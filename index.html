@@ -1,124 +1,78 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OSH™ — Homeostatic Semantic Organism</title>
-<meta name="description" content="OSH™ — Non-probabilistic, zero-GPU homeostatic semantic computing paradigm for Edge AI.">
+<meta name="description" content="OSH™ — Non-probabilistic, zero-GPU homeostatic semantic architecture for Edge computing.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg-main: #060709;
-  --bg-card: rgba(14, 18, 27, 0.75);
-  --border-cyan: rgba(0, 240, 255, 0.25);
-  --border-glow: #00f0ff;
-  --orange-accent: #f26522;
-  --cyan-accent: #00f0ff;
-  --green-glow: #00ff66;
-  --text-main: #e2e8f0;
-  --text-muted: #8a99ad;
-  --font-mono: 'JetBrains Mono', monospace;
+  --bg-dark: #07080c;
+  --bg-card: rgba(15, 17, 26, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(245, 158, 11, 0.4);
+  --amber-accent: #f59e0b;
+  --amber-glow: rgba(245, 158, 11, 0.15);
+  --text-primary: #f3f4f6;
+  --text-muted: #9ca3af;
+  --text-dim: #6b7280;
   --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-sans);
-  background: var(--bg-main);
-  color: var(--text-main);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
 }
 
-/* Background Cyber Grid */
-.cyber-grid {
+/* Background Subtle Mesh */
+.bg-grid {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
   background-image: 
-    linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
   pointer-events: none;
   z-index: 0;
 }
 
 .content { position: relative; z-index: 1; }
-.container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.container { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 
-/* Section Labels & Headers */
-.section-label {
+/* Section Styling */
+section { padding: 80px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+.section-tag {
   font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--cyan-accent);
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  color: var(--amber-accent);
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-label::before {
-  content: '>';
-  color: var(--orange-accent);
-  font-weight: bold;
 }
 .section-title {
-  font-size: clamp(28px, 4.5vw, 44px);
+  font-size: clamp(26px, 4vw, 40px);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
-  margin-bottom: 40px;
-  color: #fff;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px 28px;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-.btn-primary {
-  background: var(--orange-accent);
-  color: #fff;
-  border: 1px solid var(--orange-accent);
-  box-shadow: 0 0 15px rgba(242, 101, 34, 0.3);
-}
-.btn-primary:hover {
-  background: #ff7536;
-  box-shadow: 0 0 25px rgba(242, 101, 34, 0.6);
-  transform: translateY(-2px);
-}
-.btn-cyber {
-  background: rgba(0, 240, 255, 0.05);
-  color: var(--cyan-accent);
-  border: 1px solid var(--cyan-accent);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-}
-.btn-cyber:hover {
-  background: var(--cyan-accent);
-  color: #000;
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
-  transform: translateY(-2px);
+  margin-bottom: 36px;
+  color: #ffffff;
 }
 
 /* Hero Section */
 .hero {
-  min-height: 85vh;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -126,325 +80,362 @@ body {
   text-align: center;
   padding: 100px 24px 60px;
 }
-.hero-badge {
+
+.status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 6px 16px;
-  background: rgba(0, 240, 255, 0.05);
-  border: 1px solid var(--border-cyan);
-  border-radius: 999px;
+  background: var(--amber-glow);
+  border: 1px solid var(--border-active);
+  border-radius: 99px;
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--cyan-accent);
-  margin-bottom: 28px;
+  color: var(--amber-accent);
+  margin-bottom: 32px;
+  letter-spacing: 0.05em;
 }
-.hero-badge .pulse {
-  width: 8px; height: 8px;
+.status-badge .dot {
+  width: 7px; height: 7px;
   border-radius: 50%;
-  background: var(--green-glow);
-  box-shadow: 0 0 10px var(--green-glow);
-  animation: pulse 2s infinite;
+  background-color: var(--amber-accent);
+  box-shadow: 0 0 8px var(--amber-accent);
 }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .hero h1 {
-  font-size: clamp(64px, 12vw, 110px);
+  font-size: clamp(60px, 11vw, 105px);
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.95;
-  background: linear-gradient(180deg, #ffffff 30%, #8a99ad 100%);
+  margin-bottom: 16px;
+  background: linear-gradient(180deg, #ffffff 40%, #9ca3af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hero .subtitle {
+
+.hero .tagline {
   font-family: var(--font-mono);
-  font-size: clamp(18px, 3vw, 28px);
-  color: var(--orange-accent);
-  margin: 16px 0 20px;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--amber-accent);
+  margin-bottom: 20px;
 }
-.hero .desc {
-  font-size: clamp(16px, 2vw, 20px);
+
+.hero .description {
+  font-size: clamp(15px, 1.8vw, 19px);
   color: var(--text-muted);
-  max-width: 680px;
+  max-width: 640px;
   margin-bottom: 40px;
 }
 
 /* Hero Metrics Bar */
-.hero-metrics {
+.metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   width: 100%;
-  max-width: 960px;
-  margin-top: 40px;
+  max-width: 920px;
+  margin-top: 20px;
 }
-.metric-box {
+.metric-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-cyan);
+  border: 1px solid var(--border-subtle);
   padding: 20px;
   border-radius: 6px;
   text-align: left;
-  backdrop-filter: blur(10px);
 }
-.metric-box .val {
+.metric-card .value {
   font-family: var(--font-mono);
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--cyan-accent);
+  color: #ffffff;
   margin-bottom: 4px;
 }
-.metric-box .lbl { font-size: 13px; color: var(--text-muted); }
-
-/* Layout Grids & Cards */
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-
-.card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 28px;
-  border-radius: 8px;
-  transition: border-color 0.3s ease, transform 0.3s ease;
+.metric-card .label {
+  font-size: 13px;
+  color: var(--text-muted);
 }
-.card:hover {
-  border-color: var(--border-glow);
-  transform: translateY(-3px);
-}
-.card h3 { font-size: 18px; color: #fff; margin-bottom: 12px; }
-.card p { font-size: 14px; color: var(--text-muted); }
 
-/* Benchmark Section & Telemetry Console */
-.benchmark-container {
+/* Video & Telemetry Section */
+.benchmark-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 24px;
   background: var(--bg-card);
-  border: 1px solid var(--border-cyan);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 24px;
-  overflow: hidden;
 }
-@media(max-width: 850px) { .benchmark-container { grid-template-columns: 1fr; } }
+@media(max-width: 850px) { .benchmark-grid { grid-template-columns: 1fr; } }
 
-.video-box {
+.video-container {
   position: relative;
   background: #000;
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  border-radius: 4px;
-  aspect-ratio: 16/9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 9/16;
+  max-height: 480px;
+  margin: 0 auto;
 }
-.video-box video { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-.telemetry-box {
-  background: #000;
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  border-radius: 4px;
-  padding: 16px;
+.telemetry-panel {
+  background: #030407;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 20px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--green-glow);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.console-logs { height: 180px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; }
-.console-line { opacity: 0.8; }
-.console-line span { color: var(--cyan-accent); }
+.telemetry-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--amber-accent);
+}
+.telemetry-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.data-item {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-left: 2px solid var(--amber-accent);
+}
+.data-item .var-name { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
+.data-item .var-val { font-size: 15px; color: #ffffff; font-weight: 500; }
+
+.hardware-note {
+  background: rgba(245, 158, 11, 0.04);
+  border: 1px solid var(--border-active);
+  padding: 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Feature Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 24px;
+  border-radius: 6px;
+}
+.card h3 { font-size: 17px; color: #fff; margin-bottom: 10px; }
+.card p { font-size: 14px; color: var(--text-muted); }
 
 /* Comparison Table */
-.table-wrapper {
+.table-container {
   overflow-x: auto;
   background: var(--bg-card);
-  border: 1px solid var(--border-cyan);
-  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
 }
 table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-th, td { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-th { font-family: var(--font-mono); color: var(--cyan-accent); text-transform: uppercase; font-size: 12px; background: rgba(0,240,255,0.02); }
-td.highlight { color: var(--orange-accent); font-weight: 500; font-family: var(--font-mono); }
+th, td { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+th { font-family: var(--font-mono); color: var(--amber-accent); text-transform: uppercase; font-size: 11px; background: rgba(255,255,255,0.01); }
+td.highlight { color: #ffffff; font-weight: 600; font-family: var(--font-mono); }
 
-/* Modal NDA Form */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  display: none; align-items: center; justify-content: center;
-  z-index: 100;
+/* Actions & Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
-.modal-box {
-  background: #0e121b;
-  border: 1px solid var(--cyan-accent);
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-  padding: 36px; border-radius: 8px;
-  width: 100%; max-width: 520px;
-  position: relative;
+.btn-primary {
+  background: var(--amber-accent);
+  color: #000000;
+  border: 1px solid var(--amber-accent);
+  font-weight: 700;
 }
-.modal-close {
-  position: absolute; top: 16px; right: 16px;
-  background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;
+.btn-primary:hover {
+  background: #d97706;
+  border-color: #d97706;
 }
-.form-group { margin-bottom: 20px; text-align: left; }
-.form-group label { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--cyan-accent); margin-bottom: 8px; }
-.form-group input, .form-group select {
-  width: 100%; padding: 12px;
-  background: #040507; border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff; font-family: var(--font-sans); border-radius: 4px;
-}
-.form-group input:focus { border-color: var(--cyan-accent); outline: none; }
 
-section { padding: 90px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-footer { padding: 40px 0; text-align: center; font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+footer { padding: 40px 0; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); }
 </style>
 </head>
 <body>
 
-<div class="cyber-grid"></div>
+<div class="bg-grid"></div>
 
 <div class="content">
 
-  <!-- HERO SECTION -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="pulse"></span>
-      <span>PROTOTYPE TESTED ON INTEL ATOM // APEC 2026</span>
+    <div class="status-badge">
+      <span class="dot"></span>
+      <span>PROTOTYPE FUNCTIONAL</span>
     </div>
     <h1>OSH™</h1>
-    <p class="subtitle">HOMEOSTATIC SEMANTIC ORGANISM</p>
-    <p class="desc">A revolutionary computational paradigm engineered for deterministic, zero-GPU semantic control at the physical edge.</p>
+    <p class="tagline">Organismo Semántico Homeostático</p>
+    <p class="description">A non-probabilistic, zero-GPU homeostatic architecture engineered for local, deterministic semantic state execution.</p>
     
-    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
-      <a href="#benchmark" class="btn btn-cyber">Watch Live Demo</a>
-      <button class="btn btn-primary" onclick="openModal()">Request NDA Evaluation</button>
+    <div>
+      <a href="mailto:fabian.vallejos@oshsystems.com" class="btn btn-primary">Request Technical Evaluation</a>
     </div>
 
-    <!-- METRICS STRIP -->
-    <div class="hero-metrics">
-      <div class="metric-box">
-        <div class="val">0 MB</div>
-        <div class="lbl">GPU Memory Overhead</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="value">0 MB</div>
+        <div class="label">GPU Requirement</div>
       </div>
-      <div class="metric-box">
-        <div class="val">100%</div>
-        <div class="lbl">Deterministic (Zero Hallucination)</div>
+      <div class="metric-card">
+        <div class="value">100%</div>
+        <div class="label">Deterministic Logic</div>
       </div>
-      <div class="metric-box">
-        <div class="val">&lt; 1 ms</div>
-        <div class="lbl">State Equilibrium Latency</div>
+      <div class="metric-card">
+        <div class="value">Real-Time</div>
+        <div class="label">State Homeostasis Loop</div>
       </div>
-      <div class="metric-box">
-        <div class="val">Legacy x86</div>
-        <div class="lbl">Tested on Intel Atom & MCU</div>
+      <div class="metric-card">
+        <div class="value">Intel Atom</div>
+        <div class="label">Proven Legacy Hardware</div>
       </div>
     </div>
   </section>
 
-  <!-- LIVE DEMO & TELEMETRY SECTION -->
-  <section id="benchmark">
+  <section id="demo">
     <div class="container">
-      <div class="section-label">Empirical Hardware Validation</div>
-      <h2 class="section-title">Live Execution Benchmark</h2>
+      <div class="section-tag">Empirical Proof of Concept</div>
+      <h2 class="section-title">Hardware Telemetry & Live Execution</h2>
 
-      <div class="benchmark-container">
-        <!-- Video Container -->
-        <div class="video-box">
-          <!-- Reemplaza src por el video real o path local -->
-          <video controls poster="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' fill='%23000'><text x='50%' y='50%' fill='%2300f0ff' font-family='monospace' font-size='14' text-anchor='middle'>[ Intel Atom Execution Video ]</text></svg>">
-            <source src="demo_intel_atom.mp4" type="video/mp4">
+      <div class="benchmark-grid">
+        <div class="video-container">
+          <video controls preload="metadata">
+            <source src="VID_20260709_152731.mp4" type="video/mp4">
             Your browser does not support HTML5 video.
           </video>
         </div>
 
-        <!-- Simulated Realtime Telemetry Console -->
-        <div class="telemetry-box">
-          <div style="border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom:8px; margin-bottom:12px; color:var(--cyan-accent);">
-            SYSTEM TELEMETRY LOG // PORT 8080
+        <div class="telemetry-panel">
+          <div>
+            <div class="telemetry-header">
+              SUSTRATO: INTEL(R) ATOM(TM) CPU // LIVE OPERATIONAL STATE
+            </div>
+            
+            <div class="telemetry-data">
+              <div class="data-item">
+                <div class="var-name">Coherencia</div>
+                <div class="var-val">31.8908</div>
+              </div>
+              <div class="data-item">
+                <div class="var-name">Presión</div>
+                <div class="var-val">20.2527</div>
+              </div>
+              <div class="data-item">
+                <div class="var-name">Conflicto</div>
+                <div class="var-val">22.1795</div>
+              </div>
+              <div class="data-item">
+                <div class="var-name">Entropía</div>
+                <div class="var-val">11.1732</div>
+              </div>
+              <div class="data-item">
+                <div class="var-name">Temperatura</div>
+                <div class="var-val">0.1250</div>
+              </div>
+              <div class="data-item">
+                <div class="var-name">Fricción</div>
+                <div class="var-val">0.0000</div>
+              </div>
+            </div>
           </div>
-          <div class="console-logs" id="consoleLogs">
-            <div class="console-line"><span>[SYS_INIT]</span> Kernel initialized on x86 legacy core.</div>
-            <div class="console-line"><span>[STATE_LOOP]</span> Homeostatic ΔS = 0.000412 (Balanced).</div>
-            <div class="console-line"><span>[PERC_IN]</span> Perturbation vector injected.</div>
-            <div class="console-line"><span>[RESONANCE]</span> Stabilized in 0.82ms. No GPU call.</div>
-          </div>
-          <div style="margin-top:12px; font-size:11px; color:var(--text-muted);">
-            STATUS: ACTIVE_EQUILIBRIUM // RAM: 18.4 MB
+
+          <div class="hardware-note">
+            <strong>HARDWARE BENCHMARK NOTE:</strong><br>
+            Empirical proof running in real-time on an Intel® Atom™ PC — a legacy, highly constrained architecture where no modern LLM or Transformer model could physically load or execute.
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ARCHITECTURE PRINCIPLES -->
   <section>
     <div class="container">
-      <div class="section-label">Core Mechanics</div>
-      <h2 class="section-title">Architectural Pillars</h2>
-      
-      <div class="grid-2">
+      <div class="section-tag">System Fundamentals</div>
+      <h2 class="section-title">Core Principles</h2>
+
+      <div class="card-grid">
         <div class="card">
-          <h3>Semantic Homeostasis</h3>
-          <p>The system self-regulates its internal state under heavy external perturbation without matrix backpropagation or cloud retraining.</p>
+          <h3>Homeostatic Regulation</h3>
+          <p>Self-regulates internal semantic state variables under input perturbation without cloud connectivity or matrix backpropagation.</p>
         </div>
         <div class="card">
-          <h3>Autonomous Stabilization</h3>
-          <p>Dynamically adapts to noisy real-time inputs while preserving structural continuity of operational state.</p>
+          <h3>Autonomous Stability</h3>
+          <p>Maintains structural meaning and system equilibrium across variable real-time operational conditions.</p>
         </div>
         <div class="card">
           <h3>Contextual Persistence</h3>
-          <p>Maintains continuous contextual resonance independently of artificial attention-window boundaries ($O(N^2)$ bottlenecks).</p>
+          <p>Preserves structural context dynamically, eliminating artificial attention-window boundaries ($O(N^2)$ overhead).</p>
         </div>
         <div class="card">
-          <h3>Zero-Cloud Air-Gap</h3>
-          <p>Executes natively local. Guarantees sub-millisecond execution with complete data privacy for critical industrial deployment.</p>
+          <h3>Non-Probabilistic Logic</h3>
+          <p>Replaces stochastic token prediction with stable feedback control loops, eliminating AI model hallucinations.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COMPARISON TABLE -->
   <section>
     <div class="container">
-      <div class="section-label">Paradigm Breakdown</div>
-      <h2 class="section-title">OSH vs. Standard AI</h2>
+      <div class="section-tag">Paradigm Comparison</div>
+      <h2 class="section-title">OSH vs Traditional Models</h2>
 
-      <div class="table-wrapper">
+      <div class="table-container">
         <table>
           <thead>
             <tr>
-              <th>Vector</th>
-              <th>Probabilistic LLM / Transformer</th>
-              <th>TinyML / Quantized DL</th>
-              <th>OSH™ Homeostatic Kernel</th>
+              <th>Dimension</th>
+              <th>Probabilistic LLMs</th>
+              <th>OSH™ Architecture</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Core Mechanism</td>
+              <td>Core Execution</td>
               <td>Token probability prediction</td>
-              <td>Quantized matrix multiplication</td>
-              <td class="highlight">State Homeostasis Equilibrium</td>
+              <td class="highlight">State Homeostasis Loop</td>
             </tr>
             <tr>
-              <td>Hardware Target</td>
-              <td>High-end NPU / GPU Clusters</td>
-              <td>Dedicated AI accelerators</td>
-              <td class="highlight">Legacy x86 / MCUs / ARM</td>
+              <td>Hardware Requirement</td>
+              <td>Server Clusters / High-end GPUs</td>
+              <td class="highlight">Intel Atom / MCUs / CPUs</td>
             </tr>
             <tr>
-              <td>Determinism</td>
+              <td>Logic Behavior</td>
               <td>Stochastic (Prone to hallucination)</td>
-              <td>Probabilistic approximation</td>
-              <td class="highlight">100% Deterministic Control</td>
+              <td class="highlight">100% Deterministic</td>
             </tr>
             <tr>
-              <td>Network Dependency</td>
-              <td>High Cloud Reliance</td>
-              <td>Partial Cloud Sync</td>
-              <td class="highlight">Zero (100% Air-Gapped)</td>
+              <td>Cloud Dependency</td>
+              <td>Mandatory / Continuous</td>
+              <td class="highlight">Zero (100% Offline)</td>
             </tr>
           </tbody>
         </table>
@@ -452,81 +443,21 @@ footer { padding: 40px 0; text-align: center; font-family: var(--font-mono); fon
     </div>
   </section>
 
-  <!-- CTA / CONTACT -->
   <section style="text-align: center;">
     <div class="container">
-      <div class="section-label">Technology Transfer & Licensing</div>
-      <h2 class="section-title" style="max-width:760px; margin: 0 auto 32px;">Ready for Technical Peer Evaluation or Strategic OEM Integration.</h2>
-      <button class="btn btn-primary" onclick="openModal()">Initiate Evaluation Protocol</button>
+      <div class="section-tag">Technology Transfer & Integration</div>
+      <h2 class="section-title" style="max-width:700px; margin: 0 auto 30px;">Strategic partnership and independent technical evaluation.</h2>
+      <a href="mailto:fabian.vallejos@oshsystems.com" class="btn btn-primary">Request Technical Evaluation</a>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>© 2026 OSH SYSTEMS — All Rights Reserved // Patent Pending (INPI / PCT Strategy)</p>
+      <p>© 2026 OSH SYSTEMS — All Rights Reserved</p>
     </div>
   </footer>
 
 </div>
-
-<!-- MODAL FORM -->
-<div class="modal-overlay" id="ndaModal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="section-label">Technical Access Request</div>
-    <h3 style="color:#fff; margin-bottom:20px;">Request NDA Code Access</h3>
-    
-    <form action="mailto:fabian.vallejos@oshsystems.com" method="post" enctype="text/plain">
-      <div class="form-group">
-        <label>FULL NAME / TITLE</label>
-        <input type="text" name="Name" required placeholder="e.g. Dr. Alex Vance">
-      </div>
-      <div class="form-group">
-        <label>ORGANIZATION / VC / OEM</label>
-        <input type="text" name="Organization" required placeholder="e.g. Semiconductor Corp / Fund">
-      </div>
-      <div class="form-group">
-        <label>EVALUATION INTENT</label>
-        <select name="Intent">
-          <option>Academic / Technical Peer Review</option>
-          <option>IP Licensing / Acquisition</option>
-          <option>Joint Hardware PoC</option>
-          <option>Venture Capital Investment</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Submit Request</button>
-    </form>
-  </div>
-</div>
-
-<script>
-// Modal Controls
-function openModal() { document.getElementById('ndaModal').style.display = 'flex'; }
-function closeModal() { document.getElementById('ndaModal').style.display = 'none'; }
-
-// Telemetry Log Animation
-const logs = [
-  "ΔS State equilibrium verified.",
-  "Intel Atom Core 0 load: 8.2%",
-  "Zero GPU pipeline confirmed.",
-  "Perturbation absorbed (t = 0.31ms).",
-  "Semantic continuity persistent."
-];
-setInterval(() => {
-  const container = document.getElementById('consoleLogs');
-  if (container) {
-    const line = document.createElement('div');
-    line.className = 'console-line';
-    const randomLog = logs[Math.floor(Math.random() * logs.length)];
-    line.innerHTML = `<span>[HOMEOSTASIS]</span> ${randomLog}`;
-    container.appendChild(line);
-    if (container.children.length > 5) {
-      container.removeChild(container.children[0]);
-    }
-  }
-}, 2500);
-</script>
 
 </body>
 </html>

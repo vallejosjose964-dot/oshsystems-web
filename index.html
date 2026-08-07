@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OSH™ — Homeostatic Semantic Organism | OSH Global Systems, Inc.</title>
+<meta name="description" content="OSH Global Systems, Inc. — Homeostatic Semantic Organism. Functional prototype with measured CPU-only runtime and memory comparison against TinyLlama 1.1B Q4_K_M on identical hardware and inputs.">
+<meta name="theme-color" content="#f3efe5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f3efe5;
+  --paper-2:#faf8f2;
+  --paper-3:#ebe5d8;
+  --ink:#0e1512;
+  --muted:#66706a;
+  --muted-2:#858d87;
+  --line:rgba(14,21,18,.13);
+  --line-strong:rgba(14,21,18,.24);
+  --signal:#ff5b35;
+  --signal-2:#ff8266;
+  --bio:#17694e;
+  --bio-2:#69a98f;
+  --acid:#d9ef68;
+  --white:#fffefa;
+  --shadow:0 24px 80px rgba(30,37,31,.10);
+  --radius:28px;
+  --mono:"DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:"Manrope", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+::selection{background:var(--signal);color:#fff}
+.container{width:min(1240px,calc(100% - 48px));margin-inline:auto}
+.mono{font-family:var(--mono)}
+.orange{color:var(--signal)}
+.green{color:var(--bio)}
+
+/* background system */
+.page-noise{position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E")}
+.field-bg{position:fixed;inset:-20%;z-index:-5;pointer-events:none;background:
+ radial-gradient(circle at 72% 12%,rgba(255,91,53,.10),transparent 28%),
+ radial-gradient(circle at 18% 52%,rgba(23,105,78,.10),transparent 31%),
+ radial-gradient(circle at 80% 82%,rgba(217,239,104,.12),transparent 26%),
+ linear-gradient(180deg,var(--paper-2),var(--paper) 34%,#eee9de 100%)}
+.grid-bg{position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.42;background-image:linear-gradient(rgba(14,21,18,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(14,21,18,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 75%)}
+
+/* progress */
+.scroll-progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--signal),var(--bio));z-index:9999}
+
+/* nav */
+.nav-wrap{position:fixed;top:16px;left:0;right:0;z-index:1000;pointer-events:none}
+.nav{pointer-events:auto;width:min(1240px,calc(100% - 32px));margin:auto;border:1px solid rgba(14,21,18,.11);background:rgba(250,248,242,.78);backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);border-radius:20px;box-shadow:0 10px 34px rgba(22,28,23,.07);display:flex;align-items:center;justify-content:space-between;padding:10px 12px 10px 14px}
+.brand{display:flex;align-items:center;gap:12px;min-width:max-content}
+.brand-mark{width:34px;height:34px;border-radius:50%;position:relative;border:1px solid var(--ink);display:grid;place-items:center;background:var(--white);overflow:hidden}
+.brand-mark:before,.brand-mark:after{content:"";position:absolute;border-radius:50%;border:1px solid var(--signal)}
+.brand-mark:before{width:18px;height:18px}.brand-mark:after{width:7px;height:7px;background:var(--signal);border:0}
+.brand-lines{line-height:1.08}.brand-name{font-weight:750;font-size:12px;letter-spacing:-.02em}.brand-sub{font:500 8px/1.2 var(--mono);letter-spacing:.11em;color:var(--muted);margin-top:3px}
+.nav-links{display:flex;align-items:center;gap:4px}.nav-links a{font:500 10px/1 var(--mono);letter-spacing:.05em;padding:11px 12px;border-radius:12px;color:#4d5650;transition:.2s ease}.nav-links a:hover{background:rgba(14,21,18,.055);color:var(--ink)}
+.nav-cta{background:var(--ink)!important;color:#fff!important;padding-inline:16px!important}
+
+/* hero */
+.hero{min-height:100svh;padding:150px 0 74px;position:relative;display:flex;align-items:center}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(440px,.92fr);gap:52px;align-items:center}
+.kicker{display:flex;align-items:center;gap:10px;font:500 10px/1.2 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--bio)}
+.kicker-dot{width:7px;height:7px;border-radius:50%;background:var(--bio);box-shadow:0 0 0 6px rgba(23,105,78,.09)}
+.hero h1{font-size:clamp(82px,11vw,168px);font-weight:750;line-height:.74;letter-spacing:-.095em;margin:38px 0 22px;position:relative}
+.hero h1 sup{font:500 15px/1 var(--mono);letter-spacing:0;position:absolute;top:-3px;margin-left:7px;color:var(--muted)}
+.hero-company{font:600 15px/1.3 var(--mono);letter-spacing:.01em;color:#363f39;margin-bottom:34px}
+.hero-title{font-size:clamp(31px,4.2vw,62px);line-height:.98;letter-spacing:-.055em;font-weight:650;max-width:800px;margin:0 0 26px}
+.hero-title .outline{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
+.hero-copy{font-size:17px;line-height:1.66;color:#55605a;max-width:720px;margin:0}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:34px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:47px;border-radius:14px;padding:0 18px;font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line-strong);transition:.25s ease}
+.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(14,21,18,.18)}
+.btn-secondary{background:rgba(255,255,255,.46)}.btn-secondary:hover{background:#fff;transform:translateY(-2px)}
+.hero-foot{display:flex;align-items:center;gap:22px;margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font:400 9px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hero-foot b{color:var(--ink);font-weight:500}
+
+/* orbital card */
+.field-card{height:650px;position:relative;border:1px solid var(--line-strong);border-radius:34px;background:rgba(255,254,250,.58);overflow:hidden;box-shadow:var(--shadow);isolation:isolate}
+.field-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(255,91,53,.08),transparent 30%),linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.08));z-index:-1}
+.field-top{position:absolute;left:24px;right:24px;top:22px;display:flex;align-items:flex-start;justify-content:space-between;z-index:3}
+.field-label{font:500 9px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.live-badge{display:flex;align-items:center;gap:7px;font:500 9px/1 var(--mono);letter-spacing:.07em;color:var(--bio);padding:8px 10px;border:1px solid rgba(23,105,78,.25);border-radius:999px;background:rgba(255,255,255,.55)}
+.live-badge i{width:6px;height:6px;border-radius:50%;background:var(--bio);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.75)}}
+.field-stage{position:absolute;inset:78px 24px 118px;display:grid;place-items:center}
+.field-svg{width:min(100%,500px);height:auto;overflow:visible;filter:drop-shadow(0 18px 34px rgba(35,47,40,.08))}
+.orbit{fill:none;stroke:rgba(14,21,18,.14);stroke-width:1}.orbit-dash{stroke-dasharray:3 8}.axis{stroke:rgba(14,21,18,.08);stroke-width:1}.core-ring{fill:rgba(255,254,250,.78);stroke:rgba(14,21,18,.18);stroke-width:1}.core-inner{fill:var(--ink)}
+.s-node{transition:all .8s cubic-bezier(.2,.8,.2,1)}
+.s-node circle{stroke:var(--paper-2);stroke-width:4}.s-node text{font-family:var(--mono);font-size:10px;font-weight:500;fill:var(--ink);text-anchor:middle;dominant-baseline:central}.node-c circle{fill:var(--signal)}.node-p circle{fill:var(--bio)}.node-x circle{fill:#8b857a}.node-t circle{fill:var(--acid)}.node-h circle{fill:#d8b58c}
+.flow-line{fill:none;stroke:var(--signal);stroke-width:1.4;stroke-linecap:round;opacity:.55;stroke-dasharray:3 7;animation:flow 8s linear infinite}@keyframes flow{to{stroke-dashoffset:-100}}
+.field-center-label{font:500 8px/1 var(--mono);letter-spacing:.12em;fill:#fff;text-anchor:middle;text-transform:uppercase}
+.field-readout{position:absolute;left:24px;right:24px;bottom:22px;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.read-cell{padding:16px 10px 0;border-right:1px solid var(--line);min-width:0}.read-cell:first-child{padding-left:0}.read-cell:last-child{border-right:0;padding-right:0}
+.read-key{font:500 8px/1 var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}.read-val{font-size:21px;font-weight:650;letter-spacing:-.045em;margin-top:6px;white-space:nowrap}
+.field-caption{position:absolute;left:24px;bottom:102px;font:400 8px/1.4 var(--mono);letter-spacing:.06em;color:var(--muted);max-width:270px}
+
+/* signature metric rail */
+.metric-rail{border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);background:rgba(250,248,242,.58)}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.metric{padding:28px 28px 30px;border-right:1px solid var(--line);position:relative;overflow:hidden}.metric:first-child{padding-left:0}.metric:last-child{border-right:0;padding-right:0}
+.metric-value{font-size:clamp(32px,4.5vw,58px);line-height:1;letter-spacing:-.06em;font-weight:650}.metric-value small{font-size:.32em;color:var(--muted);letter-spacing:0}
+.metric-label{font:500 9px/1.45 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:9px;max-width:190px}
+.metric-tag{position:absolute;right:13px;top:13px;font:500 7px/1 var(--mono);letter-spacing:.09em;color:var(--bio);text-transform:uppercase}
+
+/* general sections */
+.section{padding:128px 0}
+.section + .section{border-top:1px solid var(--line)}
+.section-head{display:grid;grid-template-columns:220px minmax(0,1fr);gap:44px;align-items:start;margin-bottom:64px}
+.eyebrow{font:500 9px/1.35 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--bio);padding-top:10px}
+.section-title{font-size:clamp(42px,5.8vw,82px);line-height:.98;letter-spacing:-.06em;font-weight:620;margin:0;max-width:940px}
+.section-lead{font-size:17px;line-height:1.7;color:#59645e;max-width:760px;margin:24px 0 0}
+
+/* paradigm */
+.paradigm{display:grid;grid-template-columns:1fr 72px 1fr;border:1px solid var(--line-strong);border-radius:30px;overflow:hidden;background:rgba(255,255,255,.32)}
+.paradigm-side{padding:44px;min-height:440px;display:flex;flex-direction:column;justify-content:space-between}
+.paradigm-side.osh{background:var(--ink);color:#fff;position:relative;overflow:hidden}.paradigm-side.osh:before{content:"";position:absolute;width:430px;height:430px;border:1px solid rgba(255,91,53,.28);border-radius:50%;right:-220px;bottom:-250px;box-shadow:0 0 0 60px rgba(255,91,53,.035),0 0 0 120px rgba(23,105,78,.035)}
+.paradigm-k{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.osh .paradigm-k{color:#97a49d}
+.paradigm-word{font-size:clamp(48px,6vw,82px);font-weight:650;line-height:.92;letter-spacing:-.065em;margin:62px 0 22px}.osh .paradigm-word{color:#fff}
+.paradigm-copy{font-size:15px;line-height:1.65;color:#66706a;max-width:430px}.osh .paradigm-copy{color:#bac4be}
+.paradigm-chain{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}.chip{padding:8px 10px;border:1px solid var(--line);border-radius:999px;font:500 8px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#57615b}.osh .chip{border-color:rgba(255,255,255,.16);color:#c4cec8;background:rgba(255,255,255,.03)}
+.paradigm-vs{display:grid;place-items:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font:500 9px/1 var(--mono);letter-spacing:.14em;color:var(--muted);writing-mode:vertical-rl;background:rgba(255,255,255,.35)}
+
+
+/* measured architectural gap */
+.gap-shell{position:relative;border:1px solid var(--line-strong);border-radius:36px;overflow:hidden;background:var(--ink);color:#fff;box-shadow:0 34px 100px rgba(14,21,18,.18);isolation:isolate}
+.gap-shell:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(circle at 12% 22%,rgba(255,91,53,.14),transparent 26%),
+  radial-gradient(circle at 87% 78%,rgba(105,169,143,.10),transparent 28%)}
+.gap-shell:after{content:"";position:absolute;width:630px;height:630px;border-radius:50%;border:1px solid rgba(255,91,53,.22);right:-320px;top:-355px;box-shadow:0 0 0 82px rgba(255,91,53,.025),0 0 0 164px rgba(105,169,143,.025);pointer-events:none}
+.gap-top{display:grid;grid-template-columns:1.12fr .88fr;position:relative;z-index:1}
+.gap-lead{padding:52px 54px;border-right:1px solid rgba(255,255,255,.12);min-height:480px;display:flex;flex-direction:column;justify-content:space-between}
+.gap-k{font:500 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#98a79f}
+.gap-big{font-size:clamp(92px,13vw,178px);line-height:.76;letter-spacing:-.09em;font-weight:730;color:var(--signal);margin:54px 0 18px}
+.gap-big small{font-size:.23em;letter-spacing:-.02em;color:#f5eee6}
+.gap-headline{font-size:clamp(27px,3vw,45px);line-height:1.02;letter-spacing:-.05em;font-weight:610;max-width:620px}
+.gap-headline em{font-style:normal;color:#abb7b0}
+.gap-side{display:grid;grid-template-rows:1fr 1fr}
+.gap-side-card{padding:42px 40px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:space-between;min-height:240px}
+.gap-side-card:last-child{border-bottom:0}
+.gap-side-k{font:500 9px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#95a29b}
+.gap-side-val{font-size:clamp(50px,6vw,84px);line-height:.88;letter-spacing:-.07em;font-weight:680;margin:26px 0 12px}
+.gap-side-val.orange{color:var(--signal)}
+.gap-side-copy{font-size:13px;line-height:1.6;color:#b5c0ba;max-width:420px}
+.gap-compare{display:grid;grid-template-columns:1.25fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.12);position:relative;z-index:1}
+.gap-cell{padding:21px 24px;border-right:1px solid rgba(255,255,255,.11);border-bottom:1px solid rgba(255,255,255,.11);font-size:13px;color:#c2cbc6}
+.gap-cell:nth-child(3n){border-right:0}.gap-cell.last-row{border-bottom:0}
+.gap-cell.head{font:500 8px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#85928b;background:rgba(255,255,255,.025)}
+.gap-cell.name{color:#f8f5ed}.gap-cell.osh{font-weight:650;color:#fff}.gap-cell.tiny{color:#b4beb8}
+.gap-protocol{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.12);position:relative;z-index:1}
+.protocol-cell{padding:24px;border-right:1px solid rgba(255,255,255,.11)}.protocol-cell:last-child{border-right:0}
+.protocol-val{font-size:19px;font-weight:630;letter-spacing:-.035em;color:#fff}
+.protocol-lab{font:500 7px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#88968e;margin-top:7px}
+.gap-foot{padding:20px 24px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;line-height:1.65;color:#909d96;position:relative;z-index:1}
+.gap-foot b{color:#e7ece9;font-weight:550}
+.hardware-ribbon{margin-top:18px;border:1px solid var(--line-strong);border-radius:22px;background:rgba(255,255,255,.34);display:grid;grid-template-columns:1.25fr repeat(4,1fr);overflow:hidden}
+.hardware-ribbon>div{padding:18px 19px;border-right:1px solid var(--line)}.hardware-ribbon>div:last-child{border-right:0}
+.hardware-ribbon .hw-title{font:500 8px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bio)}
+.hardware-ribbon strong{display:block;font-size:14px;line-height:1.35;letter-spacing:-.02em;margin-top:5px}
+.hardware-ribbon span{font:400 8px/1.4 var(--mono);letter-spacing:.03em;color:var(--muted);display:block;margin-top:3px}
+.footer-contact{color:var(--ink);text-transform:none;letter-spacing:0}.footer-contact:hover{color:var(--signal)}
+@media(max-width:900px){
+  .gap-top{grid-template-columns:1fr}.gap-lead{border-right:0;border-bottom:1px solid rgba(255,255,255,.12);min-height:420px}.gap-side{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.gap-side-card{border-bottom:0;border-right:1px solid rgba(255,255,255,.12)}.gap-side-card:last-child{border-right:0}.hardware-ribbon{grid-template-columns:1fr 1fr}.hardware-ribbon>div{border-bottom:1px solid var(--line)}
+}
+@media(max-width:650px){
+  .gap-lead{padding:36px 28px}.gap-big{font-size:94px}.gap-side{grid-template-columns:1fr;grid-template-rows:1fr 1fr}.gap-side-card{border-right:0;border-bottom:1px solid rgba(255,255,255,.12)}.gap-compare{grid-template-columns:1fr}.gap-cell{border-right:0}.gap-cell.head:not(:first-child){display:none}.gap-protocol{grid-template-columns:1fr 1fr}.protocol-cell:nth-child(2){border-right:0}.protocol-cell{border-bottom:1px solid rgba(255,255,255,.11)}.hardware-ribbon{grid-template-columns:1fr}.hardware-ribbon>div{border-right:0}
+}
+
+/* measured lab */
+.lab-shell{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.lab-primary{border:1px solid var(--line-strong);border-radius:30px;background:var(--white);padding:42px;box-shadow:0 15px 60px rgba(38,46,40,.06);position:relative;overflow:hidden}
+.lab-primary:after{content:"";position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,91,53,.12),transparent 68%)}
+.lab-id{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--bio)}
+.lab-hero-num{font-size:clamp(72px,10vw,132px);letter-spacing:-.085em;line-height:.84;font-weight:670;margin:54px 0 12px}.lab-hero-num small{font-size:.18em;color:var(--muted);letter-spacing:-.02em}
+.lab-title{font-size:21px;font-weight:600;letter-spacing:-.025em;max-width:550px}.lab-note{font-size:13px;line-height:1.6;color:var(--muted);max-width:620px;margin-top:12px}
+.lab-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);margin-top:42px;padding-top:22px}.mini{padding-right:18px;border-right:1px solid var(--line);margin-right:18px}.mini:last-child{border:0;margin:0;padding:0}.mini-val{font-size:27px;font-weight:650;letter-spacing:-.045em}.mini-label{font:500 8px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.lab-stack{display:grid;grid-template-rows:1fr 1fr;gap:18px}.lab-card{border:1px solid var(--line-strong);border-radius:30px;padding:34px;background:rgba(255,255,255,.45);display:flex;flex-direction:column;justify-content:space-between;min-height:230px}.lab-card.dark{background:var(--ink);color:#fff}.lab-card-k{font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.dark .lab-card-k{color:#98a49d}.lab-card-val{font-size:clamp(42px,5vw,68px);font-weight:650;line-height:.9;letter-spacing:-.06em;margin:26px 0 8px}.lab-card-sub{font-size:13px;line-height:1.55;color:var(--muted)}.dark .lab-card-sub{color:#b4beb8}
+.proof-strip{margin-top:18px;display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line-strong);border-radius:22px;overflow:hidden;background:rgba(255,255,255,.35)}
+.proof-item{padding:22px;border-right:1px solid var(--line)}.proof-item:last-child{border:0}.proof-val{font-size:22px;font-weight:650;letter-spacing:-.04em}.proof-label{font:500 7px/1.45 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.method-note{margin-top:18px;border-left:3px solid var(--bio);padding:2px 0 2px 15px;font-size:12px;line-height:1.6;color:var(--muted);max-width:950px}
+
+/* proof video */
+.proof-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}
+.video-card{border:1px solid var(--line-strong);border-radius:30px;overflow:hidden;background:#111713;position:relative;min-height:520px;box-shadow:var(--shadow)}
+.video-card video{width:100%;height:100%;min-height:520px;object-fit:cover;display:block;background:#111713}
+.video-overlay{pointer-events:none;position:absolute;inset:0;background:linear-gradient(to top,rgba(14,21,18,.62),transparent 42%)}
+.video-label{position:absolute;left:22px;bottom:20px;color:#fff;font:500 9px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.telemetry{border:1px solid var(--line-strong);border-radius:30px;background:rgba(255,255,255,.42);padding:28px;display:flex;flex-direction:column;justify-content:space-between}
+.telemetry-top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:18px}.telemetry-title{font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase}.telemetry-status{font:500 8px/1 var(--mono);letter-spacing:.06em;color:var(--bio)}
+.telemetry-row{display:grid;grid-template-columns:18px 1fr auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.telemetry-row:last-child{border:0}.telemetry-key{font:600 10px/1 var(--mono)}.telemetry-bar{height:3px;background:rgba(14,21,18,.08);border-radius:99px;overflow:hidden}.telemetry-bar i{display:block;height:100%;background:var(--signal);border-radius:99px}.telemetry-val{font:500 10px/1 var(--mono)}
+.telemetry-foot{font-size:12px;line-height:1.55;color:var(--muted);margin-top:22px}
+
+/* architecture flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.flow-step{position:relative;border:1px solid var(--line-strong);border-radius:22px;padding:26px 22px;background:rgba(255,255,255,.38);min-height:230px;display:flex;flex-direction:column;justify-content:space-between;transition:.25s ease}.flow-step:hover{transform:translateY(-5px);background:rgba(255,255,255,.7);box-shadow:0 16px 40px rgba(30,38,32,.08)}
+.flow-no{font:500 8px/1 var(--mono);letter-spacing:.1em;color:var(--signal)}.flow-name{font-size:19px;font-weight:650;letter-spacing:-.03em;margin-top:36px}.flow-copy{font-size:12px;line-height:1.55;color:var(--muted);margin-top:12px}.flow-line-small{height:1px;background:var(--line);margin-top:auto;position:relative}.flow-line-small:after{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--bio)}
+
+/* industrial */
+.scale-shell{border:1px solid var(--line-strong);border-radius:34px;overflow:hidden;background:var(--ink);color:#fff;display:grid;grid-template-columns:.82fr 1.18fr}
+.scale-left{padding:50px;border-right:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}.scale-left:before{content:"";position:absolute;width:460px;height:460px;border-radius:50%;border:1px solid rgba(255,91,53,.32);left:-260px;bottom:-300px;box-shadow:0 0 0 70px rgba(255,91,53,.035),0 0 0 140px rgba(23,105,78,.035)}
+.scale-k{font:500 9px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#97a49d}.scale-big{font-size:clamp(46px,6vw,78px);line-height:.95;letter-spacing:-.06em;font-weight:620;margin:56px 0 28px;max-width:500px}.scale-copy{font-size:14px;line-height:1.7;color:#b8c2bc;max-width:480px;position:relative;z-index:2}
+.scale-right{padding:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.12)}.scale-cell{background:#151d19;padding:28px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}.scale-cell-no{font:500 8px/1 var(--mono);letter-spacing:.1em;color:#839089}.scale-cell-title{font-size:19px;font-weight:620;letter-spacing:-.03em}.scale-cell-copy{font-size:12px;line-height:1.55;color:#929f98;margin-top:8px}
+.sector-grid{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.sector{border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:9px 11px;font:500 8px/1 var(--mono);letter-spacing:.06em;color:#b7c1bb;text-transform:uppercase}
+
+/* CTA */
+.cta{padding:128px 0 90px}.cta-box{position:relative;border:1px solid var(--line-strong);border-radius:36px;background:var(--white);overflow:hidden;padding:64px;box-shadow:var(--shadow)}.cta-box:before{content:"";position:absolute;right:-120px;top:-180px;width:520px;height:520px;border-radius:50%;border:1px solid rgba(255,91,53,.23);box-shadow:0 0 0 70px rgba(255,91,53,.035),0 0 0 140px rgba(23,105,78,.035)}
+.cta-k{font:500 9px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--bio)}.cta h2{font-size:clamp(48px,7vw,98px);line-height:.9;letter-spacing:-.07em;font-weight:620;max-width:980px;margin:42px 0 28px;position:relative}.cta p{font-size:16px;line-height:1.65;color:var(--muted);max-width:680px;position:relative}.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px;position:relative}
+footer{padding:26px 0 44px;border-top:1px solid var(--line)}.footer-row{display:flex;justify-content:space-between;gap:24px;align-items:center;font:400 8px/1.5 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}.reveal.is-visible{opacity:1;transform:none}
+
+@media(max-width:1080px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}.field-card{height:590px;max-width:760px}.section-head{grid-template-columns:1fr;gap:18px}.paradigm{grid-template-columns:1fr}.paradigm-vs{writing-mode:horizontal-tb;border-left:0;border-right:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);min-height:58px}.lab-shell{grid-template-columns:1fr}.lab-stack{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.proof-grid{grid-template-columns:1fr}.flow{grid-template-columns:repeat(2,1fr)}.scale-shell{grid-template-columns:1fr}.scale-left{border-right:0;border-bottom:1px solid rgba(255,255,255,.12)}
+}
+@media(max-width:800px){
+  .nav-links a:not(.nav-cta){display:none}.hero{padding-top:120px}.hero h1{font-size:100px}.metric-grid{grid-template-columns:1fr 1fr}.metric{border-bottom:1px solid var(--line)}.metric:nth-child(2){border-right:0}.metric:nth-child(3){padding-left:0}.metric:first-child{padding-left:0}.proof-strip{grid-template-columns:1fr 1fr}.proof-item:nth-child(even){border-right:0}.proof-item{border-bottom:1px solid var(--line)}.proof-item:last-child{grid-column:1/-1;border-bottom:0}.flow{grid-template-columns:1fr 1fr}.scale-right{grid-template-columns:1fr}.cta-box{padding:44px 30px}
+}
+@media(max-width:580px){
+  .container{width:min(100% - 28px,1240px)}.nav{width:calc(100% - 20px)}.brand-sub{display:none}.hero{padding-bottom:54px}.hero h1{font-size:82px}.hero-title{font-size:39px}.hero-copy{font-size:15px}.hero-foot{align-items:flex-start;flex-direction:column;gap:8px}.field-card{height:520px;border-radius:26px}.field-stage{inset:72px 10px 120px}.field-readout{grid-template-columns:repeat(5,1fr);left:16px;right:16px}.read-val{font-size:15px}.read-key{font-size:7px}.field-caption{left:16px;bottom:101px}.metric-grid{grid-template-columns:1fr}.metric,.metric:nth-child(3){padding:22px 0;border-right:0}.section{padding:92px 0}.section-title{font-size:48px}.paradigm-side{padding:30px;min-height:360px}.lab-primary{padding:30px}.lab-mini-grid{grid-template-columns:1fr;gap:15px}.mini{border-right:0;border-bottom:1px solid var(--line);padding:0 0 14px;margin:0}.mini:last-child{border-bottom:0}.lab-stack{grid-template-columns:1fr}.proof-strip{grid-template-columns:1fr}.proof-item,.proof-item:nth-child(even){border-right:0}.proof-item:last-child{grid-column:auto}.video-card,.video-card video{min-height:390px}.flow{grid-template-columns:1fr}.scale-left{padding:34px}.scale-right{padding:18px}.cta{padding-top:92px}.cta h2{font-size:54px}.footer-row{align-items:flex-start;flex-direction:column}.hide-mobile{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="page-noise"></div><div class="field-bg"></div><div class="grid-bg"></div><div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="OSH Global Systems home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-lines"><span class="brand-name">OSH Global Systems</span><span class="brand-sub">HOMEOSTATIC COMPUTING</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#difference">Difference</a><a href="#benchmark-gap">Benchmark</a><a href="#measurements">OSH metrics</a><a href="#proof">Proof</a><a href="#architecture">Architecture</a><a href="#scale">Scale</a><a class="nav-cta" href="mailto:fabian.vallejos@oshsystems.com">Request evaluation</a>
+    </div>
+  </nav>
+</div>
+
+<main id="top">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="kicker"><span class="kicker-dot"></span>Functional prototype · measured architectural runtime gap</div>
+      <h1>OSH<sup>™</sup></h1>
+      <div class="hero-company">OSH Global Systems, Inc.</div>
+      <p class="hero-title">Not another model.<br><span class="outline">Another computational path.</span></p>
+      <p class="hero-copy">Homeostatic Semantic Organism is a local computational architecture organized around regulated semantic state, deformation, stabilization and continuity. In a same-machine CPU benchmark, the validated OSH organ cycle showed a substantial runtime and resident-memory gap against a quantized 1.1B Transformer baseline.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#benchmark-gap">See benchmark result <span>↘</span></a>
+        <a class="btn btn-secondary" href="mailto:fabian.vallejos@oshsystems.com">Confidential technical evaluation</a>
+      </div>
+      <div class="hero-foot"><span><b>Measured hardware</b> · Intel Atom D2500 @ 1.86 GHz</span><span><b>Protocol</b> · same 30 inputs</span><span><b>Scope</b> · runtime + memory, not language quality</span></div>
+    </div>
+
+    <div class="field-card" id="fieldCard" aria-label="Animated OSH state-field visualization based on benchmark state samples">
+      <div class="field-top"><div class="field-label">STATE FIELD / BENCHMARK SAMPLE</div><div class="live-badge"><i></i>STRUCTURED CYCLE</div></div>
+      <div class="field-stage">
+        <svg class="field-svg" viewBox="0 0 520 520" role="img" aria-label="C P X T H state geometry">
+          <line class="axis" x1="260" y1="40" x2="260" y2="480"/><line class="axis" x1="40" y1="260" x2="480" y2="260"/>
+          <circle class="orbit" cx="260" cy="260" r="196"/><circle class="orbit orbit-dash" cx="260" cy="260" r="148"/><circle class="orbit" cx="260" cy="260" r="98"/>
+          <path class="flow-line" id="flowPath" d="M 260 72 C 430 130 444 344 262 445 C 88 382 80 152 260 72"/>
+          <circle class="core-ring" cx="260" cy="260" r="60"/><circle class="core-inner" cx="260" cy="260" r="39"/><text class="field-center-label" x="260" y="257">regulated</text><text class="field-center-label" x="260" y="269">state</text>
+          <g class="s-node node-c" id="nodeC" transform="translate(260 72)"><circle r="20"/><text y="1">C</text></g>
+          <g class="s-node node-p" id="nodeP" transform="translate(430 160)"><circle r="20"/><text y="1">P</text></g>
+          <g class="s-node node-x" id="nodeX" transform="translate(412 360)"><circle r="20"/><text y="1">X</text></g>
+          <g class="s-node node-t" id="nodeT" transform="translate(128 365)"><circle r="20"/><text y="1">T</text></g>
+          <g class="s-node node-h" id="nodeH" transform="translate(100 170)"><circle r="20"/><text y="1">H</text></g>
+        </svg>
+      </div>
+      <div class="field-caption">Illustrative geometry driven by actual structured-state samples from the current 30-input runtime benchmark. It reveals state values, not proprietary implementation details.</div>
+      <div class="field-readout">
+        <div class="read-cell"><div class="read-key">Coherence · C</div><div class="read-val" id="valC">0.8729</div></div>
+        <div class="read-cell"><div class="read-key">Pressure · P</div><div class="read-val" id="valP">0.7519</div></div>
+        <div class="read-cell"><div class="read-key">Conflict · X</div><div class="read-val" id="valX">0.0295</div></div>
+        <div class="read-cell"><div class="read-key">Temp · T</div><div class="read-val" id="valT">0.3520</div></div>
+        <div class="read-cell"><div class="read-key">Hysteresis · H</div><div class="read-val" id="valH">0.8373</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="metric-rail">
+  <div class="container metric-grid">
+    <div class="metric"><span class="metric-tag">measured runtime gap</span><div class="metric-value orange">642.43<span style="font-size:.45em">×</span></div><div class="metric-label">TinyLlama median runtime ÷ OSH median organ-cycle runtime</div></div>
+    <div class="metric"><span class="metric-tag">measured memory gap</span><div class="metric-value">27.80<span style="font-size:.45em">×</span></div><div class="metric-label">TinyLlama ready Working Set ÷ OSH loaded Working Set</div></div>
+    <div class="metric"><span class="metric-tag">OSH structured organ</span><div class="metric-value green">28.239 <small>ms</small></div><div class="metric-label">Median validated OSH organ-cycle latency · 30 inputs</div></div>
+    <div class="metric"><span class="metric-tag">benchmark substrate</span><div class="metric-value" style="font-size:clamp(27px,3.6vw,48px)">Atom D2500</div><div class="metric-label">1.86 GHz · 2 cores / 2 logical processors · Windows 10</div></div>
+  </div>
+</div>
+
+<section class="section" id="difference">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">01 / Computational divergence</div><div><h2 class="section-title">Prediction and regulation are not the same computation.</h2><p class="section-lead">OSH is being developed around a different computational primitive: a bounded internal state that is perturbed, deformed and regulated. The contrast below is architectural; it is not a claim that unfinished OSH language is already superior to a modern LLM.</p></div></div>
+    <div class="paradigm reveal">
+      <article class="paradigm-side">
+        <div><div class="paradigm-k">Transformer language model</div><div class="paradigm-word">Predict.</div><div class="paradigm-copy">Input is represented as tokens. Attention and learned parameters produce a distribution over what token should come next.</div></div>
+        <div class="paradigm-chain"><span class="chip">tokens</span><span class="chip">attention</span><span class="chip">KV cache</span><span class="chip">next-token distribution</span></div>
+      </article>
+      <div class="paradigm-vs">VERSUS</div>
+      <article class="paradigm-side osh">
+        <div><div class="paradigm-k">OSH homeostatic architecture</div><div class="paradigm-word">Regulate.</div><div class="paradigm-copy">Input perturbs a compact internal state. The system deforms, captures a functional configuration, settles and emits from that regulated state.</div></div>
+        <div class="paradigm-chain"><span class="chip">state</span><span class="chip">deformation</span><span class="chip">capture</span><span class="chip">settlement</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="benchmark-gap">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">02 / Measured architectural gap</div>
+      <div>
+        <h2 class="section-title">Same machine. Same inputs. A radically different cost profile.</h2>
+        <p class="section-lead">This benchmark compares the validated OSH structured organ cycle with TinyLlama 1.1B Chat Q4_K_M through llama.cpp on the same Intel Atom D2500 system. TinyLlama was forced to CPU execution and limited to exactly one generated token per input.</p>
+      </div>
+    </div>
+
+    <div class="gap-shell reveal">
+      <div class="gap-top">
+        <div class="gap-lead">
+          <div>
+            <div class="gap-k">Median runtime ratio · TinyLlama ÷ OSH</div>
+            <div class="gap-big">642.43<small>×</small></div>
+          </div>
+          <div class="gap-headline">A measured runtime asymmetry — <em>not a language-quality claim.</em></div>
+        </div>
+        <div class="gap-side">
+          <div class="gap-side-card">
+            <div class="gap-side-k">Resident-memory ratio</div>
+            <div>
+              <div class="gap-side-val orange">27.80×</div>
+              <div class="gap-side-copy">663.930 MB TinyLlama ready Working Set versus 23.883 MB OSH loaded Working Set.</div>
+            </div>
+          </div>
+          <div class="gap-side-card">
+            <div class="gap-side-k">P95 runtime ratio</div>
+            <div>
+              <div class="gap-side-val">876.40×</div>
+              <div class="gap-side-copy">38,140.363 ms TinyLlama P95 versus 43.519 ms OSH P95 under this measured protocol.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-compare">
+        <div class="gap-cell head">Measured dimension</div><div class="gap-cell head">OSH</div><div class="gap-cell head">TinyLlama 1.1B Q4</div>
+        <div class="gap-cell name">Median runtime</div><div class="gap-cell osh">28.239 ms</div><div class="gap-cell tiny">18,141.751 ms</div>
+        <div class="gap-cell name">P95 runtime</div><div class="gap-cell osh">43.519 ms</div><div class="gap-cell tiny">38,140.363 ms</div>
+        <div class="gap-cell name">Resident Working Set</div><div class="gap-cell osh">23.883 MB</div><div class="gap-cell tiny">663.930 MB</div>
+        <div class="gap-cell name last-row">Sampled peak Working Set</div><div class="gap-cell osh last-row">24.719 MB</div><div class="gap-cell tiny last-row">671.148 MB</div>
+      </div>
+
+      <div class="gap-protocol">
+        <div class="protocol-cell"><div class="protocol-val">30 + 30</div><div class="protocol-lab">same input texts</div></div>
+        <div class="protocol-cell"><div class="protocol-val">CPU path</div><div class="protocol-lab">TinyLlama GPU layers = 0</div></div>
+        <div class="protocol-cell"><div class="protocol-val">1 token</div><div class="protocol-lab">TinyLlama output cap per input</div></div>
+        <div class="protocol-cell"><div class="protocol-val">Not scored</div><div class="protocol-lab">language quality / intelligence</div></div>
+      </div>
+
+      <div class="gap-foot"><b>Interpretation:</b> under this specific measured configuration and workload, TinyLlama required 642.43× the median runtime and 27.80× the resident Working Set of the validated OSH structured organ cycle. This result does not claim that OSH is 642× more intelligent or produces better language. It measures computational runtime and resident memory only.</div>
+    </div>
+
+    <div class="hardware-ribbon reveal">
+      <div><div class="hw-title">Benchmark environment</div><strong>Intel® Atom™ CPU D2500 @ 1.86 GHz</strong><span>same physical machine for both sides</span></div>
+      <div><div class="hw-title">CPU</div><strong>2 cores</strong><span>2 logical processors</span></div>
+      <div><div class="hw-title">OS</div><strong>Windows 10</strong><span>10.0.19045</span></div>
+      <div><div class="hw-title">Transformer</div><strong>TinyLlama 1.1B</strong><span>Q4_K_M · llama.cpp</span></div>
+      <div><div class="hw-title">Baseline constraint</div><strong>1 generated token</strong><span>CPU only · GPU layers 0</span></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="measurements">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">03 / OSH structured runtime</div><div><h2 class="section-title">Evidence first. Claims second.</h2><p class="section-lead">The current structured benchmark does not depend on the final mouth. It validates that each input reached the homeostatic organ and that the cycle produced C/P/X/T/H state, deformation, captures and a speech act. Visible language quality was explicitly excluded from scoring.</p></div></div>
+
+    <div class="lab-shell reveal">
+      <div class="lab-primary">
+        <div class="lab-id">CURRENT STRUCTURED ORGAN · 30 INPUTS</div>
+        <div class="lab-hero-num">28.239 <small>ms</small></div>
+        <div class="lab-title">Median measured end-of-cycle time for the current homeostatic language organ.</div>
+        <div class="lab-note">Route measured: <span class="mono">FaroOshLanguageOrgan.procesar_organo_lenguaje</span>. The benchmark accepted the run only after validating structured state generation.</div>
+        <div class="lab-mini-grid"><div class="mini"><div class="mini-val">18.724 ms</div><div class="mini-label">minimum</div></div><div class="mini"><div class="mini-val">43.519 ms</div><div class="mini-label">P95</div></div><div class="mini"><div class="mini-val">45.081 ms</div><div class="mini-label">maximum</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card dark"><div class="lab-card-k">Memory footprint</div><div><div class="lab-card-val orange">24.719 MB</div><div class="lab-card-sub">Sampled peak Working Set during the structured benchmark. Loaded Working Set: 23.883 MB.</div></div></div>
+        <div class="lab-card"><div class="lab-card-k">State response</div><div><div class="lab-card-val green">26 / 30</div><div class="lab-card-sub">Distinct structured state signatures across the 30 measured inputs. This is state variation, not a language-quality score.</div></div></div>
+      </div>
+    </div>
+
+    <div class="proof-strip reveal">
+      <div class="proof-item"><div class="proof-val">6.190 ms</div><div class="proof-label">module load time</div></div>
+      <div class="proof-item"><div class="proof-val">+0.078 MB</div><div class="proof-label">load Working Set delta</div></div>
+      <div class="proof-item"><div class="proof-val">0.000 MB</div><div class="proof-label">load private-memory delta</div></div>
+      <div class="proof-item"><div class="proof-val">30</div><div class="proof-label">measured inputs</div></div>
+      <div class="proof-item"><div class="proof-val">Validated</div><div class="proof-label">structured cycle</div></div>
+    </div>
+    <div class="method-note reveal">Scope matters: these figures demonstrate runtime and resident-memory behavior of the current structured OSH organ on the measured Intel Atom D2500 system. They do not establish superior reasoning, factual accuracy or final language quality. The Transformer comparison above is therefore presented as a computational-cost benchmark, not an intelligence benchmark.</div>
+
+    <div style="height:46px"></div>
+    <div class="lab-shell reveal">
+      <div class="lab-primary" style="background:var(--ink);color:#fff">
+        <div class="lab-id" style="color:#9fb2a8">GEO→TEXT V1.1 · PREVIOUS MEASURED LAYER</div>
+        <div class="lab-hero-num" style="color:#fff">0.978 <small style="color:#aab5ae">ms</small></div>
+        <div class="lab-title">Median text-realization latency across 5,000 measured executions.</div>
+        <div class="lab-note" style="color:#aeb9b2">A separate layer-level benchmark, retained as evidence of how low the realized execution cost can become in a narrower OSH path.</div>
+        <div class="lab-mini-grid" style="border-color:rgba(255,255,255,.14)"><div class="mini" style="border-color:rgba(255,255,255,.14)"><div class="mini-val">1.821 ms</div><div class="mini-label">P95</div></div><div class="mini" style="border-color:rgba(255,255,255,.14)"><div class="mini-val">+0.230 MB</div><div class="mini-label">Working Set Δ</div></div><div class="mini"><div class="mini-val">+0.035 MB</div><div class="mini-label">Private memory Δ</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card"><div class="lab-card-k">Benchmark discipline</div><div><div class="lab-card-val">5,000×</div><div class="lab-card-sub">Repeated executions, with median, P95 and maximum preserved rather than only publishing a best case.</div></div></div>
+        <div class="lab-card"><div class="lab-card-k">Interpretation</div><div><div class="lab-card-val" style="font-size:42px">Layer-level.</div><div class="lab-card-sub">Not presented as total OSH latency. The distinction remains visible instead of being hidden in a footnote.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="proof">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">04 / Operational proof</div><div><h2 class="section-title">The architecture is not a slide. It runs.</h2><p class="section-lead">A live prototype demonstrates local execution and visible internal telemetry. The video is evidence of operation; the numerical benchmark above is separate evidence of measured runtime.</p></div></div>
+    <div class="proof-grid reveal">
+      <div class="video-card"><video controls playsinline preload="metadata"><source src="VID_20260709_152731.mp4" type="video/mp4">Your browser does not support video playback.</video><div class="video-overlay"></div><div class="video-label">OSH prototype · local execution · recorded demonstration</div></div>
+      <aside class="telemetry">
+        <div><div class="telemetry-top"><div class="telemetry-title">Recorded telemetry</div><div class="telemetry-status">● LIVE TRACE</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">C</div><div class="telemetry-bar"><i style="width:96%"></i></div><div class="telemetry-val">31.8908</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">P</div><div class="telemetry-bar"><i style="width:61%"></i></div><div class="telemetry-val">20.2527</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">X</div><div class="telemetry-bar"><i style="width:67%"></i></div><div class="telemetry-val">22.1795</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">T</div><div class="telemetry-bar"><i style="width:34%"></i></div><div class="telemetry-val">11.1732</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">Θ</div><div class="telemetry-bar"><i style="width:12%"></i></div><div class="telemetry-val">0.1250</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">F</div><div class="telemetry-bar"><i style="width:1%"></i></div><div class="telemetry-val">0.0000</div></div>
+        </div>
+        <div class="telemetry-foot"><b style="color:var(--ink)">Demonstrated substrate:</b> Intel® Atom™ CPU D2500 @ 1.86 GHz · 2 cores / 2 logical processors. The same system was used for the final OSH vs TinyLlama runtime benchmark shown above.</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">05 / Operating principle</div><div><h2 class="section-title">A state transition, not a token stream.</h2><p class="section-lead">The public view intentionally exposes the functional sequence without exposing proprietary equations, implementation details or source code.</p></div></div>
+    <div class="flow reveal">
+      <div class="flow-step"><div><div class="flow-no">01 / perturbation</div><div class="flow-name">Input</div><div class="flow-copy">External information enters as a perturbation to the current internal configuration.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">02 / geometry</div><div class="flow-name">State deformation</div><div class="flow-copy">The incoming signal changes the active C/P/X/T/H relationship instead of initiating token prediction.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">03 / selection</div><div class="flow-name">Functional capture</div><div class="flow-copy">The deformed state is organized around a functional configuration appropriate to the perturbation.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">04 / homeostasis</div><div class="flow-name">Settlement</div><div class="flow-copy">The system regulates the state toward a stable operating region while preserving continuity.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">05 / expression</div><div class="flow-name">Semantic discharge</div><div class="flow-copy">Language is an output surface of the regulated state. The final mouth remains an active development layer.</div></div><div class="flow-line-small"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="scale">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">06 / Industrialization</div><div><h2 class="section-title">The opportunity is not one application. It is a computational substrate.</h2><p class="section-lead">If independent reproduction confirms the efficiency profile on target workloads, the commercial path is to package OSH as protected computational IP and deploy it across product families.</p></div></div>
+    <div class="scale-shell reveal">
+      <div class="scale-left"><div class="scale-k">Mass-scale deployment thesis</div><div class="scale-big">From prototype to millions of endpoints.</div><div class="scale-copy">A local, compact runtime can change the economics of where semantic computation lives: inside devices, industrial systems and private infrastructure instead of only behind remote inference services.</div><div class="sector-grid"><span class="sector">IoT</span><span class="sector">Robotics</span><span class="sector">Industrial control</span><span class="sector">Automotive edge</span><span class="sector">Private enterprise</span><span class="sector">Semiconductors</span><span class="sector">Smart terminals</span><span class="sector">Biomedical edge</span></div></div>
+      <div class="scale-right">
+        <div class="scale-cell"><div class="scale-cell-no">01</div><div><div class="scale-cell-title">Protect the core</div><div class="scale-cell-copy">Keep the computational mechanism as controlled IP. Public materials show evidence and behavior, not the black box.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">02</div><div><div class="scale-cell-title">Portable runtime</div><div class="scale-cell-copy">Formalize a clean runtime / SDK boundary around the validated architecture.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">03</div><div><div class="scale-cell-title">Target-hardware proof</div><div class="scale-cell-copy">Reproduce latency, memory and stability on ARM, RISC-V, x86 and embedded targets.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">04</div><div><div class="scale-cell-title">License at scale</div><div class="scale-cell-copy">OEM integration, enterprise licensing, per-device royalty or strategic technology transfer.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="container">
+    <div class="cta-box reveal"><div class="cta-k">CONFIDENTIAL TECHNICAL EVALUATION · LICENSING · STRATEGIC PARTNERSHIP</div><h2>Measure the architecture.<br>Then decide what it can become.</h2><p>OSH Global Systems is opening the architecture to serious technical evaluation under controlled disclosure. The public evidence now includes a same-machine runtime and memory comparison; deeper implementation evidence and the protected computational core remain confidential.</p><div class="cta-row"><a class="btn btn-primary" href="mailto:fabian.vallejos@oshsystems.com">fabian.vallejos@oshsystems.com</a><a class="btn btn-secondary" href="#measurements">Review measurements</a></div></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="container footer-row"><span>© 2026 OSH Global Systems, Inc. · All rights reserved.</span><a class="footer-contact" href="mailto:fabian.vallejos@oshsystems.com">fabian.vallejos@oshsystems.com</a><span>Homeostatic Semantic Organism™ · Born in Argentina · created for humanity.</span></div></footer>
+
+<script>
+const progress=document.getElementById('scrollProgress');
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h>0?(scrollY/h)*100:0)+'%';},{passive:true});
+
+const io=new IntersectionObserver((entries)=>{for(const e of entries){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Real structured-state samples from the uploaded 30-input benchmark.
+const samples=[
+  {C:.872878,P:.751942,X:.029462,T:.352008,H:.837270},
+  {C:.872892,P:.784462,X:.029511,T:.375449,H:.837198},
+  {C:.882510,P:.763676,X:.060820,T:.411077,H:.798971},
+  {C:.882395,P:.772486,X:.060837,T:.452026,H:.798854},
+  {C:.882514,P:.762012,X:.060818,T:.411570,H:.798975},
+  {C:.882493,P:.766398,X:.060819,T:.416621,H:.798954}
+];
+const ids=['C','P','X','T','H'];let si=0;
+function nodePos(k,v,index){const angles={C:-90,P:-18,X:54,T:126,H:198};const a=(angles[k]-90+(index*0))*Math.PI/180;const radius=92+v*125;return [260+Math.cos(a)*radius,260+Math.sin(a)*radius]}
+function updateField(){const s=samples[si%samples.length];ids.forEach((k,i)=>{const [x,y]=nodePos(k,s[k],i);document.getElementById('node'+k).setAttribute('transform',`translate(${x.toFixed(1)} ${y.toFixed(1)})`);document.getElementById('val'+k).textContent=s[k].toFixed(4)});si++}
+updateField();setInterval(updateField,2300);
+
+// subtle field parallax
+const fc=document.getElementById('fieldCard');if(fc&&matchMedia('(pointer:fine)').matches){fc.addEventListener('pointermove',e=>{const r=fc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;fc.style.transform=`perspective(1200px) rotateX(${(-y*2).toFixed(2)}deg) rotateY(${(x*2).toFixed(2)}deg)`});fc.addEventListener('pointerleave',()=>fc.style.transform='')}
+</script>
+</body>
+</html>

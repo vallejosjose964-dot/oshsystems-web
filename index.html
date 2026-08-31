@@ -743,7 +743,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
     </div>
 
     <div class="proof-strip reveal">
-      <div class="proof-item"><div class="proof-val">+1.85%</div><div class="proof-label">median vs report 1</div></div>
+      <div class="proof-item"><div class="proof-val">26.88x</div><div class="proof-label">memory gap</div></div>
       <div class="proof-item"><div class="proof-val">-20.21%</div><div class="proof-label">P95 tail latency</div></div>
       <div class="proof-item"><div class="proof-val">+0.10%</div><div class="proof-label">baseline drift</div></div>
       <div class="proof-item"><div class="proof-val">SHA-256</div><div class="proof-label">harness verified</div></div>
@@ -760,7 +760,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 </section>
 <section class="section" id="proof">
   <div class="container">
-    <div class="section-head reveal"><div class="eyebrow">04 / Operational proof</div><div><h2 class="section-title">The architecture is not a slide. It runs.</h2><p class="section-lead">A live prototype demonstrates local execution and visible internal telemetry. The video is evidence of operation; the numerical benchmark above is separate evidence of measured runtime.</p></div></div>
+    <div class="section-head reveal"><div class="eyebrow">05 / Operational proof</div><div><h2 class="section-title">The architecture is not a slide. It runs.</h2><p class="section-lead">A live prototype demonstrates local execution and visible internal telemetry. The video is evidence of operation; the numerical benchmark above is separate evidence of measured runtime.</p></div></div>
     <div class="proof-grid reveal">
       <div class="video-card"><video controls playsinline preload="metadata"><source src="VID_20260709_152731.mp4" type="video/mp4">Your browser does not support video playback.</video><div class="video-overlay"></div><div class="video-label">OSH prototype · local execution · recorded demonstration</div></div>
       <aside class="telemetry">
@@ -780,7 +780,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 
 <section class="section" id="architecture">
   <div class="container">
-    <div class="section-head reveal"><div class="eyebrow">05 / Operating principle</div><div><h2 class="section-title">A state transition, not a token stream.</h2><p class="section-lead">The public view intentionally exposes the functional sequence without exposing proprietary equations, implementation details or source code.</p></div></div>
+    <div class="section-head reveal"><div class="eyebrow">06 / Operating principle</div><div><h2 class="section-title">A state transition, not a token stream.</h2><p class="section-lead">The public view intentionally exposes the functional sequence without exposing proprietary equations, implementation details or source code.</p></div></div>
     <div class="flow reveal">
       <div class="flow-step"><div><div class="flow-no">01 / perturbation</div><div class="flow-name">Input</div><div class="flow-copy">External information enters as a perturbation to the current internal configuration.</div></div><div class="flow-line-small"></div></div>
       <div class="flow-step"><div><div class="flow-no">02 / geometry</div><div class="flow-name">State deformation</div><div class="flow-copy">The incoming signal changes the active C/P/X/T/H relationship instead of initiating token prediction.</div></div><div class="flow-line-small"></div></div>
@@ -793,7 +793,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 
 <section class="section" id="scale">
   <div class="container">
-    <div class="section-head reveal"><div class="eyebrow">06 / Industrialization</div><div><h2 class="section-title">The opportunity is not one application. It is a computational substrate.</h2><p class="section-lead">If independent reproduction confirms the efficiency profile on target workloads, the commercial path is to package OSH as protected computational IP and deploy it across product families.</p></div></div>
+    <div class="section-head reveal"><div class="eyebrow">07 / Industrialization</div><div><h2 class="section-title">The opportunity is not one application. It is a computational substrate.</h2><p class="section-lead">If independent reproduction confirms the efficiency profile on target workloads, the commercial path is to package OSH as protected computational IP and deploy it across product families.</p></div></div>
     <div class="scale-shell reveal">
       <div class="scale-left"><div class="scale-k">Mass-scale deployment thesis</div><div class="scale-big">From prototype to millions of endpoints.</div><div class="scale-copy">A local, compact runtime can change the economics of where semantic computation lives: inside devices, industrial systems and private infrastructure instead of only behind remote inference services.</div><div class="sector-grid"><span class="sector">IoT</span><span class="sector">Robotics</span><span class="sector">Industrial control</span><span class="sector">Automotive edge</span><span class="sector">Private enterprise</span><span class="sector">Semiconductors</span><span class="sector">Smart terminals</span><span class="sector">Biomedical edge</span></div></div>
       <div class="scale-right">
@@ -809,7 +809,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 
 <section class="section" id="economics">
   <div class="container">
-    <div class="section-head reveal"><div class="eyebrow">07 / Deployment economics</div><div><h2 class="section-title">Translate computational efficiency into a business case.</h2><p class="section-lead">RAM, latency and local execution matter technically. Procurement teams and investors also need to see how those properties could change hardware selection and unit economics. The calculator below is intentionally assumption-driven so a prospective partner can model its own target instead of inheriting an unsupported savings claim.</p></div></div>
+    <div class="section-head reveal"><div class="eyebrow">08 / Deployment economics</div><div><h2 class="section-title">Translate computational efficiency into a business case.</h2><p class="section-lead">RAM, latency and local execution matter technically. Procurement teams and investors also need to see how those properties could change hardware selection and unit economics. The calculator below is intentionally assumption-driven so a prospective partner can model its own target instead of inheriting an unsupported savings claim.</p></div></div>
     <div class="economics-shell reveal">
       <div class="econ-top"><div><div class="econ-k">TCO / BOM IMPACT MODEL</div><div class="econ-title">From bytes<br>to dollars.</div></div><p class="econ-lead">OSH does not claim a universal hardware-cost reduction percentage. The economic opportunity appears when the architecture allows a product to remove a dedicated accelerator, reduce memory, move to a lower compute tier, or keep semantic processing local. Those savings are product-specific and should be validated in a pilot.</p></div>
       <div class="cost-levers">
@@ -842,7 +842,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 
 <section class="section" id="licensing">
   <div class="container">
-    <div class="section-head reveal"><div class="eyebrow">08 / Commercial engagement</div><div><h2 class="section-title">A technology company needs a clear way to buy, integrate and scale OSH.</h2><p class="section-lead">Commercial structure can be matched to the customer’s product architecture, deployment volume and required engineering depth. Final terms remain subject to technical validation and contract.</p></div></div>
+    <div class="section-head reveal"><div class="eyebrow">09 / Commercial engagement</div><div><h2 class="section-title">A technology company needs a clear way to buy, integrate and scale OSH.</h2><p class="section-lead">Commercial structure can be matched to the customer’s product architecture, deployment volume and required engineering depth. Final terms remain subject to technical validation and contract.</p></div></div>
     <div class="commercial-shell reveal">
       <div class="commercial-head"><div><div class="commercial-k">LICENSING MODELS</div><div class="commercial-title">Engage once.<br>Scale deliberately.</div></div><p class="commercial-lead">The goal is to separate protected computational IP from the customer’s product layer. Partners receive the access needed to evaluate and integrate OSH while the proprietary mathematical core remains controlled.</p></div>
       <div class="license-grid">
@@ -863,7 +863,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 <section class="section" id="validation">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow">09 / Private pilot & external validation</div>
+      <div class="eyebrow">10 / Private pilot & external validation</div>
       <div><h2 class="section-title">Test OSH on your hardware before making a production commitment.</h2><p class="section-lead">A private pilot converts the public evidence into a defined engineering decision: target hardware, target workload, acceptance metrics and a controlled review path under NDA where necessary.</p></div>
     </div>
     <div class="validation-shell reveal">

@@ -724,7 +724,40 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
     </div>
   </div>
 </section>
+<section class="section" id="benchmark-report-2">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">04 / Technical report</div><div><h2 class="section-title">Architectural Runtime &amp; Resident Memory Benchmark (Report 2)</h2><p class="section-lead">Empirical evaluation on ultra-low-power x86 hardware: OSH Structured Homeostatic Cycle vs. TinyLlama 1.1B CPU Baseline. The harness was verified byte-identical to the original benchmark, so the second run measures reproducibility rather than introducing a new scoring method.</p></div></div>
 
+    <div class="lab-shell reveal">
+      <div class="lab-primary">
+        <div class="lab-id">EXACT REPLAY · 30 INPUTS · 20 AUGUST 2026</div>
+        <div class="lab-hero-num">631<small>x</small></div>
+        <div class="lab-title">Median runtime ratio reproduced against the TinyLlama one-token CPU baseline.</div>
+        <div class="lab-note">Deterministic latency: 28.76 ms median OSH structured cycle against 18,160 ms for the Transformer baseline on the same Intel Atom D2500 system.</div>
+        <div class="lab-mini-grid"><div class="mini"><div class="mini-val">17.872 ms</div><div class="mini-label">minimum</div></div><div class="mini"><div class="mini-val">34.726 ms</div><div class="mini-label">P95</div></div><div class="mini"><div class="mini-val">41.299 ms</div><div class="mini-label">maximum</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card dark"><div class="lab-card-k">Minimal memory footprint</div><div><div class="lab-card-val orange">26.8x</div><div class="lab-card-sub">24.66 MB loaded Working Set against 662.97 MB for the baseline process tree, under the same memory definition.</div></div></div>
+        <div class="lab-card"><div class="lab-card-k">Embedded feasibility</div><div><div class="lab-card-val green">9 / 30</div><div class="lab-card-sub">Distinct structured state signatures, above the validity threshold of five. Rigorous architectural proof demonstrating the transition path toward microcontroller and edge deployments.</div></div></div>
+      </div>
+    </div>
+
+    <div class="proof-strip reveal">
+      <div class="proof-item"><div class="proof-val">+1.85%</div><div class="proof-label">median vs report 1</div></div>
+      <div class="proof-item"><div class="proof-val">-20.21%</div><div class="proof-label">P95 tail latency</div></div>
+      <div class="proof-item"><div class="proof-val">+0.10%</div><div class="proof-label">baseline drift</div></div>
+      <div class="proof-item"><div class="proof-val">SHA-256</div><div class="proof-label">harness verified</div></div>
+      <div class="proof-item"><div class="proof-val">Reproduced</div><div class="proof-label">runtime regime</div></div>
+    </div>
+
+    <div class="method-note reveal">Interpretation boundary: this is an architectural runtime and resident-memory benchmark. It does not score intelligence, reasoning quality, factual accuracy or final language quality. The Transformer baseline is deliberately limited to one generated token, which makes the comparison conservative rather than favorable to OSH.</div>
+
+    <div style="margin-top:30px">
+      <a class="btn btn-primary" href="OSH_Benchmark_2_Report.pdf" download>Download technical report (PDF)</a>
+    </div>
+
+  </div>
+</section>
 <section class="section" id="proof">
   <div class="container">
     <div class="section-head reveal"><div class="eyebrow">04 / Operational proof</div><div><h2 class="section-title">The architecture is not a slide. It runs.</h2><p class="section-lead">A live prototype demonstrates local execution and visible internal telemetry. The video is evidence of operation; the numerical benchmark above is separate evidence of measured runtime.</p></div></div>

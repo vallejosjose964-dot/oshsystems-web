@@ -1,0 +1,1265 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OSH™ — Homeostatic Semantic Organism | OSH Global Systems, Inc.</title>
+<meta name="description" content="OSH Global Systems, Inc. — Homeostatic Semantic Organism. Functional prototype with measured CPU-only runtime and memory comparison against TinyLlama 1.1B Q4_K_M on identical hardware and inputs.">
+<meta name="theme-color" content="#0a100f">
+<meta property="og:title" content="OSH™ — Homeostatic Semantic Organism">
+<meta property="og:description" content="A measured homeostatic computational architecture by OSH Global Systems.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f3efe5;
+  --paper-2:#faf8f2;
+  --paper-3:#ebe5d8;
+  --ink:#0e1512;
+  --muted:#66706a;
+  --muted-2:#858d87;
+  --line:rgba(14,21,18,.13);
+  --line-strong:rgba(14,21,18,.24);
+  --signal:#ff5b35;
+  --signal-2:#ff8266;
+  --bio:#17694e;
+  --bio-2:#69a98f;
+  --acid:#d9ef68;
+  --white:#fffefa;
+  --shadow:0 24px 80px rgba(30,37,31,.10);
+  --radius:28px;
+  --mono:"DM Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans:"Manrope", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+::selection{background:var(--signal);color:#fff}
+.container{width:min(1240px,calc(100% - 48px));margin-inline:auto}
+.mono{font-family:var(--mono)}
+.orange{color:var(--signal)}
+.green{color:var(--bio)}
+
+/* background system */
+.page-noise{position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E")}
+.field-bg{position:fixed;inset:-20%;z-index:-5;pointer-events:none;background:
+ radial-gradient(circle at 72% 12%,rgba(255,91,53,.10),transparent 28%),
+ radial-gradient(circle at 18% 52%,rgba(23,105,78,.10),transparent 31%),
+ radial-gradient(circle at 80% 82%,rgba(217,239,104,.12),transparent 26%),
+ linear-gradient(180deg,var(--paper-2),var(--paper) 34%,#eee9de 100%)}
+.grid-bg{position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.42;background-image:linear-gradient(rgba(14,21,18,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(14,21,18,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 75%)}
+
+/* progress */
+.scroll-progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--signal),var(--bio));z-index:9999}
+
+/* nav */
+.nav-wrap{position:fixed;top:16px;left:0;right:0;z-index:1000;pointer-events:none}
+.nav{pointer-events:auto;width:min(1240px,calc(100% - 32px));margin:auto;border:1px solid rgba(14,21,18,.11);background:rgba(250,248,242,.78);backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);border-radius:20px;box-shadow:0 10px 34px rgba(22,28,23,.07);display:flex;align-items:center;justify-content:space-between;padding:10px 12px 10px 14px}
+.brand{display:flex;align-items:center;gap:12px;min-width:max-content}
+.brand-mark{width:34px;height:34px;border-radius:50%;position:relative;border:1px solid var(--ink);display:grid;place-items:center;background:var(--white);overflow:hidden}
+.brand-mark:before,.brand-mark:after{content:"";position:absolute;border-radius:50%;border:1px solid var(--signal)}
+.brand-mark:before{width:18px;height:18px}.brand-mark:after{width:7px;height:7px;background:var(--signal);border:0}
+.brand-lines{line-height:1.08}.brand-name{font-weight:750;font-size:12px;letter-spacing:-.02em}.brand-sub{font:500 8px/1.2 var(--mono);letter-spacing:.11em;color:var(--muted);margin-top:3px}
+.nav-links{display:flex;align-items:center;gap:4px}.nav-links a{font:500 10px/1 var(--mono);letter-spacing:.05em;padding:11px 12px;border-radius:12px;color:#4d5650;transition:.2s ease}.nav-links a:hover{background:rgba(14,21,18,.055);color:var(--ink)}
+.nav-cta{background:var(--ink)!important;color:#fff!important;padding-inline:16px!important}
+
+/* hero */
+.hero{min-height:100svh;padding:150px 0 74px;position:relative;display:flex;align-items:center}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(440px,.92fr);gap:52px;align-items:center}
+.kicker{display:flex;align-items:center;gap:10px;font:500 10px/1.2 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--bio)}
+.kicker-dot{width:7px;height:7px;border-radius:50%;background:var(--bio);box-shadow:0 0 0 6px rgba(23,105,78,.09)}
+.hero h1{font-size:clamp(82px,11vw,168px);font-weight:750;line-height:.74;letter-spacing:-.095em;margin:38px 0 22px;position:relative}
+.hero h1 sup{font:500 15px/1 var(--mono);letter-spacing:0;position:absolute;top:-3px;margin-left:7px;color:var(--muted)}
+.hero-company{font:600 15px/1.3 var(--mono);letter-spacing:.01em;color:#363f39;margin-bottom:34px}
+.hero-title{font-size:clamp(31px,4.2vw,62px);line-height:.98;letter-spacing:-.055em;font-weight:650;max-width:800px;margin:0 0 26px}
+.hero-title .outline{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
+.hero-copy{font-size:17px;line-height:1.66;color:#55605a;max-width:720px;margin:0}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:34px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:47px;border-radius:14px;padding:0 18px;font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line-strong);transition:.25s ease}
+.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(14,21,18,.18)}
+.btn-secondary{background:rgba(255,255,255,.46)}.btn-secondary:hover{background:#fff;transform:translateY(-2px)}
+.hero-foot{display:flex;align-items:center;gap:22px;margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font:400 9px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hero-foot b{color:var(--ink);font-weight:500}
+
+/* orbital card */
+.field-card{height:650px;position:relative;border:1px solid var(--line-strong);border-radius:34px;background:rgba(255,254,250,.58);overflow:hidden;box-shadow:var(--shadow);isolation:isolate}
+.field-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(255,91,53,.08),transparent 30%),linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.08));z-index:-1}
+.field-top{position:absolute;left:24px;right:24px;top:22px;display:flex;align-items:flex-start;justify-content:space-between;z-index:3}
+.field-label{font:500 9px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.live-badge{display:flex;align-items:center;gap:7px;font:500 9px/1 var(--mono);letter-spacing:.07em;color:var(--bio);padding:8px 10px;border:1px solid rgba(23,105,78,.25);border-radius:999px;background:rgba(255,255,255,.55)}
+.live-badge i{width:6px;height:6px;border-radius:50%;background:var(--bio);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.75)}}
+.field-stage{position:absolute;inset:78px 24px 118px;display:grid;place-items:center}
+.field-svg{width:min(100%,500px);height:auto;overflow:visible;filter:drop-shadow(0 18px 34px rgba(35,47,40,.08))}
+.orbit{fill:none;stroke:rgba(14,21,18,.14);stroke-width:1}.orbit-dash{stroke-dasharray:3 8}.axis{stroke:rgba(14,21,18,.08);stroke-width:1}.core-ring{fill:rgba(255,254,250,.78);stroke:rgba(14,21,18,.18);stroke-width:1}.core-inner{fill:var(--ink)}
+.s-node{transition:all .8s cubic-bezier(.2,.8,.2,1)}
+.s-node circle{stroke:var(--paper-2);stroke-width:4}.s-node text{font-family:var(--mono);font-size:10px;font-weight:500;fill:var(--ink);text-anchor:middle;dominant-baseline:central}.node-c circle{fill:var(--signal)}.node-p circle{fill:var(--bio)}.node-x circle{fill:#8b857a}.node-t circle{fill:var(--acid)}.node-h circle{fill:#d8b58c}
+.flow-line{fill:none;stroke:var(--signal);stroke-width:1.4;stroke-linecap:round;opacity:.55;stroke-dasharray:3 7;animation:flow 8s linear infinite}@keyframes flow{to{stroke-dashoffset:-100}}
+.field-center-label{font:500 8px/1 var(--mono);letter-spacing:.12em;fill:#fff;text-anchor:middle;text-transform:uppercase}
+.field-readout{position:absolute;left:24px;right:24px;bottom:22px;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.read-cell{padding:16px 10px 0;border-right:1px solid var(--line);min-width:0}.read-cell:first-child{padding-left:0}.read-cell:last-child{border-right:0;padding-right:0}
+.read-key{font:500 8px/1 var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}.read-val{font-size:21px;font-weight:650;letter-spacing:-.045em;margin-top:6px;white-space:nowrap}
+.field-caption{position:absolute;left:24px;bottom:102px;font:400 8px/1.4 var(--mono);letter-spacing:.06em;color:var(--muted);max-width:270px}
+
+/* signature metric rail */
+.metric-rail{border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);background:rgba(250,248,242,.58)}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.metric{padding:28px 28px 30px;border-right:1px solid var(--line);position:relative;overflow:hidden}.metric:first-child{padding-left:0}.metric:last-child{border-right:0;padding-right:0}
+.metric-value{font-size:clamp(32px,4.5vw,58px);line-height:1;letter-spacing:-.06em;font-weight:650}.metric-value small{font-size:.32em;color:var(--muted);letter-spacing:0}
+.metric-label{font:500 9px/1.45 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:9px;max-width:190px}
+.metric-tag{position:absolute;right:13px;top:13px;font:500 7px/1 var(--mono);letter-spacing:.09em;color:var(--bio);text-transform:uppercase}
+
+/* general sections */
+.section{padding:128px 0}
+.section + .section{border-top:1px solid var(--line)}
+.section-head{display:grid;grid-template-columns:220px minmax(0,1fr);gap:44px;align-items:start;margin-bottom:64px}
+.eyebrow{font:500 9px/1.35 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--bio);padding-top:10px}
+.section-title{font-size:clamp(42px,5.8vw,82px);line-height:.98;letter-spacing:-.06em;font-weight:620;margin:0;max-width:940px}
+.section-lead{font-size:17px;line-height:1.7;color:#59645e;max-width:760px;margin:24px 0 0}
+
+/* paradigm */
+.paradigm{display:grid;grid-template-columns:1fr 72px 1fr;border:1px solid var(--line-strong);border-radius:30px;overflow:hidden;background:rgba(255,255,255,.32)}
+.paradigm-side{padding:44px;min-height:440px;display:flex;flex-direction:column;justify-content:space-between}
+.paradigm-side.osh{background:var(--ink);color:#fff;position:relative;overflow:hidden}.paradigm-side.osh:before{content:"";position:absolute;width:430px;height:430px;border:1px solid rgba(255,91,53,.28);border-radius:50%;right:-220px;bottom:-250px;box-shadow:0 0 0 60px rgba(255,91,53,.035),0 0 0 120px rgba(23,105,78,.035)}
+.paradigm-k{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.osh .paradigm-k{color:#97a49d}
+.paradigm-word{font-size:clamp(48px,6vw,82px);font-weight:650;line-height:.92;letter-spacing:-.065em;margin:62px 0 22px}.osh .paradigm-word{color:#fff}
+.paradigm-copy{font-size:15px;line-height:1.65;color:#66706a;max-width:430px}.osh .paradigm-copy{color:#bac4be}
+.paradigm-chain{display:flex;flex-wrap:wrap;gap:8px;margin-top:30px}.chip{padding:8px 10px;border:1px solid var(--line);border-radius:999px;font:500 8px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#57615b}.osh .chip{border-color:rgba(255,255,255,.16);color:#c4cec8;background:rgba(255,255,255,.03)}
+.paradigm-vs{display:grid;place-items:center;border-left:1px solid var(--line);border-right:1px solid var(--line);font:500 9px/1 var(--mono);letter-spacing:.14em;color:var(--muted);writing-mode:vertical-rl;background:rgba(255,255,255,.35)}
+
+
+/* measured architectural gap */
+.gap-shell{position:relative;border:1px solid var(--line-strong);border-radius:36px;overflow:hidden;background:var(--ink);color:#fff;box-shadow:0 34px 100px rgba(14,21,18,.18);isolation:isolate}
+.gap-shell:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(circle at 12% 22%,rgba(255,91,53,.14),transparent 26%),
+  radial-gradient(circle at 87% 78%,rgba(105,169,143,.10),transparent 28%)}
+.gap-shell:after{content:"";position:absolute;width:630px;height:630px;border-radius:50%;border:1px solid rgba(255,91,53,.22);right:-320px;top:-355px;box-shadow:0 0 0 82px rgba(255,91,53,.025),0 0 0 164px rgba(105,169,143,.025);pointer-events:none}
+.gap-top{display:grid;grid-template-columns:1.12fr .88fr;position:relative;z-index:1}
+.gap-lead{padding:52px 54px;border-right:1px solid rgba(255,255,255,.12);min-height:480px;display:flex;flex-direction:column;justify-content:space-between}
+.gap-k{font:500 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#98a79f}
+.gap-big{font-size:clamp(92px,13vw,178px);line-height:.76;letter-spacing:-.09em;font-weight:730;color:var(--signal);margin:54px 0 18px}
+.gap-big small{font-size:.23em;letter-spacing:-.02em;color:#f5eee6}
+.gap-headline{font-size:clamp(27px,3vw,45px);line-height:1.02;letter-spacing:-.05em;font-weight:610;max-width:620px}
+.gap-headline em{font-style:normal;color:#abb7b0}
+.gap-side{display:grid;grid-template-rows:1fr 1fr}
+.gap-side-card{padding:42px 40px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:space-between;min-height:240px}
+.gap-side-card:last-child{border-bottom:0}
+.gap-side-k{font:500 9px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#95a29b}
+.gap-side-val{font-size:clamp(50px,6vw,84px);line-height:.88;letter-spacing:-.07em;font-weight:680;margin:26px 0 12px}
+.gap-side-val.orange{color:var(--signal)}
+.gap-side-copy{font-size:13px;line-height:1.6;color:#b5c0ba;max-width:420px}
+.gap-compare{display:grid;grid-template-columns:1.25fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.12);position:relative;z-index:1}
+.gap-cell{padding:21px 24px;border-right:1px solid rgba(255,255,255,.11);border-bottom:1px solid rgba(255,255,255,.11);font-size:13px;color:#c2cbc6}
+.gap-cell:nth-child(3n){border-right:0}.gap-cell.last-row{border-bottom:0}
+.gap-cell.head{font:500 8px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#85928b;background:rgba(255,255,255,.025)}
+.gap-cell.name{color:#f8f5ed}.gap-cell.osh{font-weight:650;color:#fff}.gap-cell.tiny{color:#b4beb8}
+.gap-protocol{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.12);position:relative;z-index:1}
+.protocol-cell{padding:24px;border-right:1px solid rgba(255,255,255,.11)}.protocol-cell:last-child{border-right:0}
+.protocol-val{font-size:19px;font-weight:630;letter-spacing:-.035em;color:#fff}
+.protocol-lab{font:500 7px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#88968e;margin-top:7px}
+.gap-foot{padding:20px 24px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;line-height:1.65;color:#909d96;position:relative;z-index:1}
+.gap-foot b{color:#e7ece9;font-weight:550}
+.hardware-ribbon{margin-top:18px;border:1px solid var(--line-strong);border-radius:22px;background:rgba(255,255,255,.34);display:grid;grid-template-columns:1.25fr repeat(4,1fr);overflow:hidden}
+.hardware-ribbon>div{padding:18px 19px;border-right:1px solid var(--line)}.hardware-ribbon>div:last-child{border-right:0}
+.hardware-ribbon .hw-title{font:500 8px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bio)}
+.hardware-ribbon strong{display:block;font-size:14px;line-height:1.35;letter-spacing:-.02em;margin-top:5px}
+.hardware-ribbon span{font:400 8px/1.4 var(--mono);letter-spacing:.03em;color:var(--muted);display:block;margin-top:3px}
+.footer-contact{color:var(--ink);text-transform:none;letter-spacing:0}.footer-contact:hover{color:var(--signal)}
+@media(max-width:900px){
+  .gap-top{grid-template-columns:1fr}.gap-lead{border-right:0;border-bottom:1px solid rgba(255,255,255,.12);min-height:420px}.gap-side{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.gap-side-card{border-bottom:0;border-right:1px solid rgba(255,255,255,.12)}.gap-side-card:last-child{border-right:0}.hardware-ribbon{grid-template-columns:1fr 1fr}.hardware-ribbon>div{border-bottom:1px solid var(--line)}
+}
+@media(max-width:650px){
+  .gap-lead{padding:36px 28px}.gap-big{font-size:94px}.gap-side{grid-template-columns:1fr;grid-template-rows:1fr 1fr}.gap-side-card{border-right:0;border-bottom:1px solid rgba(255,255,255,.12)}.gap-compare{grid-template-columns:1fr}.gap-cell{border-right:0}.gap-cell.head:not(:first-child){display:none}.gap-protocol{grid-template-columns:1fr 1fr}.protocol-cell:nth-child(2){border-right:0}.protocol-cell{border-bottom:1px solid rgba(255,255,255,.11)}.hardware-ribbon{grid-template-columns:1fr}.hardware-ribbon>div{border-right:0}
+}
+
+/* measured lab */
+.lab-shell{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.lab-primary{border:1px solid var(--line-strong);border-radius:30px;background:var(--white);padding:42px;box-shadow:0 15px 60px rgba(38,46,40,.06);position:relative;overflow:hidden}
+.lab-primary:after{content:"";position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,91,53,.12),transparent 68%)}
+.lab-id{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--bio)}
+.lab-hero-num{font-size:clamp(72px,10vw,132px);letter-spacing:-.085em;line-height:.84;font-weight:670;margin:54px 0 12px}.lab-hero-num small{font-size:.18em;color:var(--muted);letter-spacing:-.02em}
+.lab-title{font-size:21px;font-weight:600;letter-spacing:-.025em;max-width:550px}.lab-note{font-size:13px;line-height:1.6;color:var(--muted);max-width:620px;margin-top:12px}
+.lab-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);margin-top:42px;padding-top:22px}.mini{padding-right:18px;border-right:1px solid var(--line);margin-right:18px}.mini:last-child{border:0;margin:0;padding:0}.mini-val{font-size:27px;font-weight:650;letter-spacing:-.045em}.mini-label{font:500 8px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.lab-stack{display:grid;grid-template-rows:1fr 1fr;gap:18px}.lab-card{border:1px solid var(--line-strong);border-radius:30px;padding:34px;background:rgba(255,255,255,.45);display:flex;flex-direction:column;justify-content:space-between;min-height:230px}.lab-card.dark{background:var(--ink);color:#fff}.lab-card-k{font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}.dark .lab-card-k{color:#98a49d}.lab-card-val{font-size:clamp(42px,5vw,68px);font-weight:650;line-height:.9;letter-spacing:-.06em;margin:26px 0 8px}.lab-card-sub{font-size:13px;line-height:1.55;color:var(--muted)}.dark .lab-card-sub{color:#b4beb8}
+.proof-strip{margin-top:18px;display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line-strong);border-radius:22px;overflow:hidden;background:rgba(255,255,255,.35)}
+.proof-item{padding:22px;border-right:1px solid var(--line)}.proof-item:last-child{border:0}.proof-val{font-size:22px;font-weight:650;letter-spacing:-.04em}.proof-label{font:500 7px/1.45 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.method-note{margin-top:18px;border-left:3px solid var(--bio);padding:2px 0 2px 15px;font-size:12px;line-height:1.6;color:var(--muted);max-width:950px}
+
+/* proof video */
+.proof-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}
+.video-card{border:1px solid var(--line-strong);border-radius:30px;overflow:hidden;background:#111713;position:relative;min-height:520px;box-shadow:var(--shadow)}
+.video-card video{width:100%;height:100%;min-height:520px;object-fit:cover;display:block;background:#111713}
+.video-overlay{pointer-events:none;position:absolute;inset:0;background:linear-gradient(to top,rgba(14,21,18,.62),transparent 42%)}
+.video-label{position:absolute;left:22px;bottom:20px;color:#fff;font:500 9px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.telemetry{border:1px solid var(--line-strong);border-radius:30px;background:rgba(255,255,255,.42);padding:28px;display:flex;flex-direction:column;justify-content:space-between}
+.telemetry-top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:18px}.telemetry-title{font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase}.telemetry-status{font:500 8px/1 var(--mono);letter-spacing:.06em;color:var(--bio)}
+.telemetry-row{display:grid;grid-template-columns:18px 1fr auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.telemetry-row:last-child{border:0}.telemetry-key{font:600 10px/1 var(--mono)}.telemetry-bar{height:3px;background:rgba(14,21,18,.08);border-radius:99px;overflow:hidden}.telemetry-bar i{display:block;height:100%;background:var(--signal);border-radius:99px}.telemetry-val{font:500 10px/1 var(--mono)}
+.telemetry-foot{font-size:12px;line-height:1.55;color:var(--muted);margin-top:22px}
+
+/* architecture flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.flow-step{position:relative;border:1px solid var(--line-strong);border-radius:22px;padding:26px 22px;background:rgba(255,255,255,.38);min-height:230px;display:flex;flex-direction:column;justify-content:space-between;transition:.25s ease}.flow-step:hover{transform:translateY(-5px);background:rgba(255,255,255,.7);box-shadow:0 16px 40px rgba(30,38,32,.08)}
+.flow-no{font:500 8px/1 var(--mono);letter-spacing:.1em;color:var(--signal)}.flow-name{font-size:19px;font-weight:650;letter-spacing:-.03em;margin-top:36px}.flow-copy{font-size:12px;line-height:1.55;color:var(--muted);margin-top:12px}.flow-line-small{height:1px;background:var(--line);margin-top:auto;position:relative}.flow-line-small:after{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--bio)}
+
+/* industrial */
+.scale-shell{border:1px solid var(--line-strong);border-radius:34px;overflow:hidden;background:var(--ink);color:#fff;display:grid;grid-template-columns:.82fr 1.18fr}
+.scale-left{padding:50px;border-right:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}.scale-left:before{content:"";position:absolute;width:460px;height:460px;border-radius:50%;border:1px solid rgba(255,91,53,.32);left:-260px;bottom:-300px;box-shadow:0 0 0 70px rgba(255,91,53,.035),0 0 0 140px rgba(23,105,78,.035)}
+.scale-k{font:500 9px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#97a49d}.scale-big{font-size:clamp(46px,6vw,78px);line-height:.95;letter-spacing:-.06em;font-weight:620;margin:56px 0 28px;max-width:500px}.scale-copy{font-size:14px;line-height:1.7;color:#b8c2bc;max-width:480px;position:relative;z-index:2}
+.scale-right{padding:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.12)}.scale-cell{background:#151d19;padding:28px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}.scale-cell-no{font:500 8px/1 var(--mono);letter-spacing:.1em;color:#839089}.scale-cell-title{font-size:19px;font-weight:620;letter-spacing:-.03em}.scale-cell-copy{font-size:12px;line-height:1.55;color:#929f98;margin-top:8px}
+.sector-grid{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.sector{border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:9px 11px;font:500 8px/1 var(--mono);letter-spacing:.06em;color:#b7c1bb;text-transform:uppercase}
+
+/* CTA */
+.cta{padding:128px 0 90px}.cta-box{position:relative;border:1px solid var(--line-strong);border-radius:36px;background:var(--white);overflow:hidden;padding:64px;box-shadow:var(--shadow)}.cta-box:before{content:"";position:absolute;right:-120px;top:-180px;width:520px;height:520px;border-radius:50%;border:1px solid rgba(255,91,53,.23);box-shadow:0 0 0 70px rgba(255,91,53,.035),0 0 0 140px rgba(23,105,78,.035)}
+.cta-k{font:500 9px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--bio)}.cta h2{font-size:clamp(48px,7vw,98px);line-height:.9;letter-spacing:-.07em;font-weight:620;max-width:980px;margin:42px 0 28px;position:relative}.cta p{font-size:16px;line-height:1.65;color:var(--muted);max-width:680px;position:relative}.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px;position:relative}
+footer{padding:26px 0 44px;border-top:1px solid var(--line)}.footer-row{display:flex;justify-content:space-between;gap:24px;align-items:center;font:400 8px/1.5 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}.reveal.is-visible{opacity:1;transform:none}
+
+@media(max-width:1080px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}.field-card{height:590px;max-width:760px}.section-head{grid-template-columns:1fr;gap:18px}.paradigm{grid-template-columns:1fr}.paradigm-vs{writing-mode:horizontal-tb;border-left:0;border-right:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);min-height:58px}.lab-shell{grid-template-columns:1fr}.lab-stack{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.proof-grid{grid-template-columns:1fr}.flow{grid-template-columns:repeat(2,1fr)}.scale-shell{grid-template-columns:1fr}.scale-left{border-right:0;border-bottom:1px solid rgba(255,255,255,.12)}
+}
+@media(max-width:800px){
+  .nav-links a:not(.nav-cta){display:none}.hero{padding-top:120px}.hero h1{font-size:100px}.metric-grid{grid-template-columns:1fr 1fr}.metric{border-bottom:1px solid var(--line)}.metric:nth-child(2){border-right:0}.metric:nth-child(3){padding-left:0}.metric:first-child{padding-left:0}.proof-strip{grid-template-columns:1fr 1fr}.proof-item:nth-child(even){border-right:0}.proof-item{border-bottom:1px solid var(--line)}.proof-item:last-child{grid-column:1/-1;border-bottom:0}.flow{grid-template-columns:1fr 1fr}.scale-right{grid-template-columns:1fr}.cta-box{padding:44px 30px}
+}
+@media(max-width:580px){
+  .container{width:min(100% - 28px,1240px)}.nav{width:calc(100% - 20px)}.brand-sub{display:none}.hero{padding-bottom:54px}.hero h1{font-size:82px}.hero-title{font-size:39px}.hero-copy{font-size:15px}.hero-foot{align-items:flex-start;flex-direction:column;gap:8px}.field-card{height:520px;border-radius:26px}.field-stage{inset:72px 10px 120px}.field-readout{grid-template-columns:repeat(5,1fr);left:16px;right:16px}.read-val{font-size:15px}.read-key{font-size:7px}.field-caption{left:16px;bottom:101px}.metric-grid{grid-template-columns:1fr}.metric,.metric:nth-child(3){padding:22px 0;border-right:0}.section{padding:92px 0}.section-title{font-size:48px}.paradigm-side{padding:30px;min-height:360px}.lab-primary{padding:30px}.lab-mini-grid{grid-template-columns:1fr;gap:15px}.mini{border-right:0;border-bottom:1px solid var(--line);padding:0 0 14px;margin:0}.mini:last-child{border-bottom:0}.lab-stack{grid-template-columns:1fr}.proof-strip{grid-template-columns:1fr}.proof-item,.proof-item:nth-child(even){border-right:0}.proof-item:last-child{grid-column:auto}.video-card,.video-card video{min-height:390px}.flow{grid-template-columns:1fr}.scale-left{padding:34px}.scale-right{padding:18px}.cta{padding-top:92px}.cta h2{font-size:54px}.footer-row{align-items:flex-start;flex-direction:column}.hide-mobile{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* 3D hero enhancement */
+.field-card{transform-style:preserve-3d;will-change:transform}
+.field-stage{inset:78px 18px 116px}
+.field-canvas-wrap{position:relative;width:100%;height:100%;min-height:420px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.66),rgba(255,255,255,.08) 55%,transparent 75%)}
+.field-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.field-canvas-glow{position:absolute;inset:14% 12%;border-radius:50%;background:radial-gradient(circle,rgba(255,91,53,.13),rgba(23,105,78,.10) 38%,rgba(255,255,255,0) 68%);filter:blur(30px);pointer-events:none}
+.field-overlay-ui{position:absolute;inset:0;pointer-events:none}
+.center-chip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:124px;height:124px;border-radius:50%;display:grid;place-items:center;text-align:center;background:rgba(14,21,18,.86);color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 40px rgba(14,21,18,.22),0 0 0 16px rgba(255,255,255,.08);font:500 9px/1.35 var(--mono);letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(10px)}
+.center-chip b{display:block;font:700 14px/1 var(--sans);letter-spacing:-.03em;text-transform:none;margin-bottom:6px}
+.orbital-node{position:absolute;min-width:88px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.72);border:1px solid rgba(14,21,18,.12);box-shadow:0 10px 26px rgba(30,38,33,.10);transform:translate(-50%,-50%);backdrop-filter:blur(10px);transition:transform .3s ease,box-shadow .3s ease;will-change:transform}
+.orbital-node span{display:block;font:700 16px/1 var(--mono);color:var(--ink)}
+.orbital-node small{display:block;font:500 8px/1.25 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.orbital-node:before{content:'';position:absolute;left:10px;top:10px;width:8px;height:8px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 5px rgba(255,91,53,.12)}
+.orbital-node.label-p:before{background:var(--bio);box-shadow:0 0 0 5px rgba(23,105,78,.12)}
+.orbital-node.label-x:before{background:#8b857a;box-shadow:0 0 0 5px rgba(139,133,122,.13)}
+.orbital-node.label-t:before{background:var(--acid);box-shadow:0 0 0 5px rgba(217,239,104,.18)}
+.orbital-node.label-h:before{background:#d8b58c;box-shadow:0 0 0 5px rgba(216,181,140,.17)}
+.motion-hint{position:absolute;right:18px;bottom:98px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.62);border:1px solid var(--line);font:500 8px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);max-width:160px}
+.motion-hint b{display:block;color:var(--ink);margin-bottom:4px}
+.hero-micro-panels{position:absolute;left:18px;top:18px;display:flex;gap:10px;flex-wrap:wrap;z-index:2;pointer-events:none}
+.micro-panel{padding:10px 11px;border-radius:14px;background:rgba(255,255,255,.58);border:1px solid rgba(14,21,18,.09);backdrop-filter:blur(10px);box-shadow:0 10px 22px rgba(31,38,34,.07)}
+.micro-panel .mk{font:500 7px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.micro-panel .mv{margin-top:6px;font:700 13px/1 var(--sans);letter-spacing:-.03em}
+@media(max-width:800px){
+  .motion-hint{display:none}
+  .hero-micro-panels{top:auto;bottom:142px;left:16px;right:16px;justify-content:flex-start}
+  .micro-panel{padding:8px 10px}
+}
+@media(max-width:580px){
+  .field-stage{inset:72px 8px 118px}
+  .field-canvas-wrap{min-height:340px}
+  .center-chip{width:104px;height:104px;font-size:8px}
+  .center-chip b{font-size:12px}
+  .orbital-node{min-width:72px;padding:8px 10px}
+  .orbital-node span{font-size:13px}
+  .orbital-node small{font-size:6.8px}
+}
+
+
+/* Premium full-page redesign */
+.nav{background:rgba(10,16,14,.76);border-color:rgba(255,255,255,.08);box-shadow:0 18px 50px rgba(5,8,7,.18)}
+.brand-name,.nav-links a,.nav-links a:hover{color:#f6f2e9}.brand-sub{color:#97a59d}.nav-links a{color:#d4dcd7}.nav-links a:hover{background:rgba(255,255,255,.06)}.nav-cta{background:linear-gradient(135deg,var(--signal),#ff7a5b)!important;border-color:transparent!important}
+.hero{padding:128px 0 72px;min-height:auto}
+.hero-shell{position:relative;border:1px solid rgba(255,255,255,.08);border-radius:40px;padding:34px;background:linear-gradient(135deg,#0a100f 0%,#101917 54%,#15231f 100%);overflow:hidden;box-shadow:0 42px 120px rgba(8,11,10,.25)}
+.hero-shell:before{content:'';position:absolute;width:660px;height:660px;right:-220px;top:-220px;border-radius:50%;background:radial-gradient(circle,rgba(255,91,53,.18),rgba(255,91,53,0) 62%)}
+.hero-shell:after{content:'';position:absolute;width:540px;height:540px;left:-200px;bottom:-250px;border-radius:50%;background:radial-gradient(circle,rgba(23,105,78,.22),rgba(23,105,78,0) 62%)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,.9fr) minmax(460px,1.1fr);gap:28px;align-items:stretch}
+.hero-copy-col{padding:10px 4px 4px;display:flex;flex-direction:column;justify-content:center}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap}
+.hero-chip{display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font:500 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#d6dfd9;backdrop-filter:blur(10px)}
+.hero-chip i{width:7px;height:7px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 5px rgba(255,91,53,.12)}
+.hero-chip:nth-child(2) i{background:var(--bio);box-shadow:0 0 0 5px rgba(23,105,78,.14)}
+.hero-chip:nth-child(3) i{background:var(--acid);box-shadow:0 0 0 5px rgba(217,239,104,.18)}
+.hero h1{font-size:clamp(98px,10vw,176px);font-weight:780;line-height:.78;letter-spacing:-.095em;margin:24px 0 14px;color:#fff;text-shadow:0 10px 30px rgba(0,0,0,.18)}
+.hero h1 sup{color:#aab6b0;top:4px}
+.hero-company{font:600 14px/1.3 var(--mono);letter-spacing:.04em;color:#d7dfda;margin-bottom:28px}
+.hero-title{font-size:clamp(38px,4.5vw,72px);line-height:.93;letter-spacing:-.065em;font-weight:680;color:#fff;max-width:760px;margin:0 0 22px}.hero-title .outline{color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.58)}
+.hero-copy{font-size:17px;line-height:1.7;color:#b4c0ba;max-width:650px}
+.hero-actions{margin-top:30px}.btn{border-color:rgba(255,255,255,.12)}.btn-primary{background:linear-gradient(135deg,var(--signal),#ff7a5b);border-color:transparent;color:#fff;box-shadow:0 18px 40px rgba(255,91,53,.2)}.btn-secondary{background:rgba(255,255,255,.06);color:#eef3f0}.btn-secondary:hover{background:rgba(255,255,255,.12)}
+.hero-proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.hero-proof-card{padding:16px 16px 18px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px)}
+.hero-proof-k{font:500 7px/1.2 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#8fa097}
+.hero-proof-v{margin-top:10px;font-size:30px;line-height:.92;font-weight:700;letter-spacing:-.06em;color:#fff}.hero-proof-v small{font-size:.42em;color:#bac4be;letter-spacing:0}
+.hero-proof-c{margin-top:8px;font-size:12px;line-height:1.55;color:#adb8b2}
+.hero-foot{margin-top:26px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font:500 9px/1.45 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#8fa097}.hero-foot b{color:#f2f6f4}
+.hero-visual-col{position:relative;display:flex;align-items:stretch}
+.field-card{height:auto;min-height:730px;width:100%;border:1px solid rgba(255,255,255,.08);border-radius:34px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));box-shadow:none;overflow:hidden}
+.field-card:before{background:radial-gradient(circle at 50% 42%,rgba(255,91,53,.12),transparent 28%),radial-gradient(circle at 76% 15%,rgba(23,105,78,.14),transparent 22%),linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.02));z-index:0}
+.field-top,.field-caption,.field-readout{z-index:3}.field-label{color:#d2dbd6}.live-badge{color:#dff3ea;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}.live-badge i{background:var(--bio)}
+.field-stage{inset:84px 18px 126px}
+.field-canvas-wrap{min-height:520px;height:100%;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),rgba(255,255,255,.02) 40%,transparent 72%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.05)}
+.field-canvas-glow{inset:12% 10%;background:radial-gradient(circle,rgba(255,91,53,.18),rgba(23,105,78,.12) 42%,rgba(255,255,255,0) 70%);filter:blur(38px)}
+.hero-micro-panels{left:18px;top:18px}.micro-panel{background:rgba(9,14,13,.44);border:1px solid rgba(255,255,255,.09);box-shadow:none}.micro-panel .mk{color:#95a39c}.micro-panel .mv{color:#f3f7f5}
+.orbital-node{background:rgba(12,18,16,.74);border:1px solid rgba(255,255,255,.12);box-shadow:0 16px 34px rgba(1,4,3,.18)}.orbital-node span{color:#fff}.orbital-node small{color:#9eb0a6}
+.center-chip{background:rgba(255,255,255,.92);color:var(--ink);border-color:rgba(255,255,255,.3);box-shadow:0 20px 54px rgba(0,0,0,.18),0 0 0 18px rgba(255,255,255,.06)}
+.motion-hint{background:rgba(9,14,13,.55);border-color:rgba(255,255,255,.1);color:#96a39d}.motion-hint b{color:#fff}
+.field-caption{left:22px;bottom:104px;color:#97a59d;max-width:300px}
+.field-readout{left:18px;right:18px;bottom:20px;border-top:1px solid rgba(255,255,255,.11)}.read-cell{border-right:1px solid rgba(255,255,255,.08)}.read-key{color:#90a098}.read-val{color:#fff}
+.hero-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.hero-detail{padding:22px 22px 24px;border-radius:24px;background:rgba(255,255,255,.55);border:1px solid var(--line-strong);box-shadow:0 18px 40px rgba(20,27,22,.06)}
+.hero-detail-k{font:500 8px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--bio)}
+.hero-detail h3{margin:14px 0 10px;font-size:23px;line-height:1.02;letter-spacing:-.04em}
+.hero-detail p{margin:0;font-size:13px;line-height:1.62;color:#5d6762}
+.section-head{margin-bottom:58px}
+.section-title{max-width:1020px}
+@media(max-width:1180px){.hero-grid{grid-template-columns:1fr}.hero-visual-col{order:2}.field-card{min-height:660px}.hero-copy-col{padding:4px}.hero-detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.hero-shell{padding:22px}.hero-proof-grid{grid-template-columns:1fr}.hero-detail-grid{grid-template-columns:1fr}.hero-chip{font-size:8px;padding:9px 12px}.field-card{min-height:600px}}
+@media(max-width:580px){.hero{padding-top:108px}.hero-shell{border-radius:28px;padding:16px}.hero h1{font-size:82px}.hero-title{font-size:42px}.hero-copy{font-size:15px}.field-card{min-height:540px;border-radius:24px}.field-stage{inset:78px 10px 122px}.field-canvas-wrap{min-height:360px}.hero-proof-v{font-size:26px}.hero-detail{padding:18px}}
+
+
+/* ===== FINAL MAX EXPERIENCE ===== */
+body{background:linear-gradient(180deg,#f7f4ec 0%,#f1ede4 30%,#f7f4ed 68%,#ece7dc 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background:radial-gradient(circle at 12% 18%,rgba(255,91,53,.06),transparent 25%),radial-gradient(circle at 86% 52%,rgba(23,105,78,.07),transparent 28%)}
+.cursor-glow{position:fixed;left:0;top:0;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:0;opacity:.13;filter:blur(34px);background:radial-gradient(circle,rgba(255,91,53,.34),rgba(23,105,78,.18) 38%,transparent 70%);transform:translate(-50%,-50%);mix-blend-mode:multiply;transition:opacity .25s ease}
+.brand-logo-wrap{width:88px;height:34px;display:grid;place-items:center;overflow:hidden}.brand-logo-wrap img{max-width:100%;max-height:100%;object-fit:contain;filter:brightness(0) invert(1)}
+.brand-lines{display:none}
+.mobile-menu-toggle{display:none;background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px;font:600 9px/1 var(--mono);letter-spacing:.08em}
+.nav-links a{position:relative}.nav-links a:not(.nav-cta):after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:1px;transform:scaleX(0);transform-origin:left;background:var(--signal);transition:transform .25s ease}.nav-links a.is-active:after,.nav-links a:hover:after{transform:scaleX(1)}
+.hero-shell,.gap-shell,.scale-shell,.cta-box{transform:translateY(var(--scrollShift,0px))}
+.hero-shell{animation:heroIn .9s cubic-bezier(.2,.8,.2,1) both}@keyframes heroIn{from{opacity:0;transform:translateY(20px) scale(.985)}to{opacity:1;transform:none}}
+.hero-shell{min-height:780px;display:flex;align-items:center}
+.hero-copy-col{position:relative;z-index:3}.hero-title{max-width:780px}
+.hero-proof-card{transition:transform .35s ease,border-color .35s ease,background .35s ease}.hero-proof-card:hover{transform:translateY(-7px);background:rgba(255,255,255,.08);border-color:rgba(255,91,53,.32)}
+.hero-detail{position:relative;overflow:hidden;transition:transform .35s ease,box-shadow .35s ease}.hero-detail:before{content:"";position:absolute;inset:0;background:linear-gradient(130deg,transparent 35%,rgba(255,255,255,.65),transparent 63%);transform:translateX(-120%);transition:transform .7s ease}.hero-detail:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(22,30,25,.11)}.hero-detail:hover:before{transform:translateX(120%)}
+.metric-rail{position:relative;background:rgba(247,244,237,.82);backdrop-filter:blur(16px)}.metric{transition:background .3s ease}.metric:hover{background:rgba(255,255,255,.7)}
+.section{position:relative;isolation:isolate}.section:before{content:"";position:absolute;width:380px;height:380px;border-radius:50%;filter:blur(70px);opacity:.09;z-index:-1}.section:nth-of-type(even):before{right:-180px;top:10%;background:var(--bio)}.section:nth-of-type(odd):before{left:-180px;top:18%;background:var(--signal)}
+.section-head{position:relative}.section-head:after{content:"";position:absolute;left:0;right:0;bottom:-28px;height:1px;background:linear-gradient(90deg,var(--signal),rgba(14,21,18,.08) 24%,transparent 80%);transform-origin:left;transform:scaleX(.15);transition:transform 1s cubic-bezier(.2,.8,.2,1)}.section-head.is-visible:after{transform:scaleX(1)}
+.paradigm{box-shadow:0 28px 80px rgba(25,32,27,.08)}.paradigm-side{transition:transform .45s ease,filter .45s ease}.paradigm:hover .paradigm-side:not(:hover){filter:saturate(.65);transform:scale(.985)}.paradigm-side:hover{transform:scale(1.015)}
+.gap-shell{box-shadow:0 40px 120px rgba(6,9,8,.25)}
+.benchmark-lanes{padding:28px 30px 32px;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);display:grid;gap:22px;position:relative;z-index:2}.lane-row{display:grid;gap:10px}.lane-head{display:flex;justify-content:space-between;gap:14px;font:500 9px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:#dce5e0}.lane-head b{font-weight:500;color:#829089}.lane-track{height:18px;position:relative;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.lane-track i{position:absolute;left:0;height:7px;border-radius:999px;width:0;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}.lane-track .lane-tiny{top:3px;background:linear-gradient(90deg,#59635e,#87928c);opacity:.55}.lane-track .lane-osh{bottom:3px;background:linear-gradient(90deg,var(--signal),#ff8a70);z-index:2;box-shadow:0 0 18px rgba(255,91,53,.22)}.benchmark-lanes.is-visible .lane-track i{width:var(--lane)}.lane-legend{display:flex;gap:22px;flex-wrap:wrap;font:500 8px/1.3 var(--mono);color:#95a29b}.lane-legend span{display:flex;align-items:center;gap:7px}.lane-legend em{width:7px;height:7px;border-radius:50%;background:var(--signal)}.lane-legend span:nth-child(2) em{background:#78837d}
+.lab-primary,.lab-card,.proof-strip{transition:transform .35s ease,box-shadow .35s ease}.lab-primary:hover,.lab-card:hover{transform:translateY(-5px);box-shadow:0 24px 70px rgba(28,36,31,.1)}
+.video-card{transform-style:preserve-3d;transition:transform .4s ease}.video-card:hover{transform:perspective(1200px) rotateX(1deg) rotateY(-1deg) translateY(-4px)}
+.telemetry{background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.36));box-shadow:0 18px 55px rgba(28,36,31,.07)}.telemetry-bar i{transform-origin:left;animation:telemetryPulse 2.8s ease-in-out infinite}@keyframes telemetryPulse{50%{filter:brightness(1.25);box-shadow:0 0 12px rgba(255,91,53,.32)}}
+.flow{position:relative}.flow:before{content:"";position:absolute;left:4%;right:4%;top:50%;height:2px;background:linear-gradient(90deg,rgba(255,91,53,.15),var(--signal),var(--bio),rgba(23,105,78,.15));z-index:-1}.flow:after{content:"";position:absolute;top:calc(50% - 5px);left:4%;width:10px;height:10px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 8px rgba(255,91,53,.08);animation:flowPulse 7s linear infinite}@keyframes flowPulse{0%{left:4%}100%{left:94%}}.flow-step{backdrop-filter:blur(10px);box-shadow:0 14px 36px rgba(28,35,30,.05)}.flow-step:hover{transform:translateY(-9px) scale(1.02)}
+.scale-shell{box-shadow:0 34px 100px rgba(7,10,9,.18)}.scale-cell{position:relative;overflow:hidden;transition:background .3s ease,transform .3s ease}.scale-cell:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-100px;bottom:-100px;border:1px solid rgba(255,91,53,.18);transition:transform .4s ease}.scale-cell:hover{background:#1b2823;transform:translateY(-3px)}.scale-cell:hover:after{transform:scale(1.5)}
+.cta-box{padding:52px;background:linear-gradient(135deg,#0b1110,#111a17 56%,#182720);color:#fff;border-color:rgba(255,255,255,.08);box-shadow:0 40px 110px rgba(8,12,10,.22)}.cta-box:before{border-color:rgba(255,91,53,.22);box-shadow:0 0 0 70px rgba(255,91,53,.03),0 0 0 140px rgba(23,105,78,.03)}.cta-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:42px;align-items:center;position:relative;z-index:2}.cta h2{color:#fff;margin-top:30px}.cta p{color:#aebbb4}.cta-meta{margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:16px;flex-wrap:wrap;font:500 8px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#8f9e96}.contact-orbit{position:relative;min-height:420px;display:grid;place-items:center}.contact-ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12);animation:orbitSpin 18s linear infinite}.contact-ring.r1{width:330px;height:330px;border-color:rgba(255,91,53,.26)}.contact-ring.r2{width:250px;height:250px;border-color:rgba(105,169,143,.25);animation-direction:reverse;animation-duration:13s}@keyframes orbitSpin{to{transform:rotate(360deg)}}.contact-ring:before,.contact-ring:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--signal);top:50%;left:-5px;box-shadow:0 0 20px rgba(255,91,53,.4)}.contact-ring:after{left:auto;right:-5px;background:var(--bio)}.contact-core{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 18px rgba(255,255,255,.03);overflow:hidden}.contact-core img{width:74%;filter:none}.footer-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:20px}.footer-logo{width:85px;height:auto;filter:brightness(0);opacity:.72}
+.magnetic{will-change:transform}
+@media(max-width:900px){.cursor-glow{display:none}.mobile-menu-toggle{display:block}.nav-links{position:absolute;top:60px;left:10px;right:10px;padding:10px;border-radius:18px;background:rgba(10,16,14,.96);border:1px solid rgba(255,255,255,.1);display:none;flex-direction:column;align-items:stretch;box-shadow:0 20px 60px rgba(0,0,0,.22)}.nav-links.open{display:flex}.nav-links a{display:block!important;text-align:center}.cta-grid{grid-template-columns:1fr}.contact-orbit{min-height:350px}.footer-row{grid-template-columns:1fr;align-items:start}.footer-logo{width:100px}}
+@media(max-width:580px){.hero-shell{min-height:auto}.benchmark-lanes{padding:22px 20px}.lane-legend{gap:10px}.cta-box{padding:30px 22px}.contact-orbit{min-height:310px}.contact-ring.r1{width:270px;height:270px}.contact-ring.r2{width:205px;height:205px}.contact-core{width:150px;height:150px}}
+@media(prefers-reduced-motion:reduce){.contact-ring,.flow:after,.telemetry-bar i,.hero-shell{animation:none!important}.cursor-glow{display:none}}
+
+
+/* external validation gateway */
+.validation-shell{position:relative;border:1px solid var(--line-strong);border-radius:36px;overflow:hidden;background:linear-gradient(135deg,#0b1110,#111b18 55%,#183027);color:#fff;box-shadow:0 36px 100px rgba(8,12,10,.18)}
+.validation-shell:before{content:"";position:absolute;width:620px;height:620px;border-radius:50%;right:-310px;top:-360px;border:1px solid rgba(255,91,53,.22);box-shadow:0 0 0 72px rgba(255,91,53,.025),0 0 0 144px rgba(23,105,78,.025);pointer-events:none}
+.validation-top{position:relative;z-index:1;padding:46px 48px 34px;border-bottom:1px solid rgba(255,255,255,.1);display:grid;grid-template-columns:.85fr 1.15fr;gap:38px;align-items:end}
+.validation-k{font:500 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#8fa39a}
+.validation-title{font-size:clamp(44px,5.6vw,78px);line-height:.92;letter-spacing:-.06em;font-weight:650;margin:20px 0 0}
+.validation-lead{font-size:15px;line-height:1.7;color:#b0beb7;max-width:640px;margin:0}
+.validation-tracks{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid rgba(255,255,255,.1)}
+.validation-track{padding:30px 28px 32px;border-right:1px solid rgba(255,255,255,.1);min-height:250px;display:flex;flex-direction:column}.validation-track:last-child{border-right:0}
+.validation-no{font:500 8px/1 var(--mono);letter-spacing:.11em;color:var(--signal)}
+.validation-track h3{font-size:22px;line-height:1.05;letter-spacing:-.035em;margin:32px 0 12px}.validation-track p{font-size:12px;line-height:1.62;color:#9eada5;margin:0}.validation-status{margin-top:auto;padding-top:24px;font:500 8px/1.35 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#dce6e1}
+.validation-status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--bio);margin-right:8px;box-shadow:0 0 0 5px rgba(23,105,78,.14)}
+.validation-apply{position:relative;z-index:1;display:grid;grid-template-columns:.82fr 1.18fr;gap:0}.validation-copy{padding:40px 42px;border-right:1px solid rgba(255,255,255,.1)}.validation-copy h3{font-size:30px;letter-spacing:-.045em;margin:0 0 14px}.validation-copy p{font-size:13px;line-height:1.7;color:#9fada6;margin:0}.validation-copy .domain-link{display:inline-flex;margin-top:24px;color:#fff;font:500 10px/1 var(--mono);letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:5px}
+.validation-form{padding:36px 40px;background:rgba(255,255,255,.025)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-field{display:flex;flex-direction:column;gap:8px}.form-field.full{grid-column:1/-1}.form-field label{font:500 8px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:#8fa099}.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.055);color:#fff;padding:13px 14px;outline:none;font:500 12px/1.3 var(--sans);transition:.2s ease}.form-field select option{color:#111;background:#fff}.form-field textarea{min-height:92px;resize:vertical}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:rgba(255,91,53,.6);box-shadow:0 0 0 3px rgba(255,91,53,.08)}.validation-form .btn{margin-top:15px}.form-note{font:400 8px/1.5 var(--mono);color:#819189;margin-top:12px}
+@media(max-width:900px){.validation-top,.validation-apply{grid-template-columns:1fr}.validation-tracks{grid-template-columns:1fr}.validation-track{border-right:0;border-bottom:1px solid rgba(255,255,255,.1);min-height:210px}.validation-track:last-child{border-bottom:0}.validation-copy{border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}.form-grid{grid-template-columns:1fr}}
+@media(max-width:580px){.validation-top{padding:34px 24px 28px}.validation-track,.validation-copy,.validation-form{padding:28px 24px}.validation-title{font-size:44px}}
+
+.contact-tag{position:absolute;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.1);font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#dbe6e0;backdrop-filter:blur(10px)}.contact-tag.t1{top:42px;right:24px}.contact-tag.t2{left:18px;bottom:68px}.contact-tag.t3{right:14px;bottom:74px;color:#d9ef68}@media(max-width:580px){.contact-tag{font-size:7px}.contact-tag.t1{top:28px}.contact-tag.t2{bottom:48px}.contact-tag.t3{bottom:50px}}
+
+
+/* investor + enterprise economics */
+.economics-shell{position:relative;border:1px solid var(--line-strong);border-radius:36px;overflow:hidden;background:linear-gradient(135deg,#fdfbf5,#f3efe5 54%,#edf4ee);box-shadow:0 30px 90px rgba(24,32,27,.09)}
+.economics-shell:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;right:-230px;top:-280px;border:1px solid rgba(23,105,78,.18);box-shadow:0 0 0 70px rgba(23,105,78,.025),0 0 0 140px rgba(255,91,53,.02);pointer-events:none}
+.econ-top{position:relative;z-index:1;display:grid;grid-template-columns:.85fr 1.15fr;gap:34px;padding:46px 48px 34px;border-bottom:1px solid var(--line)}
+.econ-k{font:500 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--bio)}
+.econ-title{font-size:clamp(44px,5.7vw,78px);line-height:.91;letter-spacing:-.062em;font-weight:650;margin:18px 0 0}
+.econ-lead{font-size:15px;line-height:1.72;color:#5e6963;margin:0;align-self:end;max-width:660px}
+.cost-levers{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.cost-lever{padding:28px 28px 30px;border-right:1px solid var(--line);min-height:205px}.cost-lever:last-child{border-right:0}
+.cost-lever-no{font:500 8px/1 var(--mono);letter-spacing:.11em;color:var(--signal)}
+.cost-lever h3{font-size:22px;line-height:1.05;letter-spacing:-.035em;margin:28px 0 11px}.cost-lever p{font-size:12px;line-height:1.62;color:#67716b;margin:0}
+.tco-grid{position:relative;z-index:1;display:grid;grid-template-columns:.9fr 1.1fr}
+.tco-inputs{padding:38px 42px;border-right:1px solid var(--line);background:rgba(255,255,255,.28)}
+.tco-inputs h3,.tco-results h3{font-size:28px;letter-spacing:-.045em;margin:0 0 10px}.tco-sub{font-size:12px;line-height:1.65;color:var(--muted);margin:0 0 26px}
+.tco-form{display:grid;gap:18px}.tco-field{display:grid;gap:8px}.tco-field label{display:flex;justify-content:space-between;gap:16px;font:500 8px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#58645d}.tco-field label b{font-weight:600;color:var(--ink)}
+.tco-field input[type="number"]{width:100%;border:1px solid var(--line-strong);background:rgba(255,255,255,.75);border-radius:14px;padding:14px 15px;color:var(--ink);outline:none}.tco-field input[type="number"]:focus{border-color:rgba(23,105,78,.5);box-shadow:0 0 0 3px rgba(23,105,78,.07)}
+.tco-field input[type="range"]{width:100%;accent-color:var(--signal)}
+.tco-range-labels{display:flex;justify-content:space-between;font:500 7px/1 var(--mono);color:#8a938e}
+.tco-results{padding:38px 42px;background:linear-gradient(135deg,#0c1210,#121d19);color:#fff}
+.tco-results h3{color:#fff}.tco-results .tco-sub{color:#9eaaa4}
+.tco-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tco-metric{padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.035)}
+.tco-metric.wide{grid-column:1/-1;background:linear-gradient(135deg,rgba(255,91,53,.12),rgba(23,105,78,.08))}.tco-metric-k{font:500 7px/1.25 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#8fa098}.tco-metric-v{font-size:clamp(32px,4vw,56px);line-height:.9;letter-spacing:-.06em;font-weight:680;margin-top:11px;color:#fff}.tco-metric-v.orange{color:var(--signal)}.tco-metric-c{font-size:10px;line-height:1.5;color:#8f9e96;margin-top:8px}
+.tco-disclaimer{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font:400 8px/1.6 var(--mono);color:#829189}.tco-disclaimer b{color:#dde5e1;font-weight:500}
+
+/* commercial engagement */
+.commercial-shell{position:relative;border:1px solid var(--line-strong);border-radius:36px;overflow:hidden;background:var(--ink);color:#fff;box-shadow:0 36px 100px rgba(8,12,10,.2)}
+.commercial-head{padding:46px 48px 34px;display:grid;grid-template-columns:.85fr 1.15fr;gap:36px;border-bottom:1px solid rgba(255,255,255,.1)}
+.commercial-k{font:500 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:#8fa39a}.commercial-title{font-size:clamp(44px,5.7vw,78px);line-height:.92;letter-spacing:-.06em;font-weight:650;margin:18px 0 0}.commercial-lead{font-size:15px;line-height:1.7;color:#afbbb5;max-width:660px;margin:0;align-self:end}
+.license-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid rgba(255,255,255,.1)}.license-card{padding:31px 29px 34px;border-right:1px solid rgba(255,255,255,.1);min-height:330px;display:flex;flex-direction:column}.license-card:last-child{border-right:0}.license-no{font:500 8px/1 var(--mono);letter-spacing:.11em;color:var(--signal)}.license-card h3{font-size:24px;line-height:1.05;letter-spacing:-.04em;margin:34px 0 13px}.license-card p{font-size:12px;line-height:1.66;color:#9eaaa4;margin:0}.license-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:28px}.license-tags span{padding:8px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font:500 7px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#c2ccc7}
+.engagement-rail{display:grid;grid-template-columns:repeat(4,1fr)}.engagement-step{padding:25px 24px;border-right:1px solid rgba(255,255,255,.1);min-height:150px}.engagement-step:last-child{border-right:0}.engagement-step b{display:block;font:500 8px/1 var(--mono);letter-spacing:.1em;color:#7f9188}.engagement-step strong{display:block;font-size:17px;line-height:1.1;margin:18px 0 8px}.engagement-step span{font-size:10px;line-height:1.55;color:#8e9c95}
+
+/* pilot integration roadmap */
+.pilot-roadmap{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}.pilot-step{padding:25px 24px;border-right:1px solid rgba(255,255,255,.1);min-height:175px}.pilot-step:last-child{border-right:0}.pilot-step .pn{font:500 8px/1 var(--mono);letter-spacing:.1em;color:var(--signal)}.pilot-step h4{font-size:17px;margin:20px 0 8px;letter-spacing:-.025em}.pilot-step p{font-size:10px;line-height:1.58;color:#91a097;margin:0}
+.pilot-banner{margin:0;padding:22px 28px;background:linear-gradient(90deg,rgba(255,91,53,.11),rgba(23,105,78,.08));border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;gap:20px}.pilot-banner strong{font-size:18px;letter-spacing:-.025em}.pilot-banner span{font:500 8px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#9fada6}
+
+@media(max-width:900px){.econ-top,.tco-grid,.commercial-head{grid-template-columns:1fr}.cost-levers,.license-grid,.engagement-rail,.pilot-roadmap{grid-template-columns:1fr}.cost-lever,.license-card,.engagement-step,.pilot-step{border-right:0;border-bottom:1px solid var(--line)}.license-card,.engagement-step,.pilot-step{border-bottom-color:rgba(255,255,255,.1)}.tco-inputs{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:580px){.econ-top,.commercial-head{padding:34px 26px 28px}.tco-inputs,.tco-results{padding:30px 24px}.tco-metrics{grid-template-columns:1fr}.tco-metric.wide{grid-column:auto}.pilot-banner{align-items:flex-start;flex-direction:column}}
+
+
+/* ===== decade instrument (replaces normalized lanes) ===== */
+.dec-wrap{padding:32px 34px 26px;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);position:relative;z-index:2}
+.dec-block + .dec-block{margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,.08)}
+.dec-top{display:flex;align-items:baseline;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:34px}
+.dec-name{font:500 9px/1.3 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:#95a29b}
+.dec-ratio{font-size:clamp(30px,4vw,52px);line-height:.9;letter-spacing:-.06em;font-weight:700;color:var(--signal);font-variant-numeric:tabular-nums}
+.dec-ratio span{font-size:.30em;letter-spacing:.02em;color:#8e9b94;font-weight:500;margin-left:8px}
+.dec-ruler{position:relative;height:128px;margin:0 4px}
+.dec-axis{position:absolute;left:0;right:0;top:74px;height:1px;background:rgba(255,255,255,.22)}
+.dec-tick{position:absolute;top:60px;bottom:0;width:1px;background:rgba(255,255,255,.13)}
+.dec-tick i{position:absolute;top:0;left:0;width:1px;height:14px;background:rgba(255,255,255,.34)}
+.dec-tick b{position:absolute;top:22px;left:0;transform:translateX(-50%);font:400 8px/1 var(--mono);letter-spacing:.06em;color:#7d8a83;font-weight:400;white-space:nowrap}
+.dec-mark{position:absolute;top:0;bottom:0;width:0}
+.dec-stem{position:absolute;left:0;top:42px;width:1px;height:32px;background:currentColor;opacity:.5}
+.dec-dot{position:absolute;left:0;top:69px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:currentColor;box-shadow:0 0 0 5px rgba(255,255,255,.05)}
+.dec-label{position:absolute;top:0;width:190px;padding-top:10px}
+.dec-label.at-start{left:0;text-align:left}
+.dec-label.at-mid{left:-95px;text-align:center}
+.dec-label.at-end{left:auto;right:0;text-align:right}
+.dec-val{font-size:18px;font-weight:650;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1}
+.dec-who{font:500 8px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-top:8px;opacity:.72}
+.dec-osh{color:var(--signal)}
+.dec-base{color:#9aa8a1}
+.dec-span{position:absolute;top:98px;height:1px;background:repeating-linear-gradient(90deg,rgba(255,91,53,.55) 0 5px,transparent 5px 11px)}
+.dec-span:before,.dec-span:after{content:"";position:absolute;top:-3px;width:1px;height:7px;background:rgba(255,91,53,.6)}
+.dec-span:before{left:0}.dec-span:after{right:0}
+.dec-tag{position:absolute;top:106px;transform:translateX(-50%);font:500 8px/1 var(--mono);letter-spacing:.08em;color:#c7d0cb;background:var(--ink);padding:0 8px;white-space:nowrap}
+.dec-note{margin-top:22px;font:400 10px/1.7 var(--mono);letter-spacing:.03em;color:#8a978f}
+@media(max-width:700px){
+  .dec-wrap{padding:26px 20px 20px}
+  .dec-ruler{height:146px}
+  .dec-val{font-size:14px}
+  .dec-who{font-size:7px}
+  .dec-tick b{font-size:7px}
+  .dec-label{width:150px}.dec-label.at-mid{left:-75px}
+}
+
+/* tabular figures so live numbers stop shifting width as they change */
+.metric-value,.hero-proof-v,.gap-big,.gap-side-val,.lab-hero-num,
+.read-val,.proof-val,.mini-val,.lab-card-val,.protocol-val,
+.tco-metric-v,.telemetry-val,.gap-cell,.tco-field label b{
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+}
+
+/* core is now rendered on the canvas */
+.center-chip{display:none}
+/* overlay panels removed: they covered the field and described the UI, not the technology */
+.hero-micro-panels,.motion-hint{display:none}
+/* orbital labels: dark-card treatment, sized so they never dominate the field */
+.orbital-node{min-width:0;padding:6px 9px;border-radius:11px;background:rgba(10,16,13,.72);border:1px solid rgba(255,255,255,.11);box-shadow:none;backdrop-filter:blur(8px)}
+.orbital-node:before{display:none}
+.orbital-node span{font:600 11px/1 var(--mono)}
+.orbital-node small{font:400 6.5px/1 var(--mono);letter-spacing:.09em;color:#96a29b;margin-top:4px}
+/* field instrument controls */
+.field-controls{position:absolute;left:24px;right:24px;bottom:88px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;z-index:4}
+.fc-row{display:flex;gap:8px;flex-wrap:wrap}
+.fc-btn{cursor:pointer;background:rgba(255,255,255,.05);color:#e6ece9;border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:9px 13px;font:600 9px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;transition:background .2s ease,border-color .2s ease,color .2s ease}
+.fc-btn:hover{background:rgba(255,255,255,.11)}
+.fc-btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.fc-btn.is-paused{border-color:rgba(255,91,53,.5);color:#ff9a7c}
+.fc-idx{font:400 8px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:#7f8d86}
+@media(max-width:580px){.field-controls{left:16px;right:16px;bottom:92px}.fc-btn{padding:8px 10px;font-size:8px}}
+</style>
+</head>
+<body>
+<div class="page-noise"></div><div class="field-bg"></div><div class="grid-bg"></div><div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div><div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="OSH Global Systems home">
+      <span class="brand-logo-wrap"><img src="logo.png"
+    </a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation" aria-expanded="false">MENU</button>
+    <div class="nav-links" id="navLinks">
+      <a href="#difference">Difference</a><a href="#benchmark-gap">Benchmark</a><a href="#proof">Proof</a><a href="#economics">Economics</a><a href="#licensing">Licensing</a><a class="nav-cta" href="#validation">Private pilot / NDA</a><a href="#benchmark-report-2">Report</a>
+    </div>
+  </nav>
+</div>
+
+<main id="top">
+<section class="hero">
+  <div class="container">
+    <div class="hero-shell reveal">
+      <div class="hero-grid">
+        <div class="hero-copy-col">
+          <div class="hero-badges">
+            <span class="hero-chip"><i></i>Functional prototype</span>
+            <span class="hero-chip"><i></i>Measured runtime gap</span>
+            <span class="hero-chip"><i></i>CPU-only local execution</span>
+          </div>
+          <h1>OSH<sup>™</sup></h1>
+          <div class="hero-company">OSH Global Systems, Inc. · Homeostatic computing substrate</div>
+          <p class="hero-title">Not another model.<br><span class="outline">A new computational organism.</span></p>
+          <p class="hero-copy">Homeostatic Semantic Organism is a local computational architecture organized around regulated semantic state, deformation, stabilization and continuity. It was built to explore a fundamentally different cost profile for semantic computation on modest hardware — with real measured evidence, not only conceptual claims.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#benchmark-gap">See benchmark result <span>↘</span></a>
+            <a class="btn btn-secondary" href="#validation">Request private pilot / NDA</a>
+          </div>
+          <div class="hero-proof-grid">
+            <div class="hero-proof-card"><div class="hero-proof-k">Arithmetic test-time ratio*</div><div class="hero-proof-v">642.43<small>×</small></div><div class="hero-proof-c">Ratio of observed median times under the stated same-machine protocol; not universal throughput equivalence.</div></div>
+            <div class="hero-proof-card"><div class="hero-proof-k">Resident-memory gap</div><div class="hero-proof-v">27.80<small>×</small></div><div class="hero-proof-c">TinyLlama ready Working Set ÷ OSH loaded Working Set on the same machine.</div></div>
+            <div class="hero-proof-card"><div class="hero-proof-k">Current median cycle</div><div class="hero-proof-v">28.239 <small>ms</small></div><div class="hero-proof-c">Validated structured organ-cycle latency on Intel Atom D2500.</div></div>
+          </div>
+          <div class="hero-foot"><span><b>Measured hardware</b> · Intel Atom D2500 @ 1.86 GHz</span> <span><b>Protocol</b> · same 30 inputs</span> <span><b>Scope</b> · runtime + memory, not language quality</span></div>
+        </div>
+
+        <div class="hero-visual-col">
+          <div class="field-card" id="fieldCard" aria-label="Animated OSH state-field visualization based on benchmark state samples">
+            <div class="field-top"><div class="field-label">LIVE SEMANTIC FIELD / BENCHMARK SAMPLE</div><div class="live-badge"><i></i>STRUCTURED CYCLE</div></div>
+            <div class="field-stage">
+              <div class="field-canvas-wrap" aria-label="Interactive 3D OSH state-field visualization">
+                <canvas id="oshField3D" class="field-canvas"></canvas>
+                <div class="field-canvas-glow" aria-hidden="true"></div>
+                <div class="hero-micro-panels" aria-hidden="true">
+                  <div class="micro-panel"><div class="mk">Mode</div><div class="mv">3D semantic field</div></div>
+                  <div class="micro-panel"><div class="mk">Interaction</div><div class="mv">Parallax + orbital motion</div></div>
+                </div>
+                <div class="field-overlay-ui">
+                  <div class="orbital-node label-c" id="overlayC"><span>C</span><small>coherence</small></div>
+                  <div class="orbital-node label-p" id="overlayP"><span>P</span><small>pressure</small></div>
+                  <div class="orbital-node label-x" id="overlayX"><span>X</span><small>conflict</small></div>
+                  <div class="orbital-node label-t" id="overlayT"><span>T</span><small>temp</small></div>
+                  <div class="orbital-node label-h" id="overlayH"><span>H</span><small>hysteresis</small></div>
+                  <div class="center-chip"><div><b>OSH</b>regulated<br>state</div></div>
+                  <div class="motion-hint"><b>Interactive 3D</b>Move the pointer to deform the field.</div>
+                </div>
+              </div>
+            </div>
+            <div class="field-controls">
+              <div class="fc-row">
+                <button type="button" class="fc-btn" id="fcPause">Pause orbit</button>
+                <button type="button" class="fc-btn" id="fcStep">Next sample</button>
+                <button type="button" class="fc-btn" id="fcReset">Reset view</button>
+              </div>
+              <div class="fc-idx" id="fcIdx">Sample 1 / 6</div>
+            </div>
+            <div class="field-caption">Illustrative geometry driven by actual structured-state samples from the current runtime benchmark. It reveals measured state values, not proprietary mathematical implementation.</div>
+            <div class="field-readout">
+              <div class="read-cell"><div class="read-key">Coherence · C</div><div class="read-val" id="valC">0.8729</div></div>
+              <div class="read-cell"><div class="read-key">Pressure · P</div><div class="read-val" id="valP">0.7519</div></div>
+              <div class="read-cell"><div class="read-key">Conflict · X</div><div class="read-val" id="valX">0.0295</div></div>
+              <div class="read-cell"><div class="read-key">Temp · T</div><div class="read-val" id="valT">0.3520</div></div>
+              <div class="read-cell"><div class="read-key">Hysteresis · H</div><div class="read-val" id="valH">0.8373</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-detail-grid reveal">
+      <article class="hero-detail"><div class="hero-detail-k">Architectural thesis</div><h3>Regulation instead of prediction</h3><p>OSH proposes a semantic runtime centered on state deformation, stabilization and continuity rather than token-by-token prediction.</p></article>
+      <article class="hero-detail"><div class="hero-detail-k">Proof strategy</div><h3>Evidence before promises</h3><p>The page foregrounds measured runtime, memory footprint and operational proof before making broader industrial claims.</p></article>
+      <article class="hero-detail"><div class="hero-detail-k">Industrial horizon</div><h3>Built for local intelligence</h3><p>The long-term goal is a compact protected computational substrate for edge devices, private infrastructure and embedded systems.</p></article>
+    </div>
+  </div>
+</section>
+
+<div class="metric-rail">
+  <div class="container metric-grid">
+    <div class="metric"><span class="metric-tag">arithmetic test-time ratio*</span><div class="metric-value orange">642.43<span style="font-size:.45em">×</span></div><div class="metric-label">Observed median time ratio under the stated benchmark protocol*</div></div>
+    <div class="metric"><span class="metric-tag">measured memory gap</span><div class="metric-value">27.80<span style="font-size:.45em">×</span></div><div class="metric-label">TinyLlama ready Working Set ÷ OSH loaded Working Set</div></div>
+    <div class="metric"><span class="metric-tag">OSH structured organ</span><div class="metric-value green">28.239 <small>ms</small></div><div class="metric-label">Median validated OSH organ-cycle latency · 30 inputs</div></div>
+    <div class="metric"><span class="metric-tag">benchmark substrate</span><div class="metric-value" style="font-size:clamp(27px,3.6vw,48px)">Atom D2500</div><div class="metric-label">1.86 GHz · 2 cores / 2 logical processors · Windows 10</div></div>
+  </div>
+</div>
+
+<section class="section" id="difference">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">01 / Computational divergence</div><div><h2 class="section-title">Prediction and regulation are not the same computation.</h2><p class="section-lead">OSH is being developed around a different computational primitive: a bounded internal state that is perturbed, deformed and regulated. The contrast below is architectural; it is not a claim that unfinished OSH language is already superior to a modern LLM.</p></div></div>
+    <div class="paradigm reveal">
+      <article class="paradigm-side">
+        <div><div class="paradigm-k">Transformer language model</div><div class="paradigm-word">Predict.</div><div class="paradigm-copy">Input is represented as tokens. Attention and learned parameters produce a distribution over what token should come next.</div></div>
+        <div class="paradigm-chain"><span class="chip">tokens</span><span class="chip">attention</span><span class="chip">KV cache</span><span class="chip">next-token distribution</span></div>
+      </article>
+      <div class="paradigm-vs">VERSUS</div>
+      <article class="paradigm-side osh">
+        <div><div class="paradigm-k">OSH homeostatic architecture</div><div class="paradigm-word">Regulate.</div><div class="paradigm-copy">Input perturbs a compact internal state. The system deforms, captures a functional configuration, settles and emits from that regulated state.</div></div>
+        <div class="paradigm-chain"><span class="chip">state</span><span class="chip">deformation</span><span class="chip">capture</span><span class="chip">settlement</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="benchmark-gap">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">02 / Measured architectural gap</div>
+      <div>
+        <h2 class="section-title">Same machine. Same inputs. A radically different cost profile.</h2>
+        <p class="section-lead">This benchmark compares the validated OSH structured organ cycle with TinyLlama 1.1B Chat Q4_K_M through llama.cpp on the same Intel Atom D2500 system. TinyLlama was forced to CPU execution and limited to exactly one generated token per input.</p>
+      </div>
+    </div>
+
+    <div class="gap-shell reveal">
+      <div class="gap-top">
+        <div class="gap-lead">
+          <div>
+            <div class="gap-k">Arithmetic test-time ratio* · TinyLlama ÷ OSH</div>
+            <div class="gap-big">642.43<small>×</small></div>
+          </div>
+          <div class="gap-headline">A measured timing asymmetry — <em>not universal throughput equivalence.</em></div>
+        </div>
+        <div class="gap-side">
+          <div class="gap-side-card">
+            <div class="gap-side-k">Resident-memory ratio</div>
+            <div>
+              <div class="gap-side-val orange">27.80×</div>
+              <div class="gap-side-copy">663.930 MB TinyLlama ready Working Set versus 23.883 MB OSH loaded Working Set.</div>
+            </div>
+          </div>
+          <div class="gap-side-card">
+            <div class="gap-side-k">P95 runtime ratio</div>
+            <div>
+              <div class="gap-side-val">876.40×</div>
+              <div class="gap-side-copy">38,140.363 ms TinyLlama P95 versus 43.519 ms OSH P95 under this measured protocol.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dec-wrap reveal" id="decWrap" aria-label="Logarithmic decade comparison of measured runtime and resident memory">
+        <div class="dec-block">
+          <div class="dec-top">
+            <div class="dec-name">Median runtime · same machine · same 30 inputs</div>
+            <div class="dec-ratio">642.43<span>× arithmetic test-time ratio</span></div>
+          </div>
+          <div class="dec-ruler" id="decTime"></div>
+        </div>
+        <div class="dec-block">
+          <div class="dec-top">
+            <div class="dec-name">Resident Working Set · same machine</div>
+            <div class="dec-ratio">27.80<span>× resident-memory ratio</span></div>
+          </div>
+          <div class="dec-ruler" id="decMem"></div>
+        </div>
+        <div class="dec-note">Each labelled tick is one decade — a tenfold step. Distance on the ruler is distance in magnitude, with nothing normalized to fit.</div>
+      </div>
+
+      <div class="gap-compare">
+        <div class="gap-cell head">Measured dimension</div><div class="gap-cell head">OSH</div><div class="gap-cell head">TinyLlama 1.1B Q4</div>
+        <div class="gap-cell name">Median runtime</div><div class="gap-cell osh">28.239 ms</div><div class="gap-cell tiny">18,141.751 ms</div>
+        <div class="gap-cell name">P95 runtime</div><div class="gap-cell osh">43.519 ms</div><div class="gap-cell tiny">38,140.363 ms</div>
+        <div class="gap-cell name">Resident Working Set</div><div class="gap-cell osh">23.883 MB</div><div class="gap-cell tiny">663.930 MB</div>
+        <div class="gap-cell name last-row">Sampled peak Working Set</div><div class="gap-cell osh last-row">24.719 MB</div><div class="gap-cell tiny last-row">671.148 MB</div>
+      </div>
+
+      <div class="gap-protocol">
+        <div class="protocol-cell"><div class="protocol-val">30 + 30</div><div class="protocol-lab">same input texts</div></div>
+        <div class="protocol-cell"><div class="protocol-val">CPU path</div><div class="protocol-lab">TinyLlama GPU layers = 0</div></div>
+        <div class="protocol-cell"><div class="protocol-val">1 token</div><div class="protocol-lab">TinyLlama output cap per input</div></div>
+        <div class="protocol-cell"><div class="protocol-val">Not scored</div><div class="protocol-lab">language quality / intelligence</div></div>
+      </div>
+
+      <div class="gap-foot"><b>Interpretation:</b> under this specific measured configuration and input set, the observed TinyLlama median time divided by the observed OSH median cycle time is 642.43×, while the resident Working Set ratio is 27.80×. <b>*Methodology note:</b> TinyLlama timing is reported in ms/token and OSH timing in ms/cycle. These are different workload units; therefore 642.43× is an arithmetic test-time ratio from this controlled benchmark on the same Intel Atom D2500, not a universal throughput equivalence or an intelligence claim.</div>
+    </div>
+
+    <div class="hardware-ribbon reveal">
+      <div><div class="hw-title">Benchmark environment</div><strong>Intel® Atom™ CPU D2500 @ 1.86 GHz</strong><span>same physical machine for both sides</span></div>
+      <div><div class="hw-title">CPU</div><strong>2 cores</strong><span>2 logical processors</span></div>
+      <div><div class="hw-title">OS</div><strong>Windows 10</strong><span>10.0.19045</span></div>
+      <div><div class="hw-title">Transformer</div><strong>TinyLlama 1.1B</strong><span>Q4_K_M · llama.cpp</span></div>
+      <div><div class="hw-title">Baseline constraint</div><strong>1 generated token</strong><span>CPU only · GPU layers 0</span></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="measurements">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">03 / OSH structured runtime</div><div><h2 class="section-title">Evidence first. Claims second.</h2><p class="section-lead">The current structured benchmark does not depend on the final mouth. It validates that each input reached the homeostatic organ and that the cycle produced C/P/X/T/H state, deformation, captures and a speech act. Visible language quality was explicitly excluded from scoring.</p></div></div>
+
+    <div class="lab-shell reveal">
+      <div class="lab-primary">
+        <div class="lab-id">CURRENT STRUCTURED ORGAN · 30 INPUTS</div>
+        <div class="lab-hero-num">28.239 <small>ms</small></div>
+        <div class="lab-title">Median measured end-of-cycle time for the current homeostatic language organ.</div>
+        <div class="lab-note">Route measured: <span class="mono">FaroOshLanguageOrgan.procesar_organo_lenguaje</span>. The benchmark accepted the run only after validating structured state generation.</div>
+        <div class="lab-mini-grid"><div class="mini"><div class="mini-val">18.724 ms</div><div class="mini-label">minimum</div></div><div class="mini"><div class="mini-val">43.519 ms</div><div class="mini-label">P95</div></div><div class="mini"><div class="mini-val">45.081 ms</div><div class="mini-label">maximum</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card dark"><div class="lab-card-k">Memory footprint</div><div><div class="lab-card-val orange">24.719 MB</div><div class="lab-card-sub">Sampled peak Working Set during the structured benchmark. Loaded Working Set: 23.883 MB.</div></div></div>
+        <div class="lab-card"><div class="lab-card-k">State response</div><div><div class="lab-card-val green">26 / 30</div><div class="lab-card-sub">Distinct structured state signatures across the 30 measured inputs. This is state variation, not a language-quality score.</div></div></div>
+      </div>
+    </div>
+
+    <div class="proof-strip reveal">
+      <div class="proof-item"><div class="proof-val">6.190 ms</div><div class="proof-label">module load time</div></div>
+      <div class="proof-item"><div class="proof-val">+0.078 MB</div><div class="proof-label">load Working Set delta</div></div>
+      <div class="proof-item"><div class="proof-val">0.000 MB</div><div class="proof-label">load private-memory delta</div></div>
+      <div class="proof-item"><div class="proof-val">30</div><div class="proof-label">measured inputs</div></div>
+      <div class="proof-item"><div class="proof-val">Validated</div><div class="proof-label">structured cycle</div></div>
+    </div>
+    <div class="method-note reveal">Scope matters: these figures demonstrate runtime and resident-memory behavior of the current structured OSH organ on the measured Intel Atom D2500 system. They do not establish superior reasoning, factual accuracy or final language quality. The Transformer comparison above is therefore presented as a computational-cost benchmark, not an intelligence benchmark.</div>
+
+    <div style="height:46px"></div>
+    <div class="lab-shell reveal">
+      <div class="lab-primary" style="background:var(--ink);color:#fff">
+        <div class="lab-id" style="color:#9fb2a8">GEO→TEXT V1.1 · PREVIOUS MEASURED LAYER</div>
+        <div class="lab-hero-num" style="color:#fff">0.978 <small style="color:#aab5ae">ms</small></div>
+        <div class="lab-title">Median text-realization latency across 5,000 measured executions.</div>
+        <div class="lab-note" style="color:#aeb9b2">A separate layer-level benchmark, retained as evidence of how low the realized execution cost can become in a narrower OSH path.</div>
+        <div class="lab-mini-grid" style="border-color:rgba(255,255,255,.14)"><div class="mini" style="border-color:rgba(255,255,255,.14)"><div class="mini-val">1.821 ms</div><div class="mini-label">P95</div></div><div class="mini" style="border-color:rgba(255,255,255,.14)"><div class="mini-val">+0.230 MB</div><div class="mini-label">Working Set Δ</div></div><div class="mini"><div class="mini-val">+0.035 MB</div><div class="mini-label">Private memory Δ</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card"><div class="lab-card-k">Benchmark discipline</div><div><div class="lab-card-val">5,000×</div><div class="lab-card-sub">Repeated executions, with median, P95 and maximum preserved rather than only publishing a best case.</div></div></div>
+        <div class="lab-card"><div class="lab-card-k">Interpretation</div><div><div class="lab-card-val" style="font-size:42px">Layer-level.</div><div class="lab-card-sub">Not presented as total OSH latency. The distinction remains visible instead of being hidden in a footnote.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section" id="benchmark-report-2">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">04 / Technical report</div><div><h2 class="section-title">Architectural Runtime &amp; Resident Memory Benchmark (Report 2)</h2><p class="section-lead">Empirical evaluation on ultra-low-power x86 hardware: OSH Structured Homeostatic Cycle vs. TinyLlama 1.1B CPU Baseline. The harness was verified byte-identical to the original benchmark, so the second run measures reproducibility rather than introducing a new scoring method.</p></div></div>
+
+    <div class="lab-shell reveal">
+      <div class="lab-primary">
+        <div class="lab-id">EXACT REPLAY · 30 INPUTS · 20 AUGUST 2026</div>
+        <div class="lab-hero-num">631<small>x</small></div>
+        <div class="lab-title">Median runtime ratio reproduced against the TinyLlama one-token CPU baseline.</div>
+        <div class="lab-note">Deterministic latency: 28.76 ms median OSH structured cycle against 18,160 ms for the Transformer baseline on the same Intel Atom D2500 system.</div>
+        <div class="lab-mini-grid"><div class="mini"><div class="mini-val">17.872 ms</div><div class="mini-label">minimum</div></div><div class="mini"><div class="mini-val">34.726 ms</div><div class="mini-label">P95</div></div><div class="mini"><div class="mini-val">41.299 ms</div><div class="mini-label">maximum</div></div></div>
+      </div>
+      <div class="lab-stack">
+        <div class="lab-card dark"><div class="lab-card-k">Reproducibility</div><div><div class="lab-card-val orange">+1.85<small>%</small></div><div class="lab-card-sub">Median deviation from the original benchmark under a byte-identical harness, while the TinyLlama baseline drifted only 0.10% — confirming both runs shared the same machine conditions.</div></div></div>
+       <div class="lab-card"><div class="lab-card-k">Footprint discipline</div><div><div class="lab-card-val green">24.66<small> MB</small></div><div class="lab-card-sub">Loaded Working Set of the full structured cycle, measured on a 1.86 GHz ultra-low-power CPU with GPU layers set to zero.</div></div></div>
+      </div>
+    </div>
+
+    <div class="proof-strip reveal">
+      <div class="proof-item"><div class="proof-val">26.88x</div><div class="proof-label">memory gap</div></div>
+      <div class="proof-item"><div class="proof-val">-20.21%</div><div class="proof-label">P95 tail latency</div></div>
+      <div class="proof-item"><div class="proof-val">+0.10%</div><div class="proof-label">baseline drift</div></div>
+      <div class="proof-item"><div class="proof-val">SHA-256</div><div class="proof-label">harness verified</div></div>
+      <div class="proof-item"><div class="proof-val">Reproduced</div><div class="proof-label">runtime regime</div></div>
+    </div>
+
+    <div class="method-note reveal">Interpretation boundary: this is an architectural runtime and resident-memory benchmark. It does not score intelligence, reasoning quality, factual accuracy or final language quality. The Transformer baseline is deliberately limited to one generated token, which makes the comparison conservative rather than favorable to OSH.</div>
+
+    <div style="margin-top:30px">
+      <a class="btn btn-primary" href="OSH_Benchmark_2_Report.pdf" download>Download technical report (PDF)</a>
+    </div>
+
+  </div>
+</section>
+<section class="section" id="proof">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">05 / Operational proof</div><div><h2 class="section-title">Recorded on the machine. Not on a deck.</h2><p class="section-lead">A live prototype demonstrates local execution and visible internal telemetry. The video is evidence of operation; the numerical benchmark above is separate evidence of measured runtime.</p></div></div>
+    <div class="proof-grid reveal">
+      <div class="video-card"><video controls playsinline preload="metadata"><source src="demo.mp4" type="video/mp4">Your browser does not support video playback.</video><div class="video-overlay"></div><div class="video-label">OSH prototype · local execution · recorded demonstration</div></div>
+      <aside class="telemetry">
+        <div><div class="telemetry-top"><div class="telemetry-title">Recorded telemetry</div><div class="telemetry-status">● LIVE TRACE</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">C</div><div class="telemetry-bar"><i style="width:80%"></i></div><div class="telemetry-val">0.7988</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">P</div><div class="telemetry-bar"><i style="width:34%"></i></div><div class="telemetry-val">0.3428</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">X</div><div class="telemetry-bar"><i style="width:6%"></i></div><div class="telemetry-val">0.0649</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">T</div><div class="telemetry-bar"><i style="width:20%"></i></div><div class="telemetry-val">0.1977</div></div>
+          <div class="telemetry-row"><div class="telemetry-key">H</div><div class="telemetry-bar"><i style="width:85%"></i></div><div class="telemetry-val">0.8483</div></div>
+        </div>
+                <div class="telemetry-foot"><b style="color:var(--ink)">What the recording shows:</b> four inputs are typed into the local interface — a greeting, a definition request, an arithmetic question and a logical inference. Each one perturbs the internal state; the C/P/X/T/H values on the right are the regulated configuration reached at the end of the cycle, alongside the dominant act the system settled into. The header reports the measured cycle time and resident memory for that turn.<br><br><b style="color:var(--ink)">Demonstrated substrate:</b> Intel® Atom™ CPU D2500 @ 1.86 GHz · 2 cores / 2 logical processors, CPU only. The same system was used for the runtime benchmark above.</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">06 / Operating principle</div><div><h2 class="section-title">A state transition, not a token stream.</h2><p class="section-lead">The public view intentionally exposes the functional sequence without exposing proprietary equations, implementation details or source code.</p></div></div>
+    <div class="flow reveal">
+      <div class="flow-step"><div><div class="flow-no">01 / perturbation</div><div class="flow-name">Input</div><div class="flow-copy">External information enters as a perturbation to the current internal configuration.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">02 / geometry</div><div class="flow-name">State deformation</div><div class="flow-copy">The incoming signal changes the active C/P/X/T/H relationship instead of initiating token prediction.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">03 / selection</div><div class="flow-name">Functional capture</div><div class="flow-copy">The deformed state is organized around a functional configuration appropriate to the perturbation.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">04 / homeostasis</div><div class="flow-name">Settlement</div><div class="flow-copy">The system regulates the state toward a stable operating region while preserving continuity.</div></div><div class="flow-line-small"></div></div>
+      <div class="flow-step"><div><div class="flow-no">05 / expression</div><div class="flow-name">Semantic discharge</div><div class="flow-copy">Language is an output surface of the regulated state. The final mouth remains an active development layer.</div></div><div class="flow-line-small"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="scale">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">07 / Industrialization</div><div><h2 class="section-title">The opportunity is not one application. It is a computational substrate.</h2><p class="section-lead">If independent reproduction confirms the efficiency profile on target workloads, the commercial path is to package OSH as protected computational IP and deploy it across product families.</p></div></div>
+    <div class="scale-shell reveal">
+      <div class="scale-left"><div class="scale-k">Mass-scale deployment thesis</div><div class="scale-big">From prototype to millions of endpoints.</div><div class="scale-copy">A local, compact runtime can change the economics of where semantic computation lives: inside devices, industrial systems and private infrastructure instead of only behind remote inference services.</div><div class="sector-grid"><span class="sector">IoT</span><span class="sector">Robotics</span><span class="sector">Industrial control</span><span class="sector">Automotive edge</span><span class="sector">Private enterprise</span><span class="sector">Semiconductors</span><span class="sector">Smart terminals</span><span class="sector">Biomedical edge</span></div></div>
+      <div class="scale-right">
+        <div class="scale-cell"><div class="scale-cell-no">01</div><div><div class="scale-cell-title">Protect the core</div><div class="scale-cell-copy">Keep the computational mechanism as controlled IP. Public materials show evidence and behavior, not the black box.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">02</div><div><div class="scale-cell-title">Portable runtime</div><div class="scale-cell-copy">Formalize a clean runtime / SDK boundary around the validated architecture.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">03</div><div><div class="scale-cell-title">Target-hardware proof</div><div class="scale-cell-copy">Reproduce latency, memory and stability on ARM, RISC-V, x86 and embedded targets.</div></div></div>
+        <div class="scale-cell"><div class="scale-cell-no">04</div><div><div class="scale-cell-title">License at scale</div><div class="scale-cell-copy">OEM integration, enterprise licensing, per-device royalty or strategic technology transfer.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="economics">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">08 / Deployment economics</div><div><h2 class="section-title">Translate computational efficiency into a business case.</h2><p class="section-lead">RAM, latency and local execution matter technically. Procurement teams and investors also need to see how those properties could change hardware selection and unit economics. The calculator below is intentionally assumption-driven so a prospective partner can model its own target instead of inheriting an unsupported savings claim.</p></div></div>
+    <div class="economics-shell reveal">
+      <div class="econ-top"><div><div class="econ-k">TCO / BOM IMPACT MODEL</div><div class="econ-title">From bytes<br>to dollars.</div></div><p class="econ-lead">OSH does not claim a universal hardware-cost reduction percentage. The economic opportunity appears when the architecture allows a product to remove a dedicated accelerator, reduce memory, move to a lower compute tier, or keep semantic processing local. Those savings are product-specific and should be validated in a pilot.</p></div>
+      <div class="cost-levers">
+        <article class="cost-lever"><div class="cost-lever-no">LEVER 01</div><h3>Accelerator avoidance</h3><p>If a target workload can run without a dedicated GPU/NPU or external accelerator, the hardware stack may become materially simpler. This must be verified on the customer’s actual workload.</p></article>
+        <article class="cost-lever"><div class="cost-lever-no">LEVER 02</div><h3>Lower compute / memory tier</h3><p>A smaller runtime and lower resident memory can expand the set of processors and memory configurations that may be technically viable for deployment.</p></article>
+        <article class="cost-lever"><div class="cost-lever-no">LEVER 03</div><h3>Local-first operation</h3><p>On-device execution can reduce dependence on remote inference infrastructure in suitable use cases, while improving data locality and deployment control.</p></article>
+      </div>
+      <div class="tco-grid">
+        <div class="tco-inputs">
+          <h3>Illustrative BOM scenario</h3><p class="tco-sub">Enter your own assumptions. The default numbers are only a worked example and are not a quotation, forecast or measured OSH savings result.</p>
+          <div class="tco-form">
+            <div class="tco-field"><label for="tcoUnits"><span>Annual / program units</span><b id="tcoUnitsLabel">100,000</b></label><input id="tcoUnits" type="number" min="1" step="1000" value="100000"></div>
+            <div class="tco-field"><label for="tcoBaseline"><span>Current compute-related BOM / unit</span><b id="tcoBaselineLabel">$25.00</b></label><input id="tcoBaseline" type="number" min="0" step="0.50" value="25"></div>
+            <div class="tco-field"><label for="tcoReduction"><span>Scenario hardware-cost reduction</span><b id="tcoReductionLabel">50%</b></label><input id="tcoReduction" type="range" min="0" max="90" step="1" value="50"><div class="tco-range-labels"><span>0%</span><span>Scenario only — max 90%</span></div></div>
+          </div>
+        </div>
+        <div class="tco-results">
+          <h3>Modeled program impact</h3><p class="tco-sub">A procurement conversation, not a benchmark claim.</p>
+          <div class="tco-metrics">
+            <div class="tco-metric"><div class="tco-metric-k">Current compute-related BOM</div><div class="tco-metric-v" id="tcoCurrent">$2.50M</div><div class="tco-metric-c">Units × current compute-related BOM.</div></div>
+            <div class="tco-metric"><div class="tco-metric-k">Modeled OSH-era BOM</div><div class="tco-metric-v" id="tcoFuture">$1.25M</div><div class="tco-metric-c">Illustrative scenario after the selected reduction.</div></div>
+            <div class="tco-metric wide"><div class="tco-metric-k">Potential gross hardware delta</div><div class="tco-metric-v orange" id="tcoSavings">$1.25M</div><div class="tco-metric-c" id="tcoPerUnit">$12.50 modeled reduction per deployed unit.</div></div>
+          </div>
+          <div class="tco-disclaimer"><b>Important:</b> a scenario of up to 90% may be modeled only where a product can actually eliminate or substantially down-tier dedicated compute hardware. OSH has not established 90% as a universal measured result. This model excludes OSH licensing, adaptation engineering, NRE, certification, support, taxes, manufacturing yield and supply-chain effects.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="licensing">
+  <div class="container">
+    <div class="section-head reveal"><div class="eyebrow">09 / Commercial engagement</div><div><h2 class="section-title">A technology company needs a clear way to buy, integrate and scale OSH.</h2><p class="section-lead">Commercial structure can be matched to the customer’s product architecture, deployment volume and required engineering depth. Final terms remain subject to technical validation and contract.</p></div></div>
+    <div class="commercial-shell reveal">
+      <div class="commercial-head"><div><div class="commercial-k">LICENSING MODELS</div><div class="commercial-title">Engage once.<br>Scale deliberately.</div></div><p class="commercial-lead">The goal is to separate protected computational IP from the customer’s product layer. Partners receive the access needed to evaluate and integrate OSH while the proprietary mathematical core remains controlled.</p></div>
+      <div class="license-grid">
+        <article class="license-card"><div class="license-no">MODEL 01 / IP · SDK</div><h3>IP / SDK Licensing</h3><p>Development and integration rights for qualified hardware or product teams. Scope can include a protected runtime, SDK/API boundary, integration documentation and engineering support without publishing the mathematical core.</p><div class="license-tags"><span>Development license</span><span>Protected runtime</span><span>Integration support</span></div></article>
+        <article class="license-card"><div class="license-no">MODEL 02 / VOLUME</div><h3>Per-Device Royalty</h3><p>A negotiated royalty structure tied to deployed processors, devices or runtime instances. Appropriate for OEM programs where OSH becomes part of a production product.</p><div class="license-tags"><span>Volume economics</span><span>OEM deployment</span><span>Production rights</span></div></article>
+        <article class="license-card"><div class="license-no">MODEL 03 / CUSTOM</div><h3>Adaptation Engineering</h3><p>Paid engineering work to adapt the runtime boundary, performance profile or deployment path for defined architectures such as ARM, x86, ASIC/FPGA targets or constrained embedded environments.</p><div class="license-tags"><span>NRE / engineering</span><span>Target hardware</span><span>ASIC · FPGA · ARM</span></div></article>
+      </div>
+      <div class="engagement-rail">
+        <div class="engagement-step"><b>01 / EVALUATE</b><strong>Private pilot</strong><span>Freeze the workload, hardware target and acceptance metrics.</span></div>
+        <div class="engagement-step"><b>02 / VALIDATE</b><strong>Measure together</strong><span>Audit latency, memory, stability and integration constraints.</span></div>
+        <div class="engagement-step"><b>03 / CONTRACT</b><strong>Select license</strong><span>Choose SDK/IP, royalty, engineering or a hybrid commercial structure.</span></div>
+        <div class="engagement-step"><b>04 / SCALE</b><strong>Production deployment</strong><span>Move from validated target to controlled product integration and volume.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="validation">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">10 / Private pilot & external validation</div>
+      <div><h2 class="section-title">Test OSH on your hardware before making a production commitment.</h2><p class="section-lead">A private pilot converts the public evidence into a defined engineering decision: target hardware, target workload, acceptance metrics and a controlled review path under NDA where necessary.</p></div>
+    </div>
+    <div class="validation-shell reveal">
+      <div class="validation-top">
+        <div><div class="validation-k">OSH PRIVATE PILOT / EXTERNAL VALIDATION</div><div class="validation-title">Scope.<br>Measure.<br>Decide.</div></div>
+        <p class="validation-lead">The pilot is designed to reduce adoption risk without exposing the black box. A partner defines what must be proven, OSH is measured against those criteria, and the parties reach a go / no-go integration decision before production licensing.</p>
+      </div>
+      <div class="pilot-banner"><strong>Private Beta Under NDA</strong><span>Supervised evaluation · partner hardware or defined target · auditable acceptance criteria</span></div>
+      <div class="pilot-roadmap">
+        <div class="pilot-step"><div class="pn">01 / SCOPE</div><h4>Freeze the use case</h4><p>Define target hardware, workload, integration boundary and what success must look like.</p></div>
+        <div class="pilot-step"><div class="pn">02 / PROTECT</div><h4>NDA + evidence boundary</h4><p>Agree what can be inspected, what remains proprietary and which artifacts can be retained.</p></div>
+        <div class="pilot-step"><div class="pn">03 / MEASURE</div><h4>Run the supervised pilot</h4><p>Measure latency, RAM, stability, footprint and deployment constraints on the agreed target.</p></div>
+        <div class="pilot-step"><div class="pn">04 / DECIDE</div><h4>Go / no-go gate</h4><p>Compare results with the acceptance criteria and move to licensing only if the business case survives validation.</p></div>
+      </div>
+      <div class="validation-tracks">
+        <article class="validation-track"><div class="validation-no">TRACK 01 / AUDITABLE DEMO</div><h3>Reproduce the observable behavior.</h3><p>Request a controlled demonstration of local execution, runtime telemetry, benchmark protocol and reproducibility evidence on the declared hardware path.</p><div class="validation-status"><i></i>Best for jury / technical reviewers</div></article>
+        <article class="validation-track"><div class="validation-no">TRACK 02 / NDA TECHNICAL REVIEW</div><h3>Go deeper under controlled disclosure.</h3><p>For qualified engineering teams, investors or strategic partners who need implementation-level evidence beyond the public architecture while preserving proprietary mathematics and source.</p><div class="validation-status"><i></i>Protected evaluation path</div></article>
+        <article class="validation-track"><div class="validation-no">TRACK 03 / RUNTIME · SDK ACCESS</div><h3>Evaluate integration potential.</h3><p>Request closed runtime or SDK evaluation where available, scoped to a defined hardware target, integration objective and validation plan. Access is selective and subject to technical readiness.</p><div class="validation-status"><i></i>Partner / OEM application</div></article>
+      </div>
+      <div class="validation-apply">
+        <div class="validation-copy"><h3>Request a private pilot.</h3><p>This form prepares a private-pilot or validation request without transmitting technical secrets through the public website. Describe the organization, target hardware or use case, and what you need OSH to prove.</p><a class="domain-link" href="https://www.oshsystems.com/" rel="home">www.oshsystems.com ↗</a></div>
+        <form class="validation-form" id="validationForm">
+          <div class="form-grid">
+            <div class="form-field"><label for="vName">Name</label><input id="vName" name="name" autocomplete="name" required></div>
+            <div class="form-field"><label for="vOrg">Organization</label><input id="vOrg" name="organization" autocomplete="organization" required></div>
+            <div class="form-field"><label for="vEmail">Email</label><input id="vEmail" name="email" type="email" autocomplete="email" required></div>
+            <div class="form-field"><label for="vTrack">Evaluation track</label><select id="vTrack" name="track" required><option value="Auditable demo">Auditable demo</option><option value="NDA technical review">NDA technical review</option><option value="Private beta / pilot under NDA">Private beta / pilot under NDA</option><option value="Closed runtime / SDK evaluation">Closed runtime / SDK evaluation</option><option value="Licensing / strategic partnership">Licensing / strategic partnership</option></select></div>
+            <div class="form-field full"><label for="vObjective">Hardware target / use case / acceptance criteria</label><textarea id="vObjective" name="objective" placeholder="Target processor/device, workload, expected deployment volume, latency/RAM constraints, acceptance criteria…" required></textarea></div>
+          </div>
+          <button class="btn btn-primary magnetic" type="submit">Prepare pilot / evaluation request ↗</button>
+          <div class="form-note">Controlled disclosure only. Proprietary mathematics and source code are not exposed through this public form.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-grid">
+        <div class="cta-main">
+          <div class="cta-k">PRIVATE PILOT · LICENSING · STRATEGIC PARTNERSHIP</div>
+          <h2>Prove the business case.<br>Then scale the architecture.</h2>
+          <p>OSH Global Systems offers a controlled path from public benchmark evidence to a private pilot, commercial integration and production licensing. The partner can measure the target workload while the proprietary mathematical core and implementation remain protected.</p>
+          <div class="cta-row"><a class="btn btn-primary magnetic" href="#validation">Request private pilot / NDA</a><a class="btn btn-secondary magnetic" href="https://www.oshsystems.com/">www.oshsystems.com</a><a class="btn btn-secondary magnetic" href="#measurements">Review measurements</a></div>
+          <div class="cta-meta"><span>José Fabián Vallejos</span><span>Founder & CEO / Principal Architect</span><span>Argentina / USA</span></div>
+        </div>
+        <aside class="contact-orbit">
+          <div class="contact-ring r1"></div><div class="contact-ring r2"></div>
+          <span class="contact-tag t1">NDA REVIEW</span><span class="contact-tag t2">AUDITABLE DEMO</span><span class="contact-tag t3">CLOSED ACCESS</span><div class="contact-core"><img src="logo.png" alt="OSH Global Systems logo"></div>
+          
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="container footer-row"><img class="footer-logo" src="logo.png" alt="OSH Global Systems"><span>© 2026 OSH Global Systems, Inc. · All rights reserved.</span><span><a class="footer-contact" href="https://www.oshsystems.com/">www.oshsystems.com</a><br><a class="footer-contact" href="mailto:fabian.vallejos@oshsystems.com">fabian.vallejos@oshsystems.com</a></span><span>Homeostatic Semantic Organism™ · Born in Argentina · created for humanity.</span></div></footer>
+
+<script>
+const progress=document.getElementById('scrollProgress');
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h>0?(scrollY/h)*100:0)+'%';},{passive:true});
+
+const io=new IntersectionObserver((entries)=>{for(const e of entries){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+const samples=[
+  {C:.872878,P:.751942,X:.029462,T:.352008,H:.837270},
+  {C:.872892,P:.784462,X:.029511,T:.375449,H:.837198},
+  {C:.882510,P:.763676,X:.060820,T:.411077,H:.798971},
+  {C:.882395,P:.772486,X:.060837,T:.452026,H:.798854},
+  {C:.882514,P:.762012,X:.060818,T:.411570,H:.798975},
+  {C:.882493,P:.766398,X:.060819,T:.416621,H:.798954}
+];
+const ids=['C','P','X','T','H'];
+const readouts=Object.fromEntries(ids.map(k=>[k,document.getElementById('val'+k)]));
+const overlays=Object.fromEntries(ids.map(k=>[k,document.getElementById('overlay'+k)]));
+/* ===== OSH orbital field — self-contained, no external libraries ===== */
+const col={C:[255,91,53],P:[105,169,143],X:[155,148,136],T:[217,239,104],H:[216,181,140]};
+const ORB={
+  C:{inc:.14,node:0.00,sp:.42,base:1.05,gain:.95},
+  P:{inc:.52,node:1.25,sp:.31,base:1.35,gain:.85},
+  X:{inc:-.40,node:2.50,sp:.55,base:1.62,gain:.80},
+  T:{inc:.72,node:3.75,sp:.24,base:1.92,gain:.75},
+  H:{inc:-.60,node:5.00,sp:.18,base:2.22,gain:.70}
+};
+const canvas=document.getElementById('oshField3D');
+const card=document.getElementById('fieldCard');
+const ctx=canvas.getContext('2d');
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let inView=true,pageVisible=!document.hidden;
+if(card)new IntersectionObserver(es=>es.forEach(e=>{inView=e.isIntersecting}),{threshold:.04}).observe(card);
+document.addEventListener('visibilitychange',()=>{pageVisible=!document.hidden});
+
+let W=1,H=1,SC=1;const CAM=6.6;
+function resize(){
+  const r=canvas.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,1.6);
+  W=Math.max(10,r.width);H=Math.max(10,r.height);
+  canvas.width=Math.round(W*d);canvas.height=Math.round(H*d);
+  ctx.setTransform(d,0,0,d,0,0);SC=Math.min(W,H)*.235;
+}
+let rzr=0;
+new ResizeObserver(()=>{if(rzr)return;rzr=requestAnimationFrame(()=>{resize();rzr=0})}).observe(canvas.parentElement||canvas);
+resize();
+
+function rot(v,ax,ay){
+  let x=v[0],y=v[1],z=v[2],c,s;
+  c=Math.cos(ax);s=Math.sin(ax);const y2=y*c-z*s,z2=y*s+z*c;y=y2;z=z2;
+  c=Math.cos(ay);s=Math.sin(ay);
+  return[x*c+z*s,y,-x*s+z*c];
+}
+function pr(v){const z=Math.min(v[2],CAM-1.2),p=CAM/(CAM-z);return{x:W/2+v[0]*SC*p,y:H/2-v[1]*SC*p,z,p};}
+function orbPt(o,r,th){
+  const x=r*Math.cos(th),z0=r*Math.sin(th);
+  const c1=Math.cos(o.inc),s1=Math.sin(o.inc);
+  const y=-z0*s1,z1=z0*c1;
+  const c2=Math.cos(o.node),s2=Math.sin(o.node);
+  return[x*c2+z1*s2,y,-x*s2+z1*c2];
+}
+
+const shown={},target={};
+ids.forEach(k=>{shown[k]=samples[0][k];target[k]=samples[0][k];});
+let si=0,paused=false,clock=0;
+const fcIdx=document.getElementById('fcIdx');
+function setSample(i){
+  si=((i%samples.length)+samples.length)%samples.length;
+  ids.forEach(k=>{target[k]=samples[si][k];});
+  if(fcIdx)fcIdx.textContent='Sample '+(si+1)+' / '+samples.length;
+}
+setInterval(()=>{if(!paused)setSample(si+1);},2400);
+
+const fcPause=document.getElementById('fcPause');
+const fcStep=document.getElementById('fcStep');
+const fcReset=document.getElementById('fcReset');
+if(fcPause)fcPause.addEventListener('click',()=>{
+  paused=!paused;
+  fcPause.textContent=paused?'Resume orbit':'Pause orbit';
+  fcPause.classList.toggle('is-paused',paused);
+  fcPause.setAttribute('aria-pressed',String(paused));
+});
+if(fcStep)fcStep.addEventListener('click',()=>setSample(si+1));
+if(fcReset)fcReset.addEventListener('click',()=>{trx=-.30;tryy=.30;});
+
+let rx=-.30,ry=.30,trx=-.30,tryy=.30,spin=0;
+if(card&&matchMedia('(pointer:fine)').matches){
+  card.addEventListener('pointermove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    tryy=.30+x*.9;trx=-.30-y*.55;
+    card.style.transform=`perspective(1500px) rotateX(${(-y*2.2).toFixed(2)}deg) rotateY(${(x*2.2).toFixed(2)}deg)`;
+  },{passive:true});
+  card.addEventListener('pointerleave',()=>{trx=-.30;tryy=.30;card.style.transform='';});
+}
+
+const dust=Array.from({length:window.innerWidth<760?55:95},()=>({
+  a:Math.random()*6.284,r:2.5+Math.random()*1.6,y:(Math.random()-.5)*1.5,
+  s:.3+Math.random()*.7,o:.05+Math.random()*.11
+}));
+
+function draw(now){
+  requestAnimationFrame(draw);
+  if(!(inView&&pageVisible))return;
+  const t=(now||0)/1000;
+  if(!paused)clock=t;
+  rx+=(trx-rx)*.055;ry+=(tryy-ry)*.055;
+  if(!reduceMotion&&!paused)spin+=.0016;
+  const RX=rx,RY=ry+spin,T=clock;
+  ids.forEach(k=>{shown[k]+=(target[k]-shown[k])*.045;});
+
+  ctx.clearRect(0,0,W,H);
+  const g=ctx.createRadialGradient(W/2,H/2,4,W/2,H/2,Math.min(W,H)*.5);
+  g.addColorStop(0,'rgba(255,91,53,.09)');
+  g.addColorStop(.45,'rgba(23,105,78,.05)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+  for(const q of dust){
+    const a=q.a+T*.02;
+    const p=pr(rot([Math.cos(a)*q.r,q.y,Math.sin(a)*q.r],RX,RY));
+    ctx.fillStyle=`rgba(255,255,255,${q.o.toFixed(3)})`;
+    ctx.beginPath();ctx.arc(p.x,p.y,q.s*p.p,0,6.284);ctx.fill();
+  }
+
+  const body={};
+  for(const k of ids){
+    const o=ORB[k],r=o.base+shown[k]*o.gain,th=T*o.sp+o.node;
+    const w=rot(orbPt(o,r,th),RX,RY);
+    body[k]={w,p:pr(w),r,o};
+  }
+
+  for(const k of ids){
+    const o=ORB[k],r=body[k].r,c=col[k];
+    ctx.beginPath();
+    for(let i=0;i<=90;i++){
+      const p=pr(rot(orbPt(o,r,i/90*6.284),RX,RY));
+      i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=`rgba(${c[0]},${c[1]},${c[2]},.20)`;
+    ctx.lineWidth=1;ctx.stroke();
+  }
+
+  const pulse=1+Math.sin(T*2.1)*.04;
+  const items=ids.map(k=>({k,z:body[k].w[2]}));
+  items.push({k:'__core',z:0});
+  items.sort((a,b)=>a.z-b.z);
+
+  for(const it of items){
+    if(it.k==='__core'){
+      const R=Math.min(W,H)*.058*pulse;
+      const hg=ctx.createRadialGradient(W/2,H/2,R*.6,W/2,H/2,R*3.1);
+      hg.addColorStop(0,'rgba(255,91,53,.20)');
+      hg.addColorStop(.45,'rgba(255,91,53,.07)');
+      hg.addColorStop(1,'rgba(255,91,53,0)');
+      ctx.fillStyle=hg;ctx.beginPath();ctx.arc(W/2,H/2,R*3.1,0,6.284);ctx.fill();
+      const cg=ctx.createRadialGradient(W/2-R*.32,H/2-R*.36,R*.08,W/2,H/2,R);
+      cg.addColorStop(0,'#ffa987');cg.addColorStop(.34,'#f4693c');
+      cg.addColorStop(.76,'#a3300f');cg.addColorStop(1,'#22100a');
+      ctx.fillStyle=cg;ctx.beginPath();ctx.arc(W/2,H/2,R,0,6.284);ctx.fill();
+      ctx.strokeStyle='rgba(255,146,110,.32)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(W/2,H/2,R*1.7*pulse,0,6.284);ctx.stroke();
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(255,255,255,.92)';
+      ctx.font='500 9px "DM Mono",ui-monospace,monospace';
+      ctx.fillText('OSH',W/2,H/2+R+20);
+      ctx.fillStyle='rgba(255,255,255,.38)';
+      ctx.font='400 7px "DM Mono",ui-monospace,monospace';
+      ctx.fillText('REGULATED STATE',W/2,H/2+R+33);
+      continue;
+    }
+    const k=it.k,p=body[k].p,c=col[k],rr=Math.max(3.2,6.2*p.p);
+    ctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},.15)`;
+    ctx.beginPath();ctx.arc(p.x,p.y,rr*2.7,0,6.284);ctx.fill();
+    const sg=ctx.createRadialGradient(p.x-rr*.35,p.y-rr*.4,rr*.06,p.x,p.y,rr);
+    sg.addColorStop(0,'rgba(255,255,255,.95)');
+    sg.addColorStop(.28,`rgb(${c[0]},${c[1]},${c[2]})`);
+    sg.addColorStop(1,`rgb(${Math.round(c[0]*.28)},${Math.round(c[1]*.28)},${Math.round(c[2]*.28)})`);
+    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(p.x,p.y,rr,0,6.284);ctx.fill();
+
+    const el=overlays[k];
+    if(el){
+      const dx=p.x-W/2,dy=p.y-H/2,d=Math.hypot(dx,dy)||1;
+      const hw=el.offsetWidth/2+8,hh=el.offsetHeight/2+6;
+      el.style.left=Math.max(hw,Math.min(W-hw,p.x+dx/d*34))+'px';
+      el.style.top=Math.max(hh,Math.min(H-hh,p.y+dy/d*34))+'px';
+      el.style.borderColor=`rgba(${c[0]},${c[1]},${c[2]},.34)`;
+      el.style.opacity=(.45+.55*Math.min(1,Math.max(0,(body[k].w[2]+2.6)/4.2))).toFixed(2);
+      el.style.transform=`translate(-50%,-50%) scale(${Math.max(.78,Math.min(1.08,p.p)).toFixed(3)})`;
+    }
+  }
+
+  for(const k of ids)if(readouts[k])readouts[k].textContent=shown[k].toFixed(4);
+}
+requestAnimationFrame(draw);
+
+/* ===== decade instrument ===== */
+function buildDecade(el,cfg){
+  if(!el)return;
+  const lo=Math.log10(cfg.min),hi=Math.log10(cfg.max),span=hi-lo;
+  const pos=v=>((Math.log10(v)-lo)/span)*100;
+  let h='<div class="dec-axis"></div>';
+  for(let e=lo;e<=hi;e++){
+    h+='<div class="dec-tick" style="left:'+(((e-lo)/span)*100).toFixed(3)+'%"><i></i><b>'+cfg.tick(Math.pow(10,e))+'</b></div>';
+  }
+  const a=pos(cfg.a.v),b=pos(cfg.b.v),l=Math.min(a,b),r=Math.max(a,b);
+  h+='<div class="dec-span" style="left:'+l.toFixed(3)+'%;width:'+(r-l).toFixed(3)+'%"></div>';
+  h+='<div class="dec-tag" style="left:'+((l+r)/2).toFixed(3)+'%">'+cfg.gap+'</div>';
+  for(const m of [cfg.a,cfg.b]){
+    const p=pos(m.v),al=p<14?'at-start':(p>82?'at-end':'at-mid');
+    h+='<div class="dec-mark '+m.cls+'" style="left:'+p.toFixed(3)+'%"><div class="dec-stem"></div><div class="dec-dot"></div>'+
+       '<div class="dec-label '+al+'"><div class="dec-val">'+m.label+'</div><div class="dec-who">'+m.who+'</div></div></div>';
+  }
+  el.innerHTML=h;
+}
+buildDecade(document.getElementById('decTime'),{
+  min:1,max:100000,tick:v=>v>=1000?(v/1000)+'\u2009s':v+'\u2009ms',gap:'2.8 decades',
+  a:{v:28.239,label:'28.239 ms',who:'OSH',cls:'dec-osh'},
+  b:{v:18141.751,label:'18,141.751 ms',who:'TinyLlama 1.1B Q4',cls:'dec-base'}
+});
+buildDecade(document.getElementById('decMem'),{
+  min:1,max:1000,tick:v=>v+'\u2009MB',gap:'1.4 decades',
+  a:{v:23.883,label:'23.883 MB',who:'OSH',cls:'dec-osh'},
+  b:{v:663.930,label:'663.930 MB',who:'TinyLlama 1.1B Q4',cls:'dec-base'}
+});
+
+// --- global interaction layer ---
+const cursorGlow=document.getElementById('cursorGlow');
+if(cursorGlow && matchMedia('(pointer:fine)').matches){
+  window.addEventListener('pointermove',e=>{cursorGlow.style.left=e.clientX+'px';cursorGlow.style.top=e.clientY+'px';},{passive:true});
+}
+
+// active navigation state
+const navAnchors=[...document.querySelectorAll('.nav-links a[href^="#"]')];
+const observedSections=navAnchors.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const navObserver=new IntersectionObserver(entries=>{
+  const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+  if(!visible) return;
+  navAnchors.forEach(a=>a.classList.toggle('is-active',a.getAttribute('href')==='#'+visible.target.id));
+},{rootMargin:'-34% 0px -52% 0px',threshold:[0,.25,.5,.75]});
+observedSections.forEach(s=>navObserver.observe(s));
+
+// mobile navigation
+const mobileMenuToggle=document.getElementById('mobileMenuToggle');
+const navLinks=document.getElementById('navLinks');
+if(mobileMenuToggle&&navLinks){
+  mobileMenuToggle.addEventListener('click',()=>{const open=navLinks.classList.toggle('open');mobileMenuToggle.setAttribute('aria-expanded',String(open));});
+  navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');mobileMenuToggle.setAttribute('aria-expanded','false')}));
+}
+
+// magnetic CTAs on fine pointers
+if(matchMedia('(pointer:fine)').matches){
+  document.querySelectorAll('.magnetic,.btn-primary').forEach(el=>{
+    el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;el.style.transform=`translate(${(x*.09).toFixed(1)}px,${(y*.09).toFixed(1)}px) translateY(-2px)`});
+    el.addEventListener('pointerleave',()=>el.style.transform='');
+  });
+}
+
+// count-up for key metrics when first visible
+const metricNums=[...document.querySelectorAll('.metric-value,.hero-proof-v,.gap-big,.gap-side-val,.lab-hero-num')];
+const countObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(!entry.isIntersecting) return;
+  const el=entry.target; if(el.dataset.counted) return; el.dataset.counted='1';
+  const node=[...el.childNodes].find(n=>n.nodeType===3 && /\d/.test(n.textContent));
+  if(!node) return;
+  const original=node.textContent; const m=original.match(/[\d,.]+/); if(!m) return;
+  const raw=m[0].replace(/,/g,''); const target=parseFloat(raw); if(!Number.isFinite(target)) return;
+  const decimals=(raw.split('.')[1]||'').length; const start=performance.now(),dur=900;
+  function tick(now){const p=Math.min(1,(now-start)/dur),ease=1-Math.pow(1-p,3);const val=target*ease;node.textContent=original.replace(m[0],val.toLocaleString('en-US',{minimumFractionDigits:decimals,maximumFractionDigits:decimals}));if(p<1)requestAnimationFrame(tick)}
+  requestAnimationFrame(tick);
+  countObserver.unobserve(el);
+}),{threshold:.35});
+metricNums.forEach(el=>countObserver.observe(el));
+
+// gentle scroll parallax for major cards
+if(matchMedia('(prefers-reduced-motion: no-preference)').matches){
+  const floaters=[...document.querySelectorAll('.hero-shell,.gap-shell,.scale-shell,.cta-box')];
+  let raf=0;
+  window.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{const vh=innerHeight;floaters.forEach(el=>{const r=el.getBoundingClientRect();if(r.bottom<0||r.top>vh)return;const d=(r.top+r.height/2-vh/2)/vh;el.style.setProperty('--scrollShift',(d*-8).toFixed(2)+'px')});raf=0})},{passive:true});
+}
+
+
+// Controlled external-validation application: prepares an email locally.
+const validationForm=document.getElementById('validationForm');
+if(validationForm){
+  validationForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const fd=new FormData(validationForm);
+    const name=(fd.get('name')||'').toString().trim();
+    const org=(fd.get('organization')||'').toString().trim();
+    const email=(fd.get('email')||'').toString().trim();
+    const track=(fd.get('track')||'').toString().trim();
+    const objective=(fd.get('objective')||'').toString().trim();
+    const subject=`OSH external validation request — ${track}`;
+    const body=[
+      'OSH External Validation Request','',
+      `Name: ${name}`,`Organization: ${org}`,`Email: ${email}`,`Track: ${track}`,'',
+      'Validation objective:',objective,'',
+      'Website: https://www.oshsystems.com/'
+    ].join('\\n');
+    window.location.href=`mailto:fabian.vallejos@oshsystems.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+}
+
+
+// Investor-facing BOM/TCO scenario calculator. Assumption-driven by design.
+const tcoUnits=document.getElementById('tcoUnits');
+const tcoBaseline=document.getElementById('tcoBaseline');
+const tcoReduction=document.getElementById('tcoReduction');
+function compactUSD(v){
+  if(!Number.isFinite(v)) return '$0';
+  if(Math.abs(v)>=1e9) return '$'+(v/1e9).toFixed(2)+'B';
+  if(Math.abs(v)>=1e6) return '$'+(v/1e6).toFixed(2)+'M';
+  if(Math.abs(v)>=1e3) return '$'+(v/1e3).toFixed(1)+'K';
+  return '$'+v.toFixed(2);
+}
+function updateTCO(){
+  if(!tcoUnits||!tcoBaseline||!tcoReduction) return;
+  const units=Math.max(0,Number(tcoUnits.value)||0);
+  const baseline=Math.max(0,Number(tcoBaseline.value)||0);
+  const reduction=Math.max(0,Math.min(90,Number(tcoReduction.value)||0));
+  const current=units*baseline;
+  const perUnitDelta=baseline*(reduction/100);
+  const savings=units*perUnitDelta;
+  const future=current-savings;
+  document.getElementById('tcoUnitsLabel').textContent=Math.round(units).toLocaleString('en-US');
+  document.getElementById('tcoBaselineLabel').textContent='$'+baseline.toFixed(2);
+  document.getElementById('tcoReductionLabel').textContent=reduction.toFixed(0)+'%';
+  document.getElementById('tcoCurrent').textContent=compactUSD(current);
+  document.getElementById('tcoFuture').textContent=compactUSD(future);
+  document.getElementById('tcoSavings').textContent=compactUSD(savings);
+  document.getElementById('tcoPerUnit').textContent='$'+perUnitDelta.toFixed(2)+' modeled reduction per deployed unit.';
+}
+[tcoUnits,tcoBaseline,tcoReduction].forEach(el=>el&&el.addEventListener('input',updateTCO));
+updateTCO();
+</script>
+</body>
+</html>

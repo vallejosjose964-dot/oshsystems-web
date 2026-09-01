@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -914,6 +915,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
         <aside class="contact-orbit">
           <div class="contact-ring r1"></div><div class="contact-ring r2"></div>
           <span class="contact-tag t1">NDA REVIEW</span><span class="contact-tag t2">AUDITABLE DEMO</span><span class="contact-tag t3">CLOSED ACCESS</span><div class="contact-core"><img src="logo.png" alt="OSH Global Systems logo"></div>
+          
         </aside>
       </div>
     </div>
@@ -921,7 +923,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;bac
 </section>
 </main>
 
-<footer><div class="container footer-row"><img class="footer-logo" src="logo.png" ...>
+<footer><div class="container footer-row"><img class="footer-logo" src="logo.png" alt="OSH Global Systems"><span>© 2026 OSH Global Systems, Inc. · All rights reserved.</span><span><a class="footer-contact" href="https://www.oshsystems.com/">www.oshsystems.com</a><br><a class="footer-contact" href="mailto:fabian.vallejos@oshsystems.com">fabian.vallejos@oshsystems.com</a></span><span>Homeostatic Semantic Organism™ · Born in Argentina · created for humanity.</span></div></footer>
+
+<script>
+const progress=document.getElementById('scrollProgress');
 window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h>0?(scrollY/h)*100:0)+'%';},{passive:true});
 
 const io=new IntersectionObserver((entries)=>{for(const e of entries){if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}},{threshold:.12});

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ATUM — THOT Engine (Micro + Macro)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#070a14; --panel:#0d1630; --panel2:#0b1227; --line: rgba(255,255,255,.10);
+      --text:#eef3ff; --muted:#a7b5d8; --accent:#66e3ff; --accent2:#a78bfa;
+      --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b; --r:18px; --shadow: 0 14px 50px rgba(0,0,0,.55);
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 600px at 15% 0%, rgba(102,227,255,.12), transparent 62%),
+        radial-gradient(1100px 600px at 85% 10%, rgba(167,139,250,.12), transparent 62%),
+        radial-gradient(900px 520px at 50% 120%, rgba(34,197,94,.06), transparent 60%),
+        var(--bg);
+    }
+    header{
+      position:sticky; top:0; z-index:20;
+      background: rgba(7,10,20,.82);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{ max-width:1240px; margin:0 auto; padding:14px 16px; }
+    .topbar{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .brand{ display:flex; align-items:flex-start; gap:12px; min-width:0; }
+    .mark{
+      width:12px; height:12px; border-radius:6px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 22px rgba(102,227,255,.35);
+      flex:0 0 auto; margin-top:6px;
+    }
+    .title{ font-size:16px; font-weight:800; letter-spacing:.9px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sub{ margin:6px 0 0; font-size:12px; color:var(--muted); line-height:1.4; max-width:860px; }
+    .sub b{ color: rgba(238,243,255,.92); font-weight:700; }
+
+    .status{
+      display:flex; align-items:center; gap:10px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      margin-top:2px;
+      white-space:nowrap;
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background: rgba(255,255,255,.25); }
+    .dot.ok{ background: var(--ok); }
+    .dot.bad{ background: var(--bad); }
+
+    main{ padding: 16px 0 34px; }
+    .grid{ display:grid; grid-template-columns: 440px 1fr; gap:14px; }
+    @media (max-width: 1020px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(13,22,48,.78), rgba(11,18,39,.72));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hd{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.02);
+      border-bottom:1px solid var(--line);
+    }
+    .hd h2{ margin:0; font-size:12px; letter-spacing:.8px; color: rgba(238,243,255,.86); text-transform: uppercase; }
+    .bd{ padding:14px; }
+    .muted{ color: var(--muted); font-size:12px; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .row.nowrap{ flex-wrap:nowrap; }
+    .row.tight{ gap:8px; }
+
+    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; }
+    .chip{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{ border-color: rgba(102,227,255,.45); background: rgba(102,227,255,.10); }
+
+    select, input[type="text"], button{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 9px 10px;
+      font-size: 13px;
+      outline:none;
+    }
+    select, input[type="text"]{ width:100%; }
+    button{ cursor:pointer; }
+    button:hover{ background: rgba(255,255,255,.06); }
+    button:active{ transform: translateY(1px); }
+    button:disabled{ opacity:.45; cursor:not-allowed; }
+    .primary{ border-color: rgba(102,227,255,.45); background: rgba(102,227,255,.10); }
+
+    .hint{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height: 1.4;
+    }
+    .hint b{ color: rgba(238,243,255,.92); font-weight:700; }
+
+    .log{
+      height: 200px;
+      overflow:auto;
+      white-space: pre-wrap;
+      font-size: 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      background: rgba(0,0,0,.22);
+    }
+
+    .canvasWrap{ border:1px solid var(--line); border-radius: 16px; background: rgba(0,0,0,.20); padding: 10px; }
+    canvas{ width:100%; height: 460px; display:block; }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size:12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+    }
+    th,td{ padding:8px 8px; border-bottom:1px solid var(--line); text-align:left; }
+    th{ color:var(--muted); font-weight:700; background: rgba(255,255,255,.03); }
+    tr:last-child td{ border-bottom:none; }
+
+    .macroGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:12px; }
+    @media (max-width: 700px){ .macroGrid{ grid-template-columns: 1fr; } }
+    .metric{ border:1px solid var(--line); border-radius: 14px; padding:10px; background: rgba(255,255,255,.02); }
+    .metric .k{ font-size:11px; color:var(--muted); }
+    .metric .v{ margin-top:6px; font-size:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .footer{ margin-top: 14px; color: var(--muted); font-size: 12px; line-height: 1.45; border-top: 1px solid var(--line); padding-top: 12px; }
+    .split2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media(max-width: 520px){ .split2{ grid-template-columns:1fr; } }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <p class="title">ATUM</p>
+          <p class="sub">
+            <b>Uso:</b>
+            1) <b>Ping</b> (chequea backend).
+            2) <b>Load</b> (lee <span class="mono">manifest.json</span> del repo y baja el ZIP).
+            3) Elegí un <b>Objeto</b> → <b>Preview</b> → <b>Compute</b>.
+            4) Para todas: <b>Global RMS</b>.
+          </p>
+        </div>
+      </div>
+
+      <div class="status">
+        <span class="dot" id="backendDot"></span>
+        <span id="backendLabel" class="mono">Backend: no verificado</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="grid">
+
+      <section class="card">
+        <div class="hd">
+          <h2>Control</h2>
+          <div class="row tight">
+            <button id="btnReset">Reset</button>
+          </div>
+        </div>
+
+        <div class="bd">
+          <div class="muted">Modo</div>
+          <div class="pillbar" aria-label="Modos" style="margin-top:8px;">
+            <button class="chip" id="btnW">W</button>
+            <button class="chip" id="btnZ">Z</button>
+            <button class="chip" id="btnMuon">MUON</button>
+            <span style="flex:1 1 auto;"></span>
+            <button class="chip active" id="btnGalaxies">Galaxias</button>
+            <button class="chip" id="btnClusters">Clusters</button>
+            <button class="chip" id="btnDwarfs">Enanas</button>
+          </div>
+
+          <div class="muted" style="margin-top:14px;">Backend</div>
+          <div class="row" style="margin-top:8px;">
+            <input type="text" id="backendBase" value="https://thot-engine.onrender.com"/>
+          </div>
+
+          <div class="row nowrap tight" style="margin-top:10px;">
+            <button id="btnPing" class="primary">Ping</button>
+            <button id="btnLoadRepo" class="primary">Load</button>
+            <button id="btnPreview">Preview</button>
+            <button id="btnCompute" class="primary">Compute</button>
+            <button id="btnGlobalRMS">Global RMS</button>
+          </div>
+
+          <div class="muted" style="margin-top:14px;">Datasets (desde tu repo)</div>
+          <div class="hint" style="margin-top:8px;">
+            <b>No se cargan archivos manualmente.</b>
+            Esta página lee <span class="mono">./manifest.json</span> en tu GitHub Pages y lista ZIP/CSV.
+            Si ves <b>(sin manifest)</b>, es porque falta ese archivo o la ruta está mal.
+          </div>
+
+          <div class="split2" style="margin-top:10px;">
+            <div>
+              <div class="muted" style="margin-bottom:6px;">Curvas (ZIP)</div>
+              <select id="datasetZipSelect" disabled>
+                <option value="">(sin manifest)</option>
+              </select>
+            </div>
+            <div>
+              <div class="muted" style="margin-bottom:6px;">BTFR (CSV)</div>
+              <select id="datasetBtfrSelect" disabled>
+                <option value="">(sin manifest)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="muted" style="margin-bottom:6px;">Objeto (dentro del ZIP)</div>
+            <select id="fileSelect" disabled>
+              <option value="">(sin dataset cargado)</option>
+            </select>
+          </div>
+
+          <div class="muted" style="margin-top:14px;">Micro (salida)</div>
+          <div class="macroGrid">
+            <div class="metric"><div class="k">a_star (m/s²)</div><div class="v" id="microAStar">—</div></div>
+            <div class="metric"><div class="k">tau (s)</div><div class="v" id="microTau">—</div></div>
+            <div class="metric"><div class="k">mW (GeV/c²)</div><div class="v" id="microMW">—</div></div>
+            <div class="metric"><div class="k">delta_r</div><div class="v" id="microDelta">—</div></div>
+            <div class="metric"><div class="k">eta_vci</div><div class="v" id="microEta">—</div></div>
+            <div class="metric"><div class="k">lambda_eff (1/m²)</div><div class="v" id="microLambda">—</div></div>
+            <div class="metric"><div class="k">status</div><div class="v" id="microStatus">—</div></div>
+          </div>
+
+          <div class="muted" style="margin-top:14px;">Log</div>
+          <div id="log" class="log mono" style="margin-top:8px;"></div>
+
+          <div class="footer">
+            ATUM — Software propietario de Fabián Vallejos. Todos los derechos reservados.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="hd">
+          <h2>Curva + Resultados</h2>
+          <div class="row tight">
+            <button id="btnPNG">PNG</button>
+          </div>
+        </div>
+
+        <div class="bd">
+          <div class="canvasWrap">
+            <canvas id="curve" width="1400" height="820"></canvas>
+          </div>
+
+          <div style="margin-top:12px" class="muted">Macro</div>
+          <div class="macroGrid">
+            <div class="metric"><div class="k">RMS (km/s)</div><div class="v" id="macroRMS">—</div></div>
+            <div class="metric"><div class="k">N puntos</div><div class="v" id="macroN">—</div></div>
+            <div class="metric"><div class="k">galaxia</div><div class="v" id="macroName">—</div></div>
+          </div>
+
+          <div style="margin-top:12px" class="muted">Tabla (Global RMS)</div>
+          <table>
+            <thead><tr><th>Objeto</th><th>RMS</th><th>Detalle</th></tr></thead>
+            <tbody id="resultsBody">
+              <tr><td class="mono">—</td><td>—</td><td class="muted">Esperando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="./app_v3.js"></script>
+</body>
+</html>

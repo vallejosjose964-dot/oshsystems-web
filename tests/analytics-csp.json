@@ -1,4 +1,0 @@
-{
-  "current": "default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self'; font-src 'self'; media-src 'self' https://raw.githubusercontent.com/vallejosjose964-dot/oshsystems-web/main/demo.mp4; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'",
-  "proposed": "default-src 'none'; script-src 'self' https://www.googletagmanager.com/gtag/js; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self'; font-src 'self'; media-src 'self' https://raw.githubusercontent.com/vallejosjose964-dot/oshsystems-web/main/demo.mp4; connect-src https://www.google-analytics.com/g/collect https://region1.google-analytics.com/g/collect; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"
-}

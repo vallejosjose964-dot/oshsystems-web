@@ -4,7 +4,7 @@ Esta revisión mantiene la identidad, información, límites de interpretación,
 
 ## Qué mejora
 
-- HTML principal: de 17.249.847 a 156.440 bytes (99,1 % menos). Esta cifra compara el HTML, no es una medición de velocidad ni del peso total del sitio.
+- HTML principal: de 17.249.847 a 156.649 bytes (99,1 % menos). Esta cifra compara el HTML, no es una medición de velocidad ni del peso total del sitio.
 - PDFs e imágenes separados del HTML y reutilizables por la caché. Los bytes originales están preservados, sin recomprimir las evidencias.
 - Los 12 informes tienen enlaces nativos de descarga y apertura; ya no requieren JavaScript ni decodificación de PDFs al cargar.
 - Biblioteca con búsqueda, categorías, contador, estado vacío y restablecimiento.
@@ -24,6 +24,7 @@ Se mantienen los 18 archivos originales adicionales a index.html, todo el texto 
 Ejecutar desde esta carpeta:
 
     python3 tests/verify_site.py
+    python3 tests/verify_security.py
     node --check assets/site.js
     node --check assets/enhancements.js
 
@@ -36,3 +37,5 @@ Consulte VERIFICACION.md para los resultados y límites de las pruebas.
 Para futuras revisiones, trabajar en una rama y ejecutar las comprobaciones antes de publicar. Conservar todos los PDFs, imágenes, CNAME y demo.mp4 originales. El manifiesto permite detectar cambios accidentales en las evidencias.
 
 No se añadió código privado de FARO, dependencias externas, analítica, cookies ni nuevos servicios de terceros. El video conserva su enlace alternativo público preexistente en GitHub.
+
+La página incorpora una CSP restrictiva compatible con alojamiento estático y una política `no-referrer`. Consulte SECURITY.md para los controles, las pruebas y los límites que requieren configuración del alojamiento.

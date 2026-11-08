@@ -1,3 +1,16 @@
+// Keep image fallback behavior outside inline handlers. Never retry the same URL.
+document.querySelectorAll('img[data-fallback]').forEach(img => {
+ let attempted = false;
+ const recover = () => {
+  if (attempted) return;
+  attempted = true;
+  const fallback = new URL(img.dataset.fallback, document.baseURI);
+  if (fallback.origin === location.origin && fallback.href !== img.src) img.src = fallback.href;
+ };
+ img.addEventListener('error', recover, {once: true});
+ if (img.complete && img.naturalWidth === 0) recover();
+});
+
 
 
 const identityStages=[
@@ -17,8 +30,18 @@ const journeyData=[
  {stage:'CHAPTER 06 / PHYSICAL RISC-V',glyph:'RV',eyebrow:'NATIVE PHYSICAL CLOSED-LOOP CYCLES',number:'100,000',title:'The frozen architecture reaches physical RISC-V.',copy:'On CH32V307 at 96 MHz, the native firmware passed 30/30 structural-parity cases and completed 100,000 DAC-to-ADC cycles with zero ADC failures, state failures or invalid actions. A separate, host-controlled FARO V2 versus PID experiment is reported with its own execution boundary.',href:'#riscv-physical',link:'Explore the RISC-V benchmark and physical evidence'}
 
 ];
+// Render the legacy measurement formatting without interpreting HTML.
+function renderJourneyNumber(target, value) {
+ const measurement = /^(.*?) <i>([^<]*)<\/i>$/.exec(value);
+ target.replaceChildren(document.createTextNode(measurement ? measurement[1] + ' ' : value));
+ if (measurement) {
+  const unit = document.createElement('i');
+  unit.textContent = measurement[2];
+  target.append(unit);
+ }
+}
 const journeyTabs=[...document.querySelectorAll('[data-journey]')];
-function showJourney(index,focus=false){const item=journeyData[index];journeyTabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1});document.getElementById('journey-display').setAttribute('aria-labelledby',journeyTabs[index].id);document.getElementById('journey-display-stage').textContent=item.stage;document.getElementById('journey-glyph-center').textContent=item.glyph;document.getElementById('journey-display-eyebrow').textContent=item.eyebrow;document.getElementById('journey-display-number').innerHTML=item.number;document.getElementById('journey-display-title').textContent=item.title;document.getElementById('journey-display-copy').textContent=item.copy;const link=document.getElementById('journey-display-link');link.href=item.href;link.firstChild.textContent=item.link+' ';if(focus)journeyTabs[index].focus()}
+function showJourney(index,focus=false){const item=journeyData[index];journeyTabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1});document.getElementById('journey-display').setAttribute('aria-labelledby',journeyTabs[index].id);document.getElementById('journey-display-stage').textContent=item.stage;document.getElementById('journey-glyph-center').textContent=item.glyph;document.getElementById('journey-display-eyebrow').textContent=item.eyebrow;renderJourneyNumber(document.getElementById('journey-display-number'),item.number);document.getElementById('journey-display-title').textContent=item.title;document.getElementById('journey-display-copy').textContent=item.copy;const link=document.getElementById('journey-display-link');link.href=item.href;link.firstChild.textContent=item.link+' ';if(focus)journeyTabs[index].focus()}
 journeyTabs.forEach((tab,index)=>{tab.addEventListener('click',()=>showJourney(index));tab.addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft','ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();showJourney(e.key==='Home'?0:e.key==='End'?journeyTabs.length-1:(index+(['ArrowRight','ArrowDown'].includes(e.key)?1:journeyTabs.length-1))%journeyTabs.length,true)}})});
 const portfolioData=[
  {index:'01 / INDUSTRIAL EQUIPMENT',title:'A machine facing changing conditions.',copy:'An equipment maker could evaluate FARO as a resident supervisory path that tracks internal condition and selects an action as sensor conditions evolve. A pilot would compare its decisions against the existing process and measure the effect on operations.',buyer:'Equipment OEM or plant operator',value:'A differentiated, locally acting product and a measurable operational outcome.',revenue:'Paid pilot → board integration → per-unit license or supervised-node agreement.',wire:'M300 211 C209 208 185 108 106 87'},

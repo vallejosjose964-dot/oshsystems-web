@@ -1,0 +1,57 @@
+/* Presentation and usability improvements. Original research styling remains in site.css. */
+:root{color-scheme:dark;--focus-ring:#b6f4ff}
+[hidden]{display:none!important}
+:where(input,select,textarea,button,a,summary,[tabindex]):focus-visible{outline:3px solid var(--focus-ring);outline-offset:4px}
+:where(section,main,div)[tabindex="-1"]:focus:not(:focus-visible){outline:none}
+img{max-width:100%}
+:where(h1,h2,h3){text-wrap:balance}
+:where(p,li){text-wrap:pretty}
+.reading-progress{height:2px;background:var(--cyan);transform-origin:left;transform:scaleX(0);position:absolute;bottom:-1px;left:0;width:100%;pointer-events:none}
+.links a{position:relative;transition:color .16s ease}
+.links a[aria-current="location"]{color:var(--cyan)}
+.links a[aria-current="location"]::after{content:"";position:absolute;bottom:-10px;left:0;right:0;height:2px;background:var(--cyan)}
+.quick-access{display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:space-between;padding:17px 0 0}
+.quick-access a{font:12px/1.5 var(--mono);color:var(--soft);text-decoration:none}
+.quick-access a span{color:var(--cyan);margin-left:8px}.quick-access a:hover{color:var(--cyan)}
+.back-top{position:fixed;z-index:19;right:24px;bottom:24px;width:44px;height:44px;display:grid;place-items:center;color:#071526;background:var(--cyan);border:1px solid #cff9ff;border-radius:50%;font:24px var(--sans);text-decoration:none;box-shadow:0 4px 20px #0005;opacity:0;visibility:hidden;transition:opacity .16s}
+.back-top.is-visible{opacity:1;visibility:visible}
+#documentos{background:linear-gradient(150deg,#071526,#102c3c)}
+#documentos .section-head h2{max-width:700px}
+.library-tools{display:grid;grid-template-columns:minmax(200px,1.5fr) minmax(180px,1fr) auto;gap:16px 22px;align-items:end;border-block:1px solid #3e6174;padding:24px 0;margin:28px 0}
+.library-tools label{display:block;font:11px/1.5 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:9px}
+.library-tools input,.library-tools select{width:100%;min-height:48px;font:16px var(--sans);background:#071b2b;border:1px solid #648293;color:var(--ink);padding:11px 14px;border-radius:4px}
+.library-tools select{cursor:pointer;padding-right:24px}.library-tools input::placeholder{color:#9eb8c7;opacity:1}
+.search-input{position:relative}.search-input span{position:absolute;left:15px;top:7px;color:var(--cyan);font-size:25px;pointer-events:none}.search-input input{padding-left:43px}
+.library-reset{min-height:48px;padding:10px 18px;background:transparent;border:1px solid #648293;border-radius:4px;color:var(--soft)}
+.library-reset:hover{color:var(--cyan);border-color:var(--cyan)}
+#report-count{grid-column:1/-1;margin:0;font:12px/1.6 var(--mono);color:var(--muted)}
+#documentos .docs{gap:20px}
+#documentos .doc{position:relative;border:1px solid #3e6072;border-top:2px solid #75c7cf;padding:27px;background:#0b2233;transition:border-color .16s,background .16s;border-radius:4px;min-height:300px}
+#documentos .doc:hover{border-color:#79afbc;background:#102b3e}
+#documentos .doc h3{font-size:clamp(22px,2.2vw,29px);line-height:1.22;font-weight:600;margin:22px 0 14px}
+#documentos .doc>small{font-size:10px;line-height:1.6;letter-spacing:.07em;color:#b2d8df}
+#documentos .doc p{font-size:15px;line-height:1.65;flex:1;margin:0 0 22px;color:#c0d3dc}
+.doc-file-meta{font:11px/1.5 var(--mono);color:#a9c5d3;display:block;border-top:1px solid #355264;padding-top:15px;margin-top:auto;margin-bottom:4px}
+#documentos .doc a{margin:0;padding:10px 0;font-size:14px;line-height:1.45;text-decoration:none;align-self:flex-start}
+#documentos .doc a:hover{text-decoration:underline;text-underline-offset:5px}
+#documentos .doc .doc-view{font-weight:400;color:var(--soft);padding-top:4px}
+.library-empty{border:1px dashed #648293;padding:40px 24px;text-align:center;color:var(--soft);border-radius:4px}
+:where(.rv26-table-wrap,.o31-table-wrap){overscroll-behavior-inline:contain;scrollbar-color:#74b9c7 #10283d}
+#lightbox{max-height:94dvh;overscroll-behavior:contain}#lightbox-image{object-fit:contain;max-height:80dvh;width:auto;height:auto;margin-inline:auto}.dialog-head{position:sticky;top:0;background:#071526;z-index:1}#lightbox-close{min-height:44px;flex-shrink:0}
+#contact-form :is(input,select,textarea){font-size:16px}#contact-form button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:1080px){
+ .nav{height:72px;gap:12px}.menu{display:block;min-width:64px;min-height:44px;margin-left:auto}
+ .links{display:none;position:absolute;top:72px;left:0;right:0;padding:17px max(24px,calc((100vw - 1000px)/2)) 23px;background:#071526;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0;max-height:calc(100dvh - 72px);overflow:auto}
+ .links.open{display:flex}.links a{padding:13px 8px;font-size:16px;min-height:48px}.links a[aria-current="location"]::after{bottom:4px;left:8px;right:auto;width:24px}
+ .nav-action{padding:12px!important;margin-top:10px;text-align:center}
+}
+@media(max-width:760px){
+ .nav{height:64px}.links{top:64px;max-height:calc(100dvh - 64px)}
+ .quick-access{gap:12px 20px;padding-top:19px}.quick-access a{font-size:11px}
+ .library-tools{grid-template-columns:minmax(0,1fr) auto;gap:16px}.library-search{grid-column:1/-1}.library-filter{min-width:0}
+ #documentos .docs{grid-template-columns:minmax(0,1fr)}#documentos .doc{padding:24px;min-height:0}.library-tools{margin-top:24px}
+ .back-top{right:14px;bottom:14px;width:42px;height:42px}.dialog-head{gap:12px}.dialog-head span{font-size:12px}
+}
+@media(max-width:380px){.nav .brand{gap:9px}.nav .osh02-brand-copy strong{font-size:9px}.nav .osh02-brand-copy small{font-size:8px}.nav .brand img{width:70px}.menu{min-width:58px;font-size:13px}.wrap{width:calc(100% - 32px)}.quick-access{display:grid;gap:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media print{.mast,.quick-access,.reading-progress,.back-top,.library-tools,.menu,.actions{display:none!important}body,section,#documentos{background:white!important;color:black!important}.docs{display:block!important}.doc{break-inside:avoid;background:white!important;color:black!important;margin-bottom:20px}a{color:inherit!important}.doc p,.doc-file-meta{color:#222!important}}

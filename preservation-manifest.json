@@ -1,0 +1,177 @@
+{
+  "base_commit": "5c18a2d53578348c82e71464b70900b12b0721a0",
+  "original_files": {
+    "24976.jpg": "95d01863161310ebe04ee6b7e0fb15aa3f0fe891dd1b82b1d4f544faf4707786",
+    "20616.png": "c7cec0bf3e2e68302199c85febfd75f09ca87d961efdb490408a6598250a2756",
+    "CNAME": "12cf3033a20dc2aca55fa1e3eeae13036a31bacbb7e202b703a92bf55b2a2d8a",
+    "OSH_Universal_Substrate_Benchmark_FINAL_2026.pdf": "ca0fe16e71b0bea87fbb38f6223d1af7a5bea32cf4c19a22fb1b260a047c93ab",
+    "osh_power_observation_20260930.jpg": "0ac49742348876459301a8dfb1e9f9758ead1c2681f6357f0989cd539ce76eec",
+    "OSH_FARO_PID_ORACLE_FINAL.pdf": "d41b23fc19777839f314cc38945d372547bea89d18595dccd21f699d7c9aaf38",
+    "demo.mp4": "81239e69f872dd5af25f4a1651fbb5ce672a244f99c465afc9f276cbeca1f8ed",
+    "logo.png": "5d2de6662a71b35c64dcf7a2e0cf832b8f68ff9e9758cdf29e159835cbbc16a9",
+    "FARO_PUBLICO.pdf": "d21973c11745d5b368d31310d6177699c45e01a8188a6c662c2bd8ce30b3fb64",
+    "FARO_Memoria_ELF_Verificada_20261105.pdf": "e773f166af0ca04e4c4cf8d21581707e1701ac57183e78a63a43869f1be2faf9",
+    "OSH_Public_Whitepaper_Cross_Architecture_Evidence_2026.pdf": "bf062e34eee309e66cc254229b32f9371256c3eb9af1087d348658040d9d39db",
+    "osh_global_systems_vallejos_2026.pdf": "c2ded970cd1afdd0bdc271c111fefc3f52f8995e0e31c96cd119b49312fb0146",
+    "24938.jpg": "6bdbfcb48e1403ef40489040ee2b144273e5cd3575dddd8d707647d057bb5e31",
+    "24940.jpg": "7546538fd7c921c6c1819d108dc0d60b1cd7a09ff73454d3f7c9d6514b605c00",
+    "OSH_RISCV_Public_Benchmark_Complete_2026-10-09.pdf": "ab4e5e76a9d5e4ce8585d4f59af1fd7bddbeaac0f00fb4e0f5edbee2100eba69",
+    "faro.pdf": "410ac6d9dcdcc73b4154359339c031469d5d8f8ad6308bced2aed0bf68c39c97",
+    "OSH_Benchmark_3_Report.pdf": "909e6afef773feac4be1bf2306ae8448029a5f415982a55b816ab35416d8c580",
+    "OSH_FARO_RLS_CE_FINAL.pdf": "bbdd46073296e17209416b3406fdbf2ee597716ea519453e86f933e4522254d5"
+  },
+  "embedded_assets": [
+    {
+      "path": "logo.png",
+      "sha256": "5d2de6662a71b35c64dcf7a2e0cf832b8f68ff9e9758cdf29e159835cbbc16a9",
+      "bytes": 46467
+    },
+    {
+      "path": "assets/evidence-3a903c7cd8a52581.webp",
+      "sha256": "3a903c7cd8a525813d8425024580fcd16f9e8d04231f3dde1e76721135874b1b",
+      "bytes": 118222
+    },
+    {
+      "path": "assets/evidence-dd894f529fef868f.jpg",
+      "sha256": "dd894f529fef868f84d4e19ce74097fa571f565b0561c84deb785fa02349ba8c",
+      "bytes": 141197
+    },
+    {
+      "path": "assets/evidence-514fe7141f0661c5.jpg",
+      "sha256": "514fe7141f0661c58b19df67b451a51b58b0a6e062f9ce04e05e186bf35577e6",
+      "bytes": 18564
+    },
+    {
+      "path": "assets/evidence-ac7f92ef687e71f7.jpg",
+      "sha256": "ac7f92ef687e71f792f97fe190c325c9d78ab59d199862075fa4fbe4811730cc",
+      "bytes": 23679
+    },
+    {
+      "path": "assets/evidence-8c713586c979ebe2.jpg",
+      "sha256": "8c713586c979ebe2cbf340bbf6771cff75cd3ad744df4084705d9b1f466f1544",
+      "bytes": 24763
+    },
+    {
+      "path": "assets/FARO_Memoria_ELF_Verificada_20261105.pdf",
+      "sha256": "e438ed9874f7fc41c344c047adf97c10470ffc0388173cdab389f8fa2aa310e2",
+      "bytes": 91572
+    },
+    {
+      "path": "osh_power_observation_20260930.jpg",
+      "sha256": "0ac49742348876459301a8dfb1e9f9758ead1c2681f6357f0989cd539ce76eec",
+      "bytes": 387656
+    },
+    {
+      "path": "assets/evidence-3ff30b73f0ecae38.jpg",
+      "sha256": "3ff30b73f0ecae3823bd370dced408154c36566f4446c64ee301391898087747",
+      "bytes": 174743
+    },
+    {
+      "path": "assets/evidence-4541d89b1bedd62f.jpg",
+      "sha256": "4541d89b1bedd62fdd4d5a1a6bd02ddd8ec74daa2eac5fd99b3db1a4ae9f5cf8",
+      "bytes": 161518
+    },
+    {
+      "path": "24938.jpg",
+      "sha256": "6bdbfcb48e1403ef40489040ee2b144273e5cd3575dddd8d707647d057bb5e31",
+      "bytes": 265997
+    },
+    {
+      "path": "24940.jpg",
+      "sha256": "7546538fd7c921c6c1819d108dc0d60b1cd7a09ff73454d3f7c9d6514b605c00",
+      "bytes": 259650
+    },
+    {
+      "path": "24976.jpg",
+      "sha256": "95d01863161310ebe04ee6b7e0fb15aa3f0fe891dd1b82b1d4f544faf4707786",
+      "bytes": 253028
+    },
+    {
+      "path": "OSH_RISCV_Public_Benchmark_Complete_2026-10-09.pdf",
+      "sha256": "ab4e5e76a9d5e4ce8585d4f59af1fd7bddbeaac0f00fb4e0f5edbee2100eba69",
+      "bytes": 2002543
+    },
+    {
+      "path": "assets/evidence-171a5638f9952e8f.png",
+      "sha256": "171a5638f9952e8fca5e1ececf2d8199b2574bd5a51233f2a6e8efa952e26915",
+      "bytes": 13252
+    },
+    {
+      "path": "assets/DSOBMP0001-RISCV-original.bmp",
+      "sha256": "3bd6bd5dc2eb4423b2bdecb44c78354a07f35dc8c4a87cab7d77793ccde41b6d",
+      "bytes": 768054
+    },
+    {
+      "path": "assets/evidence-52b5ba1f41d5217d.jpg",
+      "sha256": "52b5ba1f41d5217da33ab78261c6f1f8ca9bfce46ff5cf7b24ee885e96d83f75",
+      "bytes": 305548
+    },
+    {
+      "path": "assets/evidence-dd812060b02f2183.jpg",
+      "sha256": "dd812060b02f2183a820739ba0680fa3fbe20dda6d6cddbdadf5b911557a127b",
+      "bytes": 207459
+    },
+    {
+      "path": "assets/evidence-67eed92b16f5b89d.jpg",
+      "sha256": "67eed92b16f5b89dd111b30520980679768e06950121a209816c2e3b5440f666",
+      "bytes": 193506
+    },
+    {
+      "path": "assets/evidence-f6f5e9c32f03e77a.jpg",
+      "sha256": "f6f5e9c32f03e77ab76a5a06953490d33d65068fed6aeb449e05318579a58230",
+      "bytes": 175625
+    },
+    {
+      "path": "assets/evidence-6fb70c1e533e3983.jpg",
+      "sha256": "6fb70c1e533e3983e334bcb33da0f21453230af657ccc5552edff67a38c8c945",
+      "bytes": 173243
+    },
+    {
+      "path": "assets/evidence-7945e9ccc3a71ddf.jpg",
+      "sha256": "7945e9ccc3a71ddf353d7e8082dc19eb176d1bec6143fc8a382f9cc35d2720cd",
+      "bytes": 173980
+    },
+    {
+      "path": "assets/OSH_FARO_vs_PID_Five_Physical_Tests_Benchmark_2026-10-19.pdf",
+      "sha256": "d3b1ab857f79032fae36e52d1bc0d575b82b3e88240c683160f49d41c225193c",
+      "bytes": 92693
+    },
+    {
+      "path": "assets/OSH_FARO_vs_PID_Oracle_Physical_R6_Benchmark_2026-10-20.pdf",
+      "sha256": "8a04766d46bae1f35ac37872b4aed729289eb5514891b1ae24b4ca27e2870050",
+      "bytes": 58548
+    },
+    {
+      "path": "OSH_FARO_PID_ORACLE_FINAL.pdf",
+      "sha256": "d41b23fc19777839f314cc38945d372547bea89d18595dccd21f699d7c9aaf38",
+      "bytes": 42664
+    },
+    {
+      "path": "OSH_FARO_RLS_CE_FINAL.pdf",
+      "sha256": "bbdd46073296e17209416b3406fdbf2ee597716ea519453e86f933e4522254d5",
+      "bytes": 475919
+    },
+    {
+      "path": "assets/OSH_FARO_PID_Benchmark_RC_SlewFloor_Corrected_2026-10-29.pdf",
+      "sha256": "381a31965135b6a4eeaa209091991c15af12685ab8a3457d1cb93a95ad81b7ab",
+      "bytes": 390744
+    },
+    {
+      "path": "FARO_PUBLICO.pdf",
+      "sha256": "d21973c11745d5b368d31310d6177699c45e01a8188a6c662c2bd8ce30b3fb64",
+      "bytes": 49218
+    },
+    {
+      "path": "assets/evidence-23c5d8fae2c01f99.png",
+      "sha256": "23c5d8fae2c01f99cfb34a7651f27916d25a56377a1c836a752deed602257291",
+      "bytes": 1906456
+    },
+    {
+      "path": "OSH_Universal_Substrate_Benchmark_FINAL_2026.pdf",
+      "sha256": "ca0fe16e71b0bea87fbb38f6223d1af7a5bea32cf4c19a22fb1b260a047c93ab",
+      "bytes": 59816
+    }
+  ],
+  "original_html_bytes": 17249847,
+  "updated_html_bytes": 156440
+}

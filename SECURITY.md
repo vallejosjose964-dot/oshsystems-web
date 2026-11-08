@@ -4,15 +4,15 @@ Esta capa reduce riesgos en el navegador. No convierte el sitio en invulnerable,
 
 ## Controles incluidos
 
-- Política CSP al principio de `index.html`, antes de los recursos: scripts, estilos e imágenes del mismo origen; sin JavaScript inline ni `eval`.
-- Se bloquean conexiones iniciadas por scripts, formularios HTML, objetos, marcos internos, workers y cambios de la URL base. La página no tiene backend de formularios: el contacto sigue preparando un borrador con `mailto`, para revisión del visitante.
+- Política CSP al principio de `index.html`, antes de los recursos: scripts, estilos e imágenes del mismo origen, con la única excepción de script GA4 detallada abajo; sin JavaScript inline ni `eval`.
+- Se bloquean conexiones iniciadas por scripts salvo los dos endpoints de medición GA4 expresamente permitidos. También se bloquean formularios HTML, objetos, marcos internos, workers y cambios de la URL base. La página no tiene backend de formularios: el contacto sigue preparando un borrador con `mailto`, para revisión del visitante.
 - El video local conserva la única excepción de medios externa ya existente: la ruta exacta de `demo.mp4` en el repositorio público de GitHub.
 - `no-referrer` evita enviar la URL de esta página como referencia al navegar o cargar recursos.
 - Los enlaces que abren otra pestaña mantienen `noopener noreferrer`.
 - Los controladores de errores de imagen se ejecutan desde el archivo JS local, no desde atributos HTML. El fallback solo acepta el mismo origen y no repite la misma URL.
 - Las medidas del recorrido se construyen con nodos de texto y un elemento de unidad, sin interpretar cadenas como HTML.
 
-No se añadieron dependencias, analítica, cookies, captura remota de datos ni servicios de terceros. Se mantienen todos los contenidos y archivos originales.
+La portada permite cargar únicamente `https://www.googletagmanager.com/gtag/js` como script externo y conectar con `https://www.google-analytics.com/g/collect` o `https://region1.google-analytics.com/g/collect`. El código no carga Google hasta aceptar analítica. Estas excepciones permiten ejecutar código del proveedor y transmitir las mediciones consentidas; no equivalen a una auditoría del proveedor. No se añadieron comodines, imágenes externas, marcos, `unsafe-inline` o `unsafe-eval`. La página de privacidad conserva la política original sin scripts externos ni conexiones. Consulte `ANALYTICS.md` para detalles y límites de validación. Se mantienen todos los contenidos y archivos originales.
 
 ## Comprobación antes de cada publicación
 

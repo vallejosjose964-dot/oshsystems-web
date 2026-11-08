@@ -34,3 +34,7 @@ La revisión técnica es de la página y de la conservación de sus archivos; no
 - El formulario conserva su handler `mailto` y habilita el botón tras registrarlo. No se enviaron correos ni se volvió a preparar un borrador con datos personales.
 
 La revisión no valida Safari, Firefox, la configuración de HTTPS obligatorio, cabeceras del servidor, seguridad de la cuenta de GitHub, permisos de colaboradores ni protección de ramas. Consulte SECURITY.md para esos límites.
+
+## Integración de analítica consentida
+
+8 de noviembre de 2026. Esta revisión configura GA4, preferencias y política de privacidad. Se amplía exclusivamente `script-src` para el tag de Google y `connect-src` para los dos endpoints documentados en `ANALYTICS.md`. Se aprobaron integridad, rutas/ARIA, análisis estático, sintaxis y pruebas unitarias de consentimiento. No se completaron las pruebas visuales ni de red de esta nueva interfaz. Los resultados de navegador anteriores de este documento no validan la nueva integración. La recepción de datos por la propiedad real permanece pendiente de comprobación.

@@ -58,3 +58,19 @@ img{max-width:100%}
 
 /* Replaces the legacy inline color so styles remain CSP-compatible. */
 .rv26-meta.rv26-meta-muted { color: #49636b; }
+
+
+/* Cross-architecture parity evidence; scoped, static and CSP-compatible. */
+.faro-parity{padding:90px 0;background:#081c29;color:#ecf5f4;border-block:1px solid #365c62;scroll-margin-top:90px}
+.faro-parity-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:1px solid #365c62;padding-bottom:18px;margin-bottom:35px;font:11px/1.5 monospace;letter-spacing:.1em;color:#a9c6c8}
+.faro-parity-kicker{margin:0;color:#96e7c0;font-weight:700}
+.faro-parity-heading{display:grid;grid-template-columns:1.3fr 1fr;gap:55px;align-items:end}
+.faro-parity-heading h2{margin:0;font-size:clamp(30px,4vw,55px);line-height:1.08;letter-spacing:-.04em;color:#fff}.faro-parity-heading h2 em{font-style:normal;color:#96e7c0}.faro-parity-heading p{margin:0;line-height:1.7;color:#c3d5dc}
+.faro-parity-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:38px 0;border:1px solid #365c62}.faro-parity-metrics>div{padding:25px;border-right:1px solid #365c62}.faro-parity-metrics>div:last-child{border:0}.faro-parity-metrics strong{display:block;font-size:clamp(27px,3vw,42px);line-height:1.2;letter-spacing:-.04em;color:#fff}.faro-parity-metrics span{display:block;margin-top:10px;font-size:12px;line-height:1.5;color:#b8ccd1}
+.faro-parity-boards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.faro-parity-boards article{padding:24px;background:#102b39;border-top:3px solid #96e7c0}.faro-parity-boards article>span{font:11px/1.5 monospace;letter-spacing:.08em;color:#a6cbd0}.faro-parity-boards h3{font-size:38px;line-height:1.1;margin:15px 0;color:#96e7c0}.faro-parity-boards p{font-size:14px;line-height:1.65;color:#c3d5dc;margin:0}
+.faro-parity-proof{display:grid;grid-template-columns:1fr 1fr;gap:45px;margin:35px 0}.faro-parity-proof h3{color:#fff;font-size:21px}.faro-parity-proof p{color:#c3d5dc;line-height:1.7;font-size:15px}
+.faro-parity-scope{border-block:1px solid #365c62;padding:18px 0}.faro-parity-scope summary{cursor:pointer;color:#cfe5df;font-size:14px;font-weight:700}.faro-parity-scope p{color:#b8ccd1;font-size:14px;line-height:1.7;max-width:95ch}
+.faro-parity-download{display:flex;justify-content:space-between;align-items:center;gap:30px;margin-top:30px}.faro-parity-download strong{display:block;color:#fff;font-size:17px;max-width:50ch}.faro-parity-download span{display:block;color:#a9c6c8;font-size:12px;margin-top:8px}.faro-parity-buttons{display:flex;gap:18px;align-items:center;flex-shrink:0}.faro-parity-buttons .button{background:#96e7c0;color:#071c20;border-color:#96e7c0}.faro-parity-buttons .button span,.faro-parity-buttons .textlink span{display:inline;color:inherit;font-size:inherit}.faro-parity-buttons .textlink{color:#cfe5df;white-space:nowrap}.faro-parity-footer{margin:24px 0 0;color:#a9c6c8;font-size:12px;line-height:1.6}
+@media(max-width:800px){.faro-parity{padding:55px 0}.faro-parity-heading,.faro-parity-proof{grid-template-columns:1fr;gap:20px}.faro-parity-download{align-items:flex-start;flex-direction:column}.faro-parity-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.faro-parity-metrics>div{border-bottom:1px solid #365c62}.faro-parity-metrics>div:nth-child(2){border-right:0}.faro-parity-metrics>div:nth-child(3){border-bottom:0}.faro-parity-boards{gap:12px}.faro-parity-boards article{padding:18px}}
+@media(max-width:560px){.faro-parity-boards{grid-template-columns:1fr}.faro-parity-metrics>div{padding:20px}.faro-parity-buttons{flex-wrap:wrap;flex-shrink:1}.faro-parity-heading h2{font-size:34px}.faro-parity-top{font-size:10px}}
+@media print{.faro-parity,.faro-parity-boards article{background:#fff!important;color:#000!important}.faro-parity *{color:#000!important}.faro-parity{break-inside:auto}.faro-parity-scope>div{display:block}}

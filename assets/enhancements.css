@@ -150,7 +150,7 @@ img{max-width:100%}
 @media print{.fav4-path,.fav4-grid article,.fav4-evidence,.fav4-pilot{background:#fff!important;color:#000!important}.faro-applications-v4 *{color:#000!important}.fav4-grid article{break-inside:avoid}.fav4-path li:after{display:none}}
 
 /* Section 06 pilot and evidence cards. Scoped, static and CSP-compatible. */
-.fpe6{margin-top:48px;padding-top:36px;border-top:1px solid #a4beb5;scroll-margin-top:90px}
+.fpe6{margin-top:48px;padding:36px 0 0;border-top:1px solid #a4beb5;scroll-margin-top:90px}
 .fpe6-heading{max-width:760px;margin-bottom:27px}.fpe6-heading .cv3-kicker{font-size:10px;margin-bottom:15px}
 .fpe6-heading h4{font-size:clamp(30px,3.5vw,46px);line-height:1.1;letter-spacing:-.035em;color:#143c49;margin:0 0 18px}.fpe6-heading h4 em{font-style:normal;color:#087586}
 .fpe6-heading>p:last-child{font-size:16px;line-height:1.7;color:#355967;margin:0;max-width:65ch}

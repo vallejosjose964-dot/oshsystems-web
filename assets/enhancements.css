@@ -93,3 +93,58 @@ img{max-width:100%}
 .faro-parity-digest{margin:24px 0 0;padding-top:18px;border-top:1px solid #365c62;display:flex;gap:14px;flex-wrap:wrap;color:#a9c6c8;font:11px/1.7 var(--mono)}.faro-parity-digest>span{color:#96e7c0;flex-shrink:0}.faro-parity-digest code{overflow-wrap:anywhere;word-break:break-word;font:inherit}
 @media(max-width:560px){.faro-parity-claim{padding:22px}.faro-parity-heading h2{font-size:clamp(30px,8vw,40px)}.faro-parity-boards h3{font-size:42px}}
 @media print{.faro-parity-claim{background:#fff!important}.faro-parity-digest{color:#000!important}}
+
+
+/* Section 06 application landscape. Scoped CSS, no new scripts or external resources. */
+.faro-applications-v4{margin-top:52px;padding-top:36px}
+.fav4-heading{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:end;margin-bottom:32px}
+.fav4-heading h3{font-size:clamp(34px,4.4vw,58px);line-height:1.04;letter-spacing:-.045em;margin:0;color:#143c49}
+.fav4-heading h3 em{font-style:normal;color:#087586}
+.fav4-heading p{color:#355967;font-size:15px;line-height:1.7;margin:0}
+.fav4-heading .cv3-kicker{margin-bottom:18px;font-size:11px}
+.fav4-heading .fav4-lead{font-size:20px;line-height:1.5;color:#143c49;margin-bottom:14px}
+.fav4-path{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:center;padding:28px 30px;background:#0d3543;color:#e9f6f5;margin-bottom:24px}
+.fav4-path-label>span{font:10px/1.5 var(--mono);letter-spacing:.08em;color:#9de3df}
+.fav4-path-label h4{font-size:21px;line-height:1.25;letter-spacing:-.02em;margin:10px 0 0;color:#fff}
+.fav4-path ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:0;gap:18px}
+.fav4-path li{position:relative;min-width:0;padding-top:12px;border-top:1px solid #6a969b}
+.fav4-path li:not(:last-child):after{content:'→';position:absolute;top:-12px;right:-20px;background:#0d3543;padding-inline:4px;color:#9de3df}
+.fav4-path b{display:block;font:10px/1.5 var(--mono);color:#9de3df;margin-bottom:7px}
+.fav4-path li>span{display:block;font-size:14px;line-height:1.4;font-weight:650;color:#effbf6}
+.fav4-path small{display:block;font-size:11px;line-height:1.5;color:#b8d2d9;margin-top:5px}
+.fav4-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.fav4-grid article{min-width:0;background:#f6f8f2;border:1px solid #a4beb5;padding:25px 26px 22px;display:flex;flex-direction:column}
+.fav4-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}
+.fav4-card-top>span{font:10px/1.6 var(--mono);letter-spacing:.055em;color:#326e70;padding-top:5px}
+.fav4-card-top svg{width:42px;height:42px;flex:0 0 42px;fill:none;stroke:#087586;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fav4-grid h4{font-size:clamp(24px,2.2vw,31px);line-height:1.15;letter-spacing:-.035em;margin:0 0 17px;color:#143c49}
+.fav4-grid p{font-size:14px;line-height:1.75;color:#355967;margin:0 0 22px}
+.fav4-grid article>small{font:9px/1.6 var(--mono);letter-spacing:.025em;color:#326e70;margin-top:auto;padding-top:16px;border-top:1px solid #c4d4cb}
+.fav4-grid .fav4-card-autonomy{background:#deede4;border-color:#7da99b}
+.fav4-open-scope{display:flex;gap:20px;align-items:center;border-block:1px solid #a4beb5;padding:22px 0;margin:26px 0 40px;font-size:15px;line-height:1.65;color:#355967}
+.fav4-open-scope>span:first-child{font-size:37px;line-height:1;color:#087586;font-weight:300}
+.fav4-open-scope strong{color:#143c49}
+.fav4-evidence{display:grid;grid-template-columns:.8fr 1fr 1fr;gap:28px;padding:30px;border:1px solid #a4beb5;background:#e3ebe4}
+.fav4-evidence h4,.fav4-value h4{font-size:29px;line-height:1.13;letter-spacing:-.03em;color:#143c49;margin:0}
+.fav4-evidence .cv3-kicker{font-size:10px;margin-bottom:13px}
+.fav4-evidence-label{display:block;font:600 10px/1.6 var(--mono);letter-spacing:.07em;color:#326e70;margin-bottom:12px}
+.fav4-evidence p{font-size:14px;line-height:1.7;color:#355967;margin:0 0 18px}
+.fav4-evidence a{color:#0b6576;font-size:13px;line-height:1.6;text-underline-offset:5px;font-weight:650}
+.fav4-value{display:grid;grid-template-columns:.8fr 2fr;gap:40px;padding:40px 0}
+.fav4-value dl{display:grid;grid-template-columns:1fr 1fr;gap:27px 30px;margin:0}
+.fav4-value dt{font-size:17px;color:#143c49;font-weight:650;margin-bottom:9px}
+.fav4-value dd{font-size:14px;line-height:1.7;color:#355967;margin:0}
+.fav4-value .cv3-kicker{font-size:10px}
+.fav4-pilot{display:flex;align-items:center;gap:50px;justify-content:space-between;padding:30px;background:#0d3543;color:#e9f6f5}
+.fav4-pilot .cv3-kicker{color:#9de3df;font-size:10px;margin-bottom:12px}
+.fav4-pilot h4{font-size:29px;line-height:1.15;letter-spacing:-.025em;margin:0 0 14px;color:#fff}
+.fav4-pilot p{font-size:14px;line-height:1.7;color:#c0d8dd;margin:0;max-width:76ch}
+.fav4-pilot a{flex:0 0 auto;color:#092635;background:#b8f3d3;border:1px solid #b8f3d3;border-radius:3px;padding:13px 19px;text-decoration:none;font-size:14px;font-weight:650;line-height:1.5}
+.fav4-pilot a span{padding-left:12px}
+.fav4-pilot a:hover{background:#d6ffe5}
+.faro-applications-v4 a:focus-visible{outline:3px solid #087586;outline-offset:5px}
+.fav4-pilot a:focus-visible{outline-color:#fff}
+@media(max-width:1050px){.fav4-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fav4-heading{gap:32px}.fav4-path{grid-template-columns:1fr;gap:24px}.fav4-path-label h4 br{display:none}.fav4-pilot{gap:25px;align-items:flex-start;flex-direction:column}.fav4-evidence{grid-template-columns:1fr 1fr}.fav4-evidence>div:first-child{grid-column:1/-1}.fav4-evidence h4 br{display:none}}
+@media(max-width:760px){.faro-applications-v4{margin-top:38px}.fav4-heading,.fav4-value{grid-template-columns:1fr;gap:23px}.fav4-heading .fav4-lead{font-size:18px}.fav4-grid article{padding:22px}.fav4-grid h4{font-size:27px}.fav4-evidence{padding:24px;gap:24px}.fav4-value{padding:32px 0}.fav4-pilot{padding:24px}.fav4-open-scope{align-items:flex-start;margin-bottom:30px}.fav4-value h4 br{display:none}}
+@media(max-width:560px){.fav4-grid,.fav4-evidence,.fav4-value dl{grid-template-columns:1fr}.fav4-heading h3{font-size:clamp(32px,8.8vw,45px)}.fav4-path{padding:23px}.fav4-path ol{grid-template-columns:1fr 1fr;gap:23px 20px}.fav4-path li:nth-child(2):after{content:none}.fav4-evidence>div:first-child{grid-column:auto}.fav4-pilot h4{font-size:26px}.fav4-pilot a{width:100%;text-align:center}.fav4-card-top{margin-bottom:12px}.fav4-grid h4 br{display:none}}
+@media print{.fav4-path,.fav4-grid article,.fav4-evidence,.fav4-pilot{background:#fff!important;color:#000!important}.faro-applications-v4 *{color:#000!important}.fav4-grid article{break-inside:avoid}.fav4-path li:after{display:none}}

@@ -83,6 +83,10 @@ img{max-width:100%}
 @media(max-width:760px){.faro-business-value{margin-top:40px}.fbv-heading,.fbv-grid,.fbv-evidence{grid-template-columns:1fr}.fbv-heading{gap:20px}.fbv-grid article,.fbv-pilot{padding:23px}.fbv-evidence{gap:14px}}
 @media print{.faro-business-value,.fbv-grid article,.fbv-pilot{background:#fff!important;color:#000!important}.faro-business-value *{color:#000!important}.fbv-grid article{break-inside:avoid}}
 
+/* Section 06 local-decision examples; preserves the existing business-value layout. */
+.fbv-solutions{margin-top:32px}.fbv-solutions>h4{font-size:clamp(26px,2.8vw,36px);line-height:1.2;letter-spacing:-.025em;margin:0 0 18px;color:#143c49}.fbv-solutions>p{max-width:98ch;color:#355967;font-size:16px;line-height:1.75;margin:0 0 18px}.fbv-use-cases{grid-template-columns:repeat(3,minmax(0,1fr));margin:28px 0}.fbv-use-cases article{padding:24px}.fbv-use-cases h4{font-size:clamp(23px,2vw,28px)}.fbv-opportunity{border-left:3px solid #087586;padding:5px 0 5px 24px;max-width:100ch}.fbv-opportunity h4{font-size:25px;line-height:1.3;margin:0 0 12px;color:#143c49}.fbv-opportunity p{font-size:15px;line-height:1.7;color:#355967;margin:0}.fbv-opportunity .fbv-scope-note{margin-top:16px;font-size:14px}.fbv-scope-note strong{color:#143c49}
+@media(max-width:900px){.fbv-use-cases{grid-template-columns:1fr}.fbv-use-cases article{padding:23px}.fbv-opportunity{padding-left:18px}}
+
 /* Expanded parity master: evidence-first emphasis; no new scripts. */
 .faro-parity-gate{display:block;margin:-4px 0 17px;color:#96e7c0;font:10px/1.6 var(--mono);letter-spacing:.08em}
 .faro-parity-claim{margin:0 0 28px;padding:28px 30px;border-left:4px solid #96e7c0;background:#102b39}.faro-parity-claim>span{font:10px/1.6 var(--mono);letter-spacing:.1em;color:#96e7c0}.faro-parity-claim p{margin:12px 0 0;color:#b8ccd1;font-size:14px;line-height:1.7;max-width:100ch}.faro-parity-claim p:first-of-type{font-size:clamp(19px,2.1vw,25px);line-height:1.4;color:#fff}

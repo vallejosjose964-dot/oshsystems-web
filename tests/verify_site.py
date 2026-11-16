@@ -28,7 +28,7 @@ for tag,a in p.elements:
         for target in (a.get(key) or '').split():assert target in ids, key+': '+target
     if tag=='img':assert 'alt' in a, 'Missing image alt'
 downloads={a['href'] for t,a in p.elements if t=='a' and 'download' in a}
-assert len(downloads)==15, 'Expected fourteen reports and original BMP'
+assert len(downloads)==16, 'Expected fifteen reports and original BMP'
 assert ';base64,' not in content, 'Unexpected embedded binary'
 assert len(content.encode()) < 200_000, 'HTML budget exceeded'
 print(f'PASS: {len(m["original_files"])} original files + {len(m["embedded_assets"])} extracted assets have exact SHA-256.')

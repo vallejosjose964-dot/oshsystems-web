@@ -28,7 +28,7 @@ for tag,a in p.elements:
         for target in (a.get(key) or '').split():assert target in ids, key+': '+target
     if tag=='img':assert 'alt' in a, 'Missing image alt'
 downloads={a['href'] for t,a in p.elements if t=='a' and 'download' in a}
-assert len(downloads)==19, 'Expected eighteen PDFs and original BMP'
+assert len(downloads)==20, 'Expected nineteen PDFs and original BMP'
 assert ';base64,' not in content, 'Unexpected embedded binary'
 assert len(content.encode()) < 200_000, 'HTML budget exceeded'
 print(f'PASS: {len(m["original_files"])} original files + {len(m["embedded_assets"])} extracted assets have exact SHA-256.')
@@ -56,4 +56,4 @@ print('PASS: robots.txt, sitemap.xml, CNAME and canonical consistently use '+ori
 library = content.split('id="report-list">', 1)[1].split('</section>', 1)[0]
 for pdf in ROOT.rglob('*.pdf'):
     assert './'+pdf.relative_to(ROOT).as_posix() in library, 'PDF missing from library: '+str(pdf)
-print('PASS: All 18 public PDF files are discoverable in the evidence library.')
+print('PASS: All 19 public PDF files are discoverable in the evidence library.')
